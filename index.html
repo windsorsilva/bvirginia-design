@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- SEO Básico -->
+    <title>B Virgínia Design | Sobrancelhas e Cílios em Cabo de Santo Agostinho - PE</title>
+    <meta name="description" content="Realce sua beleza com design de sobrancelhas e extensão de cílios na B Virgínia Design em Bela Vista, Cabo de Santo Agostinho. Atendimento personalizado e premium.">
+    <meta name="keywords" content="sobrancelhas, cílios, extensão de cílios, fox eyes, volume brasileiro, design de sobrancelhas, beleza, Cabo de Santo Agostinho, Pernambuco">
+    <meta name="author" content="B Virgínia Design">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Favicon (SVG Elegante de Flor/Cílio) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✨</text></svg>">
+
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Cabeçalho Fixo -->
+    <header class="header">
+        <div class="header-container container">
+            <a href="#inicio" class="logo" id="header-logo-cms">B Virgínia Design</a>
+            
+            <nav class="nav" id="nav-menu">
+                <ul class="nav-list">
+                    <li><a href="#inicio" class="nav-link active">Início</a></li>
+                    <li><a href="#sobre" class="nav-link">Sobre</a></li>
+                    <li><a href="#servicos" class="nav-link">Serviços</a></li>
+                    <li><a href="#galeria" class="nav-link">Galeria</a></li>
+                    <li><a href="#depoimentos" class="nav-link">Depoimentos</a></li>
+                    <li><a href="#agendamento" class="nav-link">Agendamento</a></li>
+                </ul>
+            </nav>
+
+            <div class="header-actions">
+                <a href="#" target="_blank" rel="noopener noreferrer" class="instagram-icon-link" id="header-instagram-link" aria-label="Acesse nosso Instagram">
+                    <!-- SVG Instagram Dourado -->
+                    <svg class="icon-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                        <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                        <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                    </svg>
+                </a>
+                <a href="#agendamento" class="btn btn-primary btn-header">Agendar agora</a>
+                
+                <!-- Menu Mobile Hamburguer -->
+                <button class="menu-toggle" id="menu-toggle-btn" aria-label="Abrir Menu">
+                    <span class="hamburger"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Seção Principal / Capa (Hero) -->
+        <section id="inicio" class="hero-section">
+            <div class="hero-bg-overlay"></div>
+            <div class="container hero-container">
+                <div class="hero-content fade-in-up">
+                    <span class="hero-subtitle" id="hero-subtitle-cms">B Virgínia Design</span>
+                    <h1 class="hero-title" id="hero-title-cms">Beleza através do olhar ✨</h1>
+                    <p class="hero-description" id="hero-desc-cms">Realce sua beleza com sobrancelhas e cílios feitos para valorizar a sua essência.</p>
+                    <div class="hero-buttons">
+                        <a href="#" target="_blank" rel="noopener noreferrer" id="hero-whatsapp-btn" class="btn btn-gold">Agendar pelo WhatsApp</a>
+                        <a href="#servicos" class="btn btn-outline">Conhecer serviços</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Sobre -->
+        <section id="sobre" class="about-section scroll-reveal">
+            <div class="container about-container">
+                <div class="about-image-wrapper">
+                    <img src="assets/images/hero-bg.png" alt="Espaço B Virgínia Design" class="about-img" id="about-img-cms" loading="lazy">
+                    <div class="about-img-border"></div>
+                </div>
+                <div class="about-content">
+                    <span class="section-subtitle">Exclusividade e Arte</span>
+                    <h2 class="section-title" id="about-title-cms">Seu olhar merece cuidado</h2>
+                    <p class="about-text" id="about-text1-cms">
+                        Na B Virgínia Design, cada atendimento é pensado para realçar sua beleza de forma única, delicada e sofisticada. Trabalhamos com técnicas personalizadas para valorizar seu olhar e elevar sua autoestima.
+                    </p>
+                    <p class="about-text" id="about-text2-cms">
+                        Localizado no coração de <strong>Bela Vista, Cabo de Santo Agostinho – PE</strong>, o espaço foi planejado para oferecer conforto, segurança e uma experiência de bem-estar inesquecível. Aqui, a sua beleza natural é a nossa maior inspiração.
+                    </p>
+                    <div class="about-signature">B Virgínia</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Serviços (Dynamic Services List) -->
+        <section id="servicos" class="services-section scroll-reveal">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="section-subtitle">Nossos Procedimentos</span>
+                    <h2 class="section-title">Serviços Personalizados</h2>
+                    <p class="section-description">Técnicas modernas e seguras para proporcionar o olhar marcante e elegante que você deseja.</p>
+                </div>
+                
+                <div class="services-grid" id="dynamic-services">
+                    <!-- Cards gerados dinamicamente via JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Galeria -->
+        <section id="galeria" class="gallery-section scroll-reveal">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="section-subtitle">Portfólio</span>
+                    <h2 class="section-title">Resultados que encantam</h2>
+                    <p class="section-description">Confira alguns de nossos procedimentos e transformações de olhar reais.</p>
+                </div>
+                
+                <div class="gallery-grid" id="dynamic-gallery">
+                    <!-- Cards gerados via JS -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Depoimentos -->
+        <section id="depoimentos" class="testimonials-section scroll-reveal">
+            <div class="container">
+                <div class="section-header text-center">
+                    <span class="section-subtitle">Avaliações</span>
+                    <h2 class="section-title">O que nossas clientes dizem</h2>
+                    <p class="section-description">A satisfação e autoestima de cada cliente é a nossa principal prioridade.</p>
+                </div>
+
+                <div class="testimonials-grid">
+                    <!-- Depoimento 1 -->
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">
+                            "Atendimento incrível e impecável. Minhas sobrancelhas nunca ficaram tão harmônicas e naturais. Recomendo de olhos fechados!"
+                        </p>
+                        <div class="testimonial-author">
+                            <span class="author-name">Amanda Silva</span>
+                            <span class="author-location">Cabo de Santo Agostinho</span>
+                        </div>
+                    </div>
+
+                    <!-- Depoimento 2 -->
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">
+                            "A extensão de cílios é super confortável, não sinto nenhum peso e dura muito tempo. O efeito Sirena ficou maravilhoso e combinou muito comigo."
+                        </p>
+                        <div class="testimonial-author">
+                            <span class="author-name">Beatriz Costa</span>
+                            <span class="author-location">Cabo de Santo Agostinho</span>
+                        </div>
+                    </div>
+
+                    <!-- Depoimento 3 -->
+                    <div class="testimonial-card">
+                        <div class="stars">★★★★★</div>
+                        <p class="testimonial-text">
+                            "Profissional extremamente detalhista, cuidadosa e atenciosa. O espaço é muito aconchegante, limpo e luxuoso. Nota mil para a Virgínia!"
+                        </p>
+                        <div class="testimonial-author">
+                            <span class="author-name">Caroline Ramos</span>
+                            <span class="author-location">Cabo de Santo Agostinho</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Agendamento -->
+        <section id="agendamento" class="booking-section scroll-reveal">
+            <div class="container booking-container">
+                <div class="booking-details">
+                    <span class="section-subtitle">Horário Exclusivo</span>
+                    <h2 class="section-title">Reserve seu momento de beleza</h2>
+                    <p class="booking-text">
+                        Preencha o formulário ao lado para solicitar a sua data e horário de preferência. Analisaremos a disponibilidade e entraremos em contato para confirmar.
+                    </p>
+                    <div class="contact-info-list">
+                        <div class="contact-info-item">
+                            <span class="contact-icon">📍</span>
+                            <span id="booking-address-cms">Bela Vista, Cabo de Santo Agostinho - PE</span>
+                        </div>
+                        <div class="contact-info-item">
+                            <span class="contact-icon">💬</span>
+                            <span id="booking-phone-cms">+55 81 98900-2496</span>
+                        </div>
+                        <div class="contact-info-item">
+                            <span class="contact-icon">🕒</span>
+                            <span id="booking-hours-cms">Terça a Sábado, com hora marcada</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="booking-form-wrapper">
+                    <form id="booking-form" class="booking-form">
+                        <div class="form-group">
+                            <label for="form-name">Nome Completo</label>
+                            <input type="text" id="form-name" placeholder="Digite seu nome completo" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-phone">WhatsApp</label>
+                            <input type="tel" id="form-phone" placeholder="(81) 99999-9999" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="form-service">Serviço Desejado</label>
+                            <select id="form-service" required>
+                                <option value="" disabled selected>Selecione um serviço</option>
+                                <!-- Opções geradas via JS -->
+                            </select>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="form-date">Data Preferida</label>
+                                <input type="date" id="form-date" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="form-time">Horário Selecionado</label>
+                                <input type="text" id="form-time" placeholder="Selecione abaixo" readonly required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group" id="slots-section" style="display: none; margin-top: 0.5rem; grid-column: span 2;">
+                            <label>Horários Disponíveis (Livre)</label>
+                            <div id="slots-container" class="slots-grid">
+                                <!-- Preenchido dinamicamente via JS -->
+                            </div>
+                            <span id="slots-loading-msg" style="font-size: 0.8rem; color: var(--color-text-muted); font-style: italic; display: none;">Selecione o serviço e a data para ver a disponibilidade...</span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="form-notes">Observações</label>
+                            <textarea id="form-notes" rows="3" placeholder="Caso tenha alguma restrição, preferência ou dúvida..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-gold btn-block">Solicitar agendamento</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-brand">
+                <a href="#inicio" class="footer-logo" id="footer-logo-cms">B Virgínia Design</a>
+                <p class="footer-tagline" id="footer-tagline-cms">“Realçando sua beleza através do olhar.”</p>
+                <div class="footer-socials">
+                    <a href="#" target="_blank" rel="noopener noreferrer" id="footer-instagram-link" aria-label="Acesse nosso Instagram">
+                        <!-- SVG Instagram -->
+                        <svg class="icon-social" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect>
+                            <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
+                            <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line>
+                        </svg>
+                    </a>
+                    <a href="#" target="_blank" rel="noopener noreferrer" id="footer-whatsapp-link" aria-label="Fale conosco no WhatsApp">
+                        <!-- SVG WhatsApp -->
+                        <svg class="icon-social" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <h4 class="footer-title">Links Úteis</h4>
+                <ul>
+                    <li><a href="#inicio">Início</a></li>
+                    <li><a href="#sobre">Sobre</a></li>
+                    <li><a href="#servicos">Serviços</a></li>
+                    <li><a href="#galeria">Galeria</a></li>
+                    <li><a href="#depoimentos">Depoimentos</a></li>
+                    <li><a href="#agendamento">Agendamento</a></li>
+                    <li><a href="admin.html" style="color: var(--color-gold); font-weight: 600;">Área Restrita 🔒</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-contact">
+                <h4 class="footer-title">Contato & Localização</h4>
+                <p id="footer-address-cms">📍 Bela Vista, Cabo de Santo Agostinho – PE</p>
+                <p id="footer-phone-cms">💬 WhatsApp: +55 81 98900-2496</p>
+                <p>📸 Instagram: <a href="#" target="_blank" rel="noopener noreferrer" id="footer-contact-instagram-link">@bvirginiadesign</a></p>
+            </div>
+        </div>
+
+        <div class="footer-bottom text-center">
+            <p>&copy; 2026 B Virgínia Design. Todos os direitos reservados. | Realizado com elegância.</p>
+        </div>
+    </footer>
+
+    <!-- Botão Flutuante do WhatsApp -->
+    <a href="#" target="_blank" rel="noopener noreferrer" class="whatsapp-floating-btn" id="floating-whatsapp-btn" aria-label="Conversar no WhatsApp">
+        <!-- SVG WhatsApp Flutuante -->
+        <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.455L0 24zm6.59-4.846c1.6.95 3.188 1.449 4.825 1.451 5.436 0 9.86-4.37 9.864-9.799.002-2.63-1.023-5.101-2.885-6.963C16.488 2.015 14.017 1 11.997 1c-5.439 0-9.862 4.371-9.866 9.802-.001 1.772.484 3.5 1.401 5.02L2.5 21.533l4.147-1.379zm12.355-6.425c-.272-.136-1.61-.794-1.859-.885-.25-.09-.432-.136-.614.136-.182.273-.705.885-.864 1.067-.159.182-.318.205-.59.069-.272-.136-1.15-.424-2.19-1.353-.809-.722-1.356-1.616-1.515-1.889-.159-.272-.017-.42.119-.555.123-.122.272-.318.409-.477.136-.159.182-.272.272-.455.09-.182.046-.341-.023-.477-.069-.136-.614-1.477-.841-2.023-.222-.534-.442-.461-.607-.469-.156-.008-.335-.01-.514-.01-.18 0-.472.067-.719.34-.247.272-.942.92-0.942 2.247s.967 2.607 1.102 2.789c.137.182 1.902 2.903 4.609 4.07 1.637.708 2.296.818 3.125.696.482-.07 1.61-.659 1.838-1.296.227-.636.227-1.182.159-1.296-.068-.113-.25-.181-.523-.317z"/>
+        </svg>
+    </a>
+
+    <!-- Modal de Pré-confirmação do Agendamento -->
+    <div id="confirmation-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Agendamento Preparado ✨</h3>
+            </div>
+            <div class="modal-body">
+                <p>Seu pedido de agendamento foi preparado. Você será direcionada para o WhatsApp para confirmar.</p>
+            </div>
+            <div class="modal-footer">
+                <button id="modal-cancel-btn" class="btn btn-outline btn-sm">Editar dados</button>
+                <button id="modal-confirm-btn" class="btn btn-gold btn-sm">Prosseguir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="db.js"></script>
+    <script src="shared.js"></script>
+    <script src="scripts.js"></script>
+</body>
+</html>

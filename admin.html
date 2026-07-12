@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo | B Virgínia Design</title>
+    
+    <!-- SEO & Favicon -->
+    <meta name="robots" content="noindex, nofollow">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
+
+    <!-- Fontes do Google -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+    <!-- CSS Personalizado Compartilhado -->
+    <link rel="stylesheet" href="styles.css">
+    
+    <style>
+        body {
+            background-color: var(--color-nude-light);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .admin-main {
+            padding: 3rem 0;
+            flex-grow: 1;
+            display: none; /* Oculto antes do login */
+        }
+        
+        /* Estilos do Login Gate */
+        .login-wrapper {
+            margin: auto;
+            width: 100%;
+            max-width: 400px;
+            padding: 3rem 2.5rem;
+            background-color: var(--color-white);
+            box-shadow: var(--shadow-medium);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+            text-align: center;
+        }
+        
+        /* Sub-Abas de Configurações */
+        .config-subtabs-nav {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            padding-bottom: 0.5rem;
+        }
+        
+        .config-subtab-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--color-text-muted);
+            padding: 0.4rem 0.8rem;
+            transition: var(--transition-smooth);
+        }
+        
+        .config-subtab-btn.active {
+            color: var(--color-black);
+            background-color: var(--color-nude-medium);
+        }
+        
+        .config-subtab-content {
+            display: none;
+        }
+        
+        .config-subtab-content.active {
+            display: block;
+        }
+        
+        /* Calendários de Agenda */
+        .calendar-views-wrapper {
+            display: grid;
+            grid-template-columns: 0.8fr 1.2fr;
+            gap: 2.5rem;
+            align-items: start;
+        }
+        
+        /* Lista de Slots Diários */
+        .daily-slots-sheet-admin {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .admin-slot-card {
+            background-color: var(--color-white);
+            padding: 1.2rem 1.8rem;
+            border: 1px solid rgba(197, 160, 89, 0.12);
+            box-shadow: var(--shadow-soft);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-left: 5px solid transparent;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .admin-slot-card.disponivel { border-left-color: #22c55e; }
+        .admin-slot-card.reservado { border-left-color: var(--color-black); background-color: #FAF8F5; }
+        .admin-slot-card.bloqueado { border-left-color: #a8a29e; background-color: #f5f5f4; opacity: 0.85; }
+        
+        .admin-slot-time-text {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--color-black);
+            min-width: 60px;
+        }
+        
+        /* Tabelas */
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            margin-top: 1rem;
+        }
+        
+        .admin-table th {
+            text-align: left;
+            padding: 0.8rem;
+            border-bottom: 2px solid rgba(197, 160, 89, 0.2);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .admin-table td {
+            padding: 0.8rem;
+            border-bottom: 1px solid rgba(197, 160, 89, 0.08);
+            vertical-align: middle;
+        }
+        
+        /* Lista de Serviços CMS */
+        .cms-services-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .cms-service-item {
+            background-color: var(--color-white);
+            border: 1px solid rgba(197, 160, 89, 0.15);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* Configurações de Dias de Atendimento */
+        .days-checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .day-checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        /* Modal Overlay Específico */
+        .modal-admin-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-admin-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-admin-content {
+            background-color: var(--color-white);
+            width: 90%;
+            max-width: 480px;
+            padding: 2.5rem;
+            border: 1.5px solid var(--color-gold);
+            box-shadow: var(--shadow-dark);
+        }
+
+        .modal-admin-footer {
+            margin-top: 2rem;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TELA DE LOGIN -->
+    <div id="login-screen" class="login-wrapper">
+        <h1 class="login-logo">B Virgínia</h1>
+        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 2rem;">Área Restrita - Digite sua senha para acessar a agenda</p>
+        
+        <form id="login-form" class="booking-form" style="gap: 1.2rem;">
+            <div class="form-group">
+                <label for="admin-password">Senha de Acesso</label>
+                <input type="password" id="admin-password" placeholder="Digite sua senha" required autofocus>
+            </div>
+            <div id="login-error" style="color: #b91c1c; font-size: 0.8rem; display: none;">Senha incorreta. Tente novamente.</div>
+            <button type="submit" class="btn btn-gold btn-block" style="padding: 0.8rem;">Entrar</button>
+        </form>
+        <p style="margin-top: 1.5rem; font-size: 0.8rem;"><a href="index.html" style="color: var(--color-gold-dark);">Voltar para o site</a></p>
+    </div>
+
+    <!-- PAINEL ERP / CMS UNIFICADO -->
+    <main id="admin-dashboard-panel" class="admin-main">
+        <div class="container">
+            
+            <!-- Cabeçalho Administrativo -->
+            <div class="admin-header">
+                <div class="admin-welcome">
+                    <h2>Painel da Agenda ✨</h2>
+                    <p>Estúdio de Beleza ERP & Conteúdos CMS</p>
+                </div>
+                <button id="logout-btn" class="btn btn-primary btn-sm">Sair do Painel</button>
+            </div>
+
+            <!-- Abas do Painel -->
+            <nav class="admin-tabs-nav">
+                <button class="tab-link-btn active" data-tab-id="agenda-tab">Agenda 📅</button>
+                <button class="tab-link-btn" data-tab-id="clientes-tab">Clientes (CRM) 👥</button>
+                <button class="tab-link-btn" data-tab-id="financeiro-tab">Financeiro 💰</button>
+                <button class="tab-link-btn" data-tab-id="bloqueios-tab">Bloqueios Manuais 🚫</button>
+                <button class="tab-link-btn" data-tab-id="config-tab">Configurações & CMS ⚙️</button>
+                <button class="tab-link-btn" data-tab-id="backup-tab">Backup & Restauração 💾</button>
+            </nav>
+
+            <!-- CONTEÚDO DAS ABAS -->
+
+            <!-- ABA 1: AGENDA -->
+            <section id="agenda-tab" class="admin-tab-content active">
+                <div class="calendar-views-wrapper">
+                    
+                    <!-- Lado Esquerdo: Calendário Mensal e Filtro de data -->
+                    <div class="calendar-view-month">
+                        <div class="month-header">
+                            <button id="prev-month-btn" class="month-nav-btn">◀</button>
+                            <h4 id="month-year-title" class="month-title">Junho 2026</h4>
+                            <button id="next-month-btn" class="month-nav-btn">▶</button>
+                        </div>
+                        <div class="month-grid" id="month-calendar-grid">
+                            <!-- Preenchido dinamicamente via JS -->
+                        </div>
+                        <div style="margin-top: 1.5rem; text-align: center;">
+                            <label style="font-size: 0.75rem; font-weight: 600; text-transform: uppercase;">Ir para data específica:</label><br>
+                            <input type="date" id="selected-date-input" class="date-input-admin" style="margin-top: 0.5rem; width: 100%;">
+                        </div>
+                    </div>
+
+                    <!-- Lado Direito: Slots Diários (Folha de Agenda) -->
+                    <div class="panel-box" style="padding: 2.2rem;">
+                        <h3 id="display-date-title" style="font-size: 1.4rem; border-bottom: 1px solid rgba(197, 160, 89, 0.15); padding-bottom: 0.8rem; margin-bottom: 1.5rem;">Horários da Folha</h3>
+                        
+                        <div id="daily-slots-sheet" class="daily-slots-sheet-admin">
+                            <!-- Gerado dinamicamente via JS -->
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ABA 2: CLIENTES (CRM) -->
+            <section id="clientes-tab" class="admin-tab-content">
+                <div class="panel-box">
+                    <h3 class="panel-box-title">Gestão de Clientes</h3>
+                    
+                    <div class="search-wrapper">
+                        <input type="text" id="crm-search" class="search-input" placeholder="Buscar por nome ou WhatsApp...">
+                    </div>
+                    
+                    <div class="customers-list-grid" id="crm-customers-grid">
+                        <!-- Clientes listados dinamicamente via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA 3: FINANCEIRO -->
+            <section id="financeiro-tab" class="admin-tab-content">
+                <!-- Métricas Rápidas -->
+                <div class="finance-metrics">
+                    <div class="stat-card">
+                        <span class="stat-value" id="revenue-today">R$ 0,00</span>
+                        <span class="stat-label">Receita de Hoje (Confirmado)</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="revenue-month">R$ 0,00</span>
+                        <span class="stat-label">Receita Mensal (Confirmado)</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="revenue-pending" style="color: #854d0e;">R$ 0,00</span>
+                        <span class="stat-label">Receita Pendente / Reservada</span>
+                    </div>
+                </div>
+
+                <!-- Histórico e Logs de Pagamentos -->
+                <div class="panel-box">
+                    <h3 class="panel-box-title">Histórico de Transações (Serviços)</h3>
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Data / Hora</th>
+                                    <th>Cliente</th>
+                                    <th>Serviço</th>
+                                    <th>Valor</th>
+                                    <th>Forma Pagamento</th>
+                                    <th>Status Financ.</th>
+                                    <th style="text-align: right;">Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="finance-table-body">
+                                <!-- Linhas geradas via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA 4: BLOQUEIOS MANUAIS -->
+            <section id="bloqueios-tab" class="admin-tab-content">
+                <div class="calendar-views-wrapper" style="grid-template-columns: 0.9fr 1.1fr;">
+                    
+                    <!-- Formulário para Criar Bloqueio -->
+                    <div class="panel-box">
+                        <h3 class="panel-box-title">Cadastrar Bloqueio de Horário</h3>
+                        <form id="add-blocking-form" class="booking-form">
+                            <div class="form-group">
+                                <label for="block-date">Data do Bloqueio</label>
+                                <input type="date" id="block-date" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="block-start">Hora de Início</label>
+                                    <input type="time" id="block-start" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="block-end">Hora de Fim</label>
+                                    <input type="time" id="block-end" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="block-reason">Motivo do Bloqueio</label>
+                                <select id="block-reason" required>
+                                    <option value="Consulta Médica">Consulta Médica</option>
+                                    <option value="Curso / Treinamento">Curso / Treinamento</option>
+                                    <option value="Folga">Folga</option>
+                                    <option value="Viagem">Viagem</option>
+                                    <option value="Compromisso Pessoal">Compromisso Pessoal</option>
+                                    <option value="Intervalo Adicional">Intervalo Adicional</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-gold btn-block">Adicionar Bloqueio</button>
+                        </form>
+                    </div>
+
+                    <!-- Tabela de Bloqueios Cadastrados -->
+                    <div class="panel-box">
+                        <h3 class="panel-box-title">Bloqueios Cadastrados</h3>
+                        <div class="table-responsive">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Data</th>
+                                        <th>Intervalo</th>
+                                        <th>Motivo</th>
+                                        <th style="text-align: right;">Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="blockings-table-body">
+                                    <!-- Linhas via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ABA 5: CONFIGURAÇÕES & CMS -->
+            <section id="config-tab" class="admin-tab-content">
+                <!-- Navegação Secundária das Configurações -->
+                <div class="config-subtabs-nav">
+                    <button class="config-subtab-btn active" data-subtab-id="subtab-services">Procedimentos / Serviços</button>
+                    <button class="config-subtab-btn" data-subtab-id="subtab-hours">Horário de Funcionamento</button>
+                    <button class="config-subtab-btn" data-subtab-id="subtab-cms">Gerenciador de Conteúdo (CMS)</button>
+                    <button class="config-subtab-btn" data-subtab-id="subtab-gallery">Galeria de Fotos</button>
+                </div>
+
+                <!-- SUB-ABA A: SERVIÇOS -->
+                <div id="subtab-services" class="config-subtab-content active">
+                    <div class="panel-box">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(197, 160, 89, 0.15); padding-bottom: 0.8rem; flex-wrap: wrap; gap: 1rem;">
+                            <h3 style="font-size: 1.3rem; font-family: var(--font-heading);">Configurar Procedimentos</h3>
+                            <button class="btn btn-gold btn-sm" id="btn-open-new-service">Adicionar Novo Serviço</button>
+                        </div>
+                        
+                        <div class="cms-services-list" id="cms-services-grid">
+                            <!-- Serviços gerados via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SUB-ABA B: REGRAS E HORAS -->
+                <div id="subtab-hours" class="config-subtab-content">
+                    <div class="panel-box" style="max-width: 600px;">
+                        <h3 class="panel-box-title">Ajustar Regras da Agenda</h3>
+                        <form id="settings-hours-form" class="booking-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cfg-start-time">Início do Expediente</label>
+                                    <input type="time" id="cfg-start-time" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cfg-last-start">Último Início de Atendimento</label>
+                                    <input type="time" id="cfg-last-start" required>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="cfg-close-time">Fechamento do Estúdio</label>
+                                    <input type="time" id="cfg-close-time" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cfg-buffer">Intervalo/Limpeza entre Clientes</label>
+                                    <select id="cfg-buffer">
+                                        <option value="0">Sem intervalo</option>
+                                        <option value="5">5 minutos</option>
+                                        <option value="10">10 minutos</option>
+                                        <option value="15">15 minutos</option>
+                                        <option value="20">20 minutos</option>
+                                        <option value="30">30 minutos</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Dias de Atendimento</label>
+                                <div class="days-checkbox-group">
+                                    <label class="day-checkbox-label"><input type="checkbox" name="cfg-workdays" value="0"> Domingo</label>
+                                    <label class="day-checkbox-label"><input type="checkbox" name="cfg-workdays" value="1"> Segunda</label>
+                                    <label class="day-checkbox-label"><input type="checkbox" name="cfg-workdays" value="2"> Terça</label>
+                                    <label class="day-checkbox-label"><input type="checkbox" name="cfg-workdays" value="3"> Quarta</label>
+                                    <label class="day-checkbox-label"><input type="checkbox" name="cfg-workdays" value="4"> Quinta</label>
+                                    <label class="day-checkbox-label"><input type="checkbox" name="cfg-workdays" value="5"> Sexta</label>
+                                    <label class="day-checkbox-label"><input type="checkbox" name="cfg-workdays" value="6"> Sábado</label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="cfg-lunch-blocks">Horários Bloqueados Fixo (ex: Almoço - separados por vírgula)</label>
+                                <input type="text" id="cfg-lunch-blocks" placeholder="12:00, 12:30, 13:00, 13:30">
+                            </div>
+
+                            <button type="submit" class="btn btn-gold">Salvar Regras</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- SUB-ABA C: CONTEÚDOS CMS -->
+                <div id="subtab-cms" class="config-subtab-content">
+                    <div class="panel-box">
+                        <h3 class="panel-box-title">Editar Textos e Informações do Site</h3>
+                        <form id="settings-cms-form" class="booking-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                            <!-- Coluna 1 -->
+                            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                <div class="form-group">
+                                    <label for="cms-logo-text">Nome / Logo Textual</label>
+                                    <input type="text" id="cms-logo-text" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cms-hero-title">Título Principal (Capa)</label>
+                                    <input type="text" id="cms-hero-title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cms-hero-desc">Descrição Secundária (Capa)</label>
+                                    <textarea id="cms-hero-desc" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cms-tagline">Frase de Efeito (Rodapé)</label>
+                                    <input type="text" id="cms-tagline" required>
+                                </div>
+                            </div>
+
+                            <!-- Coluna 2 -->
+                            <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+                                <div class="form-group">
+                                    <label for="cms-about-title">Título do Sobre</label>
+                                    <input type="text" id="cms-about-title" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cms-about-text1">Texto do Sobre (Parágrafo 1)</label>
+                                    <textarea id="cms-about-text1" rows="3" required></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cms-about-text2">Texto do Sobre (Parágrafo 2)</label>
+                                    <textarea id="cms-about-text2" rows="3" required></textarea>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="cms-whatsapp">WhatsApp (somente números, ex: 5581989002496)</label>
+                                        <input type="text" id="cms-whatsapp" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cms-instagram">Instagram (somente usuário, ex: bvirginiadesign)</label>
+                                        <input type="text" id="cms-instagram" required>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cms-address">Endereço / Localização</label>
+                                    <input type="text" id="cms-address" required>
+                                </div>
+                            </div>
+                            
+                            <div style="grid-column: span 2; display: flex; justify-content: flex-end;">
+                                <button type="submit" class="btn btn-gold" style="width: 250px;">Publicar Alterações</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- SUB-ABA D: GALERIA DE FOTOS -->
+                <div id="subtab-gallery" class="config-subtab-content">
+                    <div class="panel-box">
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(197, 160, 89, 0.15); padding-bottom: 0.8rem; flex-wrap: wrap; gap: 1rem;">
+                            <h3 style="font-size: 1.3rem; font-family: var(--font-heading);">Galeria de Fotos do Portfólio</h3>
+                            <button class="btn btn-gold btn-sm" id="btn-open-new-gallery">Adicionar Foto</button>
+                        </div>
+                        
+                        <div class="cms-services-list" id="cms-gallery-grid" style="grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); margin-top: 1.5rem;">
+                            <!-- Fotos dinâmicas via JS -->
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABA 6: BACKUP & RESTAURAÇÃO -->
+            <section id="backup-tab" class="admin-tab-content">
+                <div class="panel-box" style="max-width: 600px; margin: 0 auto;">
+                    <h3 class="panel-box-title">Segurança e Transferência de Dados</h3>
+                    <p style="font-size: 0.9rem; color: var(--color-text-muted); margin-bottom: 2rem;">
+                        Use esta aba para exportar a agenda e configurações para salvar como arquivo no computador. Se precisar trocar de aparelho ou limpar o navegador, você poderá importar o arquivo novamente para não perder as informações.
+                    </p>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <div>
+                            <h4>1. Exportar Backup da Agenda</h4>
+                            <button id="btn-export-backup" class="btn btn-gold btn-block" style="margin-top: 0.8rem;">Exportar Backup (.json)</button>
+                        </div>
+                        
+                        <div style="border-top: 1px solid rgba(197, 160, 89, 0.15); padding-top: 1.5rem;">
+                            <h4>2. Restaurar Dados de Backup</h4>
+                            <div class="backup-box" id="backup-drag-box">
+                                <span style="font-size: 0.9rem; font-weight: 500; display: block; margin-bottom: 0.5rem;">Arraste ou clique para enviar arquivo de backup</span>
+                                <input type="file" id="backup-file-input" accept=".json" style="display: none;">
+                                <button type="button" id="btn-trigger-upload" class="btn btn-outline btn-sm" style="color: var(--color-black); border-color: var(--color-gold); margin-top: 0.5rem;">Escolher Arquivo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <!-- MODAL DE CADASTRO DE RESERVA MANUAL (ADMIN) -->
+    <div id="reserve-modal" class="modal-admin-overlay">
+        <div class="modal-admin-content">
+            <div class="modal-admin-header">
+                <h3>Reservar Horário 📅</h3>
+            </div>
+            <form id="reserve-form" class="booking-form" style="gap: 1.2rem;">
+                <input type="hidden" id="reserve-time">
+                <div class="form-group">
+                    <label>Data</label>
+                    <input type="text" id="display-reserve-date" readonly style="background-color: #f5f5f5;">
+                </div>
+                <div class="form-group">
+                    <label>Horário</label>
+                    <input type="text" id="display-reserve-time" readonly style="background-color: #f5f5f5;">
+                </div>
+                <div class="form-group">
+                    <label for="reserve-name">Nome da Cliente</label>
+                    <input type="text" id="reserve-name" placeholder="Nome completo da cliente" required>
+                </div>
+                <div class="form-group">
+                    <label for="reserve-phone">Telefone / WhatsApp</label>
+                    <input type="tel" id="reserve-phone" placeholder="(81) 99999-9999" required>
+                </div>
+                <div class="form-group">
+                    <label for="reserve-service">Serviço</label>
+                    <select id="reserve-service" required>
+                        <!-- Carregado dinamicamente -->
+                    </select>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="reserve-payment-status">Status Pagamento</label>
+                        <select id="reserve-payment-status">
+                            <option value="Pago">Pago</option>
+                            <option value="Pendente" selected>Pendente</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="reserve-payment-method">Forma de Pagamento</label>
+                        <select id="reserve-payment-method">
+                            <option value="PIX" selected>PIX</option>
+                            <option value="Dinheiro">Dinheiro</option>
+                            <option value="Cartão">Cartão</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-admin-footer">
+                    <button type="button" id="close-reserve-btn" class="btn-slot-action btn-slot-release">Cancelar</button>
+                    <button type="submit" class="btn-slot-action btn-slot-msg">Confirmar Reserva</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE RESPOSTA / REAGENDAMENTO -->
+    <div id="suggest-modal" class="modal-admin-overlay">
+        <div class="modal-admin-content">
+            <div class="modal-admin-header">
+                <h3>Sugerir Outro Horário 💬</h3>
+            </div>
+            <form id="suggest-form" class="booking-form" style="gap: 1.2rem;">
+                <input type="hidden" id="suggest-original-date">
+                <input type="hidden" id="suggest-original-time">
+                <input type="hidden" id="suggest-client-name">
+                
+                <div class="form-group">
+                    <label>Enviar para</label>
+                    <input type="text" id="display-suggest-client" readonly style="background-color: #f5f5f5;">
+                </div>
+                
+                <div class="form-group">
+                    <label for="suggest-phone">WhatsApp da Cliente</label>
+                    <input type="tel" id="suggest-phone" placeholder="Digite o número" required>
+                </div>
+                
+                <div style="border-top: 1px solid rgba(197, 160, 89, 0.15); padding-top: 1rem; margin-top: 0.5rem;">
+                    <p style="font-size: 0.75rem; font-weight: 600; color: var(--color-black); margin-bottom: 0.8rem; text-transform: uppercase;">Sugerir novo horário:</p>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="suggest-new-date">Nova Data</label>
+                            <input type="date" id="suggest-new-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="suggest-new-time">Novo Horário</label>
+                            <input type="time" id="suggest-new-time" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-admin-footer">
+                    <button type="button" id="close-suggest-btn" class="btn-slot-action btn-slot-release">Cancelar</button>
+                    <button type="submit" class="btn-slot-action btn-slot-msg">Enviar Mensagem</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CADASTRO DE SERVIÇO (CMS) -->
+    <div id="service-modal" class="modal-admin-overlay">
+        <div class="modal-admin-content">
+            <div class="modal-admin-header">
+                <h3 id="service-modal-title">Adicionar Serviço</h3>
+            </div>
+            <form id="service-form" class="booking-form" style="gap: 1.2rem;">
+                <input type="hidden" id="service-id-field">
+                <div class="form-group">
+                    <label for="service-name-field">Nome do Serviço</label>
+                    <input type="text" id="service-name-field" placeholder="Ex: Design simples" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="service-duration-field">Duração (minutos)</label>
+                        <input type="number" id="service-duration-field" placeholder="Ex: 30" min="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="service-price-field">Preço (R$)</label>
+                        <input type="number" id="service-price-field" placeholder="Ex: 50.00" step="0.01" min="0" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="service-desc-field">Descrição</label>
+                    <textarea id="service-desc-field" rows="3" placeholder="Fale brevemente sobre o serviço..."></textarea>
+                </div>
+                <div class="modal-admin-footer">
+                    <button type="button" id="close-service-modal-btn" class="btn-slot-action btn-slot-release">Cancelar</button>
+                    <button type="submit" class="btn-slot-action btn-slot-msg">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL DE CADASTRO DE FOTO NA GALERIA (CMS) -->
+    <div id="gallery-modal" class="modal-admin-overlay">
+        <div class="modal-admin-content">
+            <div class="modal-admin-header">
+                <h3 id="gallery-modal-title">Adicionar Foto à Galeria</h3>
+            </div>
+            <form id="gallery-form" class="booking-form" style="gap: 1.2rem;">
+                <input type="hidden" id="gallery-id-field">
+                <div class="form-group">
+                    <label for="gallery-image-field">Caminho da Imagem (Ex: assets/images/galeria-1.png)</label>
+                    <input type="text" id="gallery-image-field" placeholder="assets/images/foto.jpg" required>
+                </div>
+                <div class="form-group">
+                    <label for="gallery-label-field">Legenda / Título da Foto</label>
+                    <input type="text" id="gallery-label-field" placeholder="Ex: Design com Henna" required>
+                </div>
+                <div class="modal-admin-footer">
+                    <button type="button" id="close-gallery-modal-btn" class="btn-slot-action btn-slot-release">Cancelar</button>
+                    <button type="submit" class="btn-slot-action btn-slot-msg">Confirmar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CARREGAMENTO DE LOGICA -->
+    <script src="db.js"></script>
+    <script src="shared.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
