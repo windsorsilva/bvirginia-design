@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const SUPABASE_KEY = "sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as";
     const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
+    // Expor o cliente para funções externas (ex: alterarFotoFixaDoSite no admin.html)
+    window._supabaseAdmin = supabase;
+
     // ==========================================
     // 0. AUTENTICAÇÃO E LOGIN GATE
     // ==========================================

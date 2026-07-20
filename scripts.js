@@ -91,12 +91,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if (servicesGrid) {
         servicesGrid.innerHTML = '';
         services.forEach(srv => {
+            // Gerar o ID do Supabase com base no nome do serviço (slug)
+            const supabaseIdMap = {
+                'Design simples':    'foto-design-simples',
+                'Design com henna':  'foto-design-henna',
+                'Fox Eyes':          'foto-fox-eyes'
+            };
+            const supabaseId = supabaseIdMap[srv.name] || '';
+            const supabaseAttr = supabaseId ? ` data-supabase-id="${supabaseId}"` : '';
+
             // Adicionar card na grade pública
             const card = document.createElement('div');
             card.className = 'service-card';
             card.innerHTML = `
                 <div class="service-img-wrapper">
-                    <img src="${srv.image || 'assets/images/servico-design.png'}" alt="Procedimento ${srv.name}" class="service-img" loading="lazy">
+                    <img src="${srv.image || 'assets/images/servico-design.png'}" alt="Procedimento ${srv.name}" class="service-img" loading="lazy"${supabaseAttr}>
                 </div>
                 <div class="service-info">
                     <h3 class="service-name">
@@ -108,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="btn btn-card-booking btn-select-service" data-service-name="${srv.name}">Agendar</button>
                 </div>
             `;
-            servicesGrid.appendChild(srv.image ? card : card); // Safe fallback
+            servicesGrid.appendChild(card);
             
             // Adicionar opção no formulário de agendamento
             const option = document.createElement('option');

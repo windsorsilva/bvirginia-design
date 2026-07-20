@@ -80,7 +80,7 @@
         <section id="sobre" class="about-section scroll-reveal">
             <div class="container about-container">
                 <div class="about-image-wrapper">
-                    <img src="assets/images/hero-bg.png" alt="Espaço B Virgínia Design" class="about-img" id="about-img-cms" loading="lazy">
+                    <img src="assets/images/hero-bg.png" alt="Espaço B Virgínia Design" class="about-img" id="about-img-cms" loading="lazy" data-supabase-id="foto-sobre">
                     <div class="about-img-border"></div>
                 </div>
                 <div class="about-content">
@@ -327,5 +327,48 @@
     <script src="db.js"></script>
     <script src="shared.js"></script>
     <script src="scripts.js"></script>
+
+    <!-- Carregamento Dinâmico de Fotos do Supabase -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Mapa: data-supabase-id do elemento → nome do arquivo no bucket "fotos-sistema"
+        const imagensDinamicas = {
+          'foto-sobre':         'sobre.jpg',
+          'foto-design-simples': 'design-simples.jpg',
+          'foto-design-henna':  'design-henna.jpg',
+          'foto-fox-eyes':      'fox-eyes.jpg'
+        };
+
+        const BUCKET_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co/storage/v1/object/public/fotos-sistema/';
+        const versaoCache = Date.now();
+
+        // Atualizar imagens marcadas com data-supabase-id
+        document.querySelectorAll('[data-supabase-id]').forEach(img => {
+          const chave = img.getAttribute('data-supabase-id');
+          const arquivo = imagensDinamicas[chave];
+          if (!arquivo) return;
+
+          const urlNuvem = `${BUCKET_URL}${arquivo}?v=${versaoCache}`;
+          const testeImg = new Image();
+          testeImg.onload = () => { img.src = urlNuvem; };
+          testeImg.src = urlNuvem;
+        });
+
+        // Atualizar imagens de serviços marcadas com data-supabase-id
+        // (adicionadas dinamicamente pelo scripts.js após a renderização dos cards)
+        setTimeout(() => {
+          document.querySelectorAll('[data-supabase-id]').forEach(img => {
+            const chave = img.getAttribute('data-supabase-id');
+            const arquivo = imagensDinamicas[chave];
+            if (!arquivo) return;
+
+            const urlNuvem = `${BUCKET_URL}${arquivo}?v=${versaoCache}`;
+            const testeImg = new Image();
+            testeImg.onload = () => { img.src = urlNuvem; };
+            testeImg.src = urlNuvem;
+          });
+        }, 300);
+      });
+    </script>
 </body>
 </html>

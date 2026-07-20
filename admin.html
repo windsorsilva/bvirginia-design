@@ -555,6 +555,54 @@
 
                 <!-- SUB-ABA D: GALERIA DE FOTOS -->
                 <div id="subtab-gallery" class="config-subtab-content">
+
+                    <!-- GERENCIADOR DE FOTOS FIXAS DO SITE -->
+                    <div class="panel-box" style="margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.3rem; font-family: var(--font-heading); border-bottom: 2px solid var(--color-gold); padding-bottom: 0.8rem; margin-bottom: 1.5rem;">Fotos Fixas do Site</h3>
+                        <p style="font-size: 0.85rem; color: var(--color-text-muted); margin-bottom: 1.5rem;">Suba novas imagens para substituir as fotos estáticas do site em tempo real. O site atualiza automaticamente ao carregar a página.</p>
+
+                        <!-- Foto de Apresentação -->
+                        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed rgba(197, 160, 89, 0.3);">
+                            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Foto de Apresentação ("Seu olhar merece cuidado")</label>
+                            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <input type="file" id="input-sobre" accept="image/*" style="flex: 1; min-width: 0; padding: 0.5rem; border: 1px solid rgba(197, 160, 89, 0.3); font-family: var(--font-body); font-size: 0.8rem;">
+                                <button onclick="alterarFotoFixaDoSite('sobre', 'sobre.jpg')" class="btn btn-gold btn-sm" style="white-space: nowrap;">Alterar Foto</button>
+                                <span id="status-sobre" style="font-size: 0.8rem; font-weight: 700;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Design Simples -->
+                        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed rgba(197, 160, 89, 0.3);">
+                            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Serviço: Design Simples (Card)</label>
+                            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <input type="file" id="input-design-simples" accept="image/*" style="flex: 1; min-width: 0; padding: 0.5rem; border: 1px solid rgba(197, 160, 89, 0.3); font-family: var(--font-body); font-size: 0.8rem;">
+                                <button onclick="alterarFotoFixaDoSite('design-simples', 'design-simples.jpg')" class="btn btn-gold btn-sm" style="white-space: nowrap;">Alterar Foto</button>
+                                <span id="status-design-simples" style="font-size: 0.8rem; font-weight: 700;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Design com Henna -->
+                        <div style="margin-bottom: 1.5rem; padding-bottom: 1.5rem; border-bottom: 1px dashed rgba(197, 160, 89, 0.3);">
+                            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Serviço: Design com Henna (Card)</label>
+                            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <input type="file" id="input-design-henna" accept="image/*" style="flex: 1; min-width: 0; padding: 0.5rem; border: 1px solid rgba(197, 160, 89, 0.3); font-family: var(--font-body); font-size: 0.8rem;">
+                                <button onclick="alterarFotoFixaDoSite('design-henna', 'design-henna.jpg')" class="btn btn-gold btn-sm" style="white-space: nowrap;">Alterar Foto</button>
+                                <span id="status-design-henna" style="font-size: 0.8rem; font-weight: 700;"></span>
+                            </div>
+                        </div>
+
+                        <!-- Fox Eyes -->
+                        <div>
+                            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">Serviço: Fox Eyes (Card)</label>
+                            <div style="display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <input type="file" id="input-fox-eyes" accept="image/*" style="flex: 1; min-width: 0; padding: 0.5rem; border: 1px solid rgba(197, 160, 89, 0.3); font-family: var(--font-body); font-size: 0.8rem;">
+                                <button onclick="alterarFotoFixaDoSite('fox-eyes', 'fox-eyes.jpg')" class="btn btn-gold btn-sm" style="white-space: nowrap;">Alterar Foto</button>
+                                <span id="status-fox-eyes" style="font-size: 0.8rem; font-weight: 700;"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- GALERIA DO PORTFÓLIO -->
                     <div class="panel-box">
                         <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(197, 160, 89, 0.15); padding-bottom: 0.8rem; flex-wrap: wrap; gap: 1rem;">
                             <h3 style="font-size: 1.3rem; font-family: var(--font-heading);">Galeria de Fotos do Portfólio</h3>
@@ -758,5 +806,52 @@
     <script src="db.js"></script>
     <script src="shared.js"></script>
     <script src="admin.js"></script>
+
+    <!-- Função de Upload de Fotos Estáticas (usa o supabase já inicializado no admin.js) -->
+    <script>
+        async function alterarFotoFixaDoSite(idInput, nomeArquivoDestino) {
+            const fileInput = document.getElementById(`input-${idInput}`);
+            const statusTxt = document.getElementById(`status-${idInput}`);
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                statusTxt.innerText = '⚠️ Selecione uma foto primeiro.';
+                statusTxt.style.color = '#dc2626';
+                return;
+            }
+
+            // Acessa o supabase inicializado dentro do admin.js (exposto como window._supabaseAdmin)
+            const supabaseClient = window._supabaseAdmin;
+            if (!supabaseClient) {
+                statusTxt.innerText = '❌ Supabase não inicializado.';
+                statusTxt.style.color = '#dc2626';
+                return;
+            }
+
+            const arquivo = fileInput.files[0];
+            statusTxt.innerText = '⏳ Enviando para o site...';
+            statusTxt.style.color = '#d97706';
+
+            try {
+                const { data, error } = await supabaseClient.storage
+                    .from('fotos-sistema')
+                    .upload(nomeArquivoDestino, arquivo, { upsert: true });
+
+                if (error) throw error;
+
+                statusTxt.innerText = '✅ Foto atualizada!';
+                statusTxt.style.color = '#16a34a';
+
+                setTimeout(() => {
+                    fileInput.value = '';
+                    statusTxt.innerText = '';
+                }, 2500);
+
+            } catch (err) {
+                console.error('Erro no envio:', err);
+                statusTxt.innerText = '❌ Erro: ' + err.message;
+                statusTxt.style.color = '#dc2626';
+            }
+        }
+    </script>
 </body>
 </html>
