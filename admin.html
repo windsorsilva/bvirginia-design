@@ -738,16 +738,17 @@
             <form id="gallery-form" class="booking-form" style="gap: 1.2rem;">
                 <input type="hidden" id="gallery-id-field">
                 <div class="form-group">
-                    <label for="gallery-image-field">Caminho da Imagem (Ex: assets/images/galeria-1.png)</label>
-                    <input type="text" id="gallery-image-field" placeholder="assets/images/foto.jpg" required>
+                    <label style="font-weight: 600;">Selecione a Imagem (Upload via Supabase)</label>
+                    <input type="file" id="gallery-image-file" accept="image/*" style="width: 100%; padding: 0.5rem; border: 1px solid rgba(197, 160, 89, 0.3); background-color: var(--color-white); font-family: var(--font-body); font-size: 0.85rem;" required>
                 </div>
                 <div class="form-group">
                     <label for="gallery-label-field">Legenda / Título da Foto</label>
                     <input type="text" id="gallery-label-field" placeholder="Ex: Design com Henna" required>
                 </div>
+                <p id="gallery-upload-status" style="margin: 0.5rem 0; font-size: 0.85rem; font-weight: 600; text-align: center; min-height: 20px; font-family: var(--font-body);"></p>
                 <div class="modal-admin-footer">
                     <button type="button" id="close-gallery-modal-btn" class="btn-slot-action btn-slot-release">Cancelar</button>
-                    <button type="submit" class="btn-slot-action btn-slot-msg">Confirmar</button>
+                    <button type="submit" class="btn-slot-action btn-slot-msg" id="confirm-gallery-upload-btn">Confirmar</button>
                 </div>
             </form>
         </div>

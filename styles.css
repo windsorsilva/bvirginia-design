@@ -365,10 +365,13 @@ h1, h2, h3, h4, h5, h6 {
     min-height: 600px;
     display: flex;
     align-items: center;
+    background-image: linear-gradient(rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.65)), url('assets/images/foto-perfil.jpg.jpg');
     background-size: cover;
-    background-position: center;
+    background-position: center center;
+    background-repeat: no-repeat;
     background-attachment: fixed;
     padding-top: var(--header-height);
+    overflow: hidden;
 }
 
 .hero-bg-overlay {
@@ -1551,11 +1554,33 @@ h1, h2, h3, h4, h5, h6 {
     .nav-link {
         font-size: 1.1rem;
     }
+    .hero-section {
+        padding: 30px 20px;
+        justify-content: center;
+        text-align: center;
+        background-position: 75% center;
+    }
     .hero-title {
-        font-size: 2.8rem;
+        font-size: 2.2rem !important;
+        line-height: 1.2 !important;
+        margin-bottom: 15px !important;
     }
     .hero-description {
-        font-size: 1rem;
+        font-size: 1.1rem !important;
+        line-height: 1.4 !important;
+        margin-bottom: 25px !important;
+    }
+    .hero-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        width: 100%;
+    }
+    .hero-buttons .btn {
+        width: 100%;
+        text-align: center;
+        box-sizing: border-box;
+        padding: 15px 20px !important;
     }
     .about-container {
         grid-template-columns: 1fr;
@@ -1577,11 +1602,24 @@ h1, h2, h3, h4, h5, h6 {
         padding-right: 0;
     }
     .services-grid {
-        grid-template-columns: 1fr;
-        gap: 2rem;
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 10px !important;
     }
     .gallery-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+        padding: 10px !important;
+    }
+    .gallery-item {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+    }
+    .gallery-item img {
+        width: 100% !important;
+        height: 250px !important;
+        object-fit: cover !important;
     }
     .testimonials-grid {
         grid-template-columns: 1fr;

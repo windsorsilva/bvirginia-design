@@ -7,6 +7,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     // ==========================================
+    // INICIALIZAÇÃO SUPABASE STORAGE
+    // ==========================================
+    const SUPABASE_URL = "https://zehvxzqqideeyqdvnnwp.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as";
+    const supabase = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+    // ==========================================
     // 0. AUTENTICAÇÃO E LOGIN GATE
     // ==========================================
     const loginScreen = document.getElementById('login-screen');
@@ -1070,8 +1077,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.getElementById('btn-open-new-gallery').addEventListener('click', () => {
         document.getElementById('gallery-id-field').value = '';
-        document.getElementById('gallery-image-field').value = '';
+        document.getElementById('gallery-image-file').value = '';
         document.getElementById('gallery-label-field').value = '';
+        document.getElementById('gallery-upload-status').innerText = '';
+        document.getElementById('gallery-upload-status').style.color = 'inherit';
         galleryModal.classList.add('active');
     });
 
@@ -1079,22 +1088,77 @@ document.addEventListener('DOMContentLoaded', () => {
         galleryModal.classList.remove('active');
     });
 
-    galleryForm.addEventListener('submit', (e) => {
+    galleryForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const image = document.getElementById('gallery-image-field').value.trim();
-        const label = document.getElementById('gallery-label-field').value.trim();
+        
+        const fileInput = document.getElementById('gallery-image-file');
+        const labelInput = document.getElementById('gallery-label-field');
+        const statusTxt = document.getElementById('gallery-upload-status');
+        const confirmBtn = document.getElementById('confirm-gallery-upload-btn');
 
-        const gallery = DB.getGallery();
-        const newItem = {
-            id: SharedEngine.generateUUID(),
-            image: image,
-            label: label
-        };
-        gallery.push(newItem);
-        DB.saveGallery(gallery);
+        if (!fileInput.files || fileInput.files.length === 0) {
+            statusTxt.innerText = "⚠️ Selecione uma imagem antes de confirmar.";
+            statusTxt.style.color = "#dc2626";
+            return;
+        }
 
-        galleryModal.classList.remove('active');
-        renderCMSGallery();
+        if (!supabase) {
+            statusTxt.innerText = "❌ Supabase não configurado ou offline.";
+            statusTxt.style.color = "#dc2626";
+            return;
+        }
+
+        const arquivo = fileInput.files[0];
+        const nomeArquivo = `galeria_${Date.now()}_${arquivo.name}`;
+        const legenda = labelInput.value.trim() || "Novo Trabalho";
+
+        statusTxt.innerText = "⏳ Enviando imagem para a nuvem...";
+        statusTxt.style.color = "#d97706";
+        confirmBtn.disabled = true;
+
+        try {
+            // 1. Envia o arquivo físico para o bucket "fotos-sistema"
+            const { data, error } = await supabase.storage
+                .from('fotos-sistema')
+                .upload(nomeArquivo, arquivo);
+
+            if (error) throw error;
+
+            // 2. Solicita a URL pública oficial gerada
+            const { data: urlData } = supabase.storage
+                .from('fotos-sistema')
+                .getPublicUrl(nomeArquivo);
+
+            const linkPublicoDaImagem = urlData.publicUrl;
+
+            statusTxt.innerText = "✅ Imagem salva com sucesso!";
+            statusTxt.style.color = "#16a34a";
+
+            // 3. Salvar no banco
+            const gallery = DB.getGallery();
+            const newItem = {
+                id: SharedEngine.generateUUID(),
+                image: linkPublicoDaImagem,
+                label: legenda
+            };
+            gallery.push(newItem);
+            DB.saveGallery(gallery);
+
+            setTimeout(() => {
+                galleryModal.classList.remove('active');
+                statusTxt.innerText = "";
+                labelInput.value = "";
+                fileInput.value = "";
+                confirmBtn.disabled = false;
+                renderCMSGallery();
+            }, 1200);
+
+        } catch (err) {
+            console.error("Erro no upload do Supabase:", err);
+            statusTxt.innerText = "❌ Erro ao enviar: " + err.message;
+            statusTxt.style.color = "#dc2626";
+            confirmBtn.disabled = false;
+        }
     });
 
     window.deleteGalleryItem = (id) => {
