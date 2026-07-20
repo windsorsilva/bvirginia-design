@@ -3,12 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo | B Virgínia Design</title>
-  <meta name="robots" content="noindex, nofollow">
-
-  <!-- Tailwind CSS -->
+  <title>Painel Administrativo - B Virgínia Design</title>
+  <!-- Tailwind CSS para Design Responsivo e Premium -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase Library (DEVE vir antes de qualquer script que use window.supabase) -->
+  <!-- Supabase Library para integração em nuvem -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <!-- Google Fonts & FontAwesome -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
@@ -17,578 +15,318 @@
   <style>
     body { font-family: 'Inter', sans-serif; }
     .font-title { font-family: 'Playfair Display', serif; }
-    .tab-active { border-color: #b5945b !important; color: #b5945b !important; }
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* Estilos dos slots de horário (integração com shared.js) */
-    .slot-btn {
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      border: 1px solid #e5e7eb;
-      font-size: 0.75rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.2s;
-      background: #fff;
-    }
-    .slot-btn:hover { background: #b5945b; color: white; border-color: #b5945b; }
-    .slot-btn.selected { background: #2C2A29; color: white; border-color: #2C2A29; }
-    .slot-btn.busy { background: #fee2e2; color: #b91c1c; cursor: not-allowed; opacity: 0.7; }
-    .slot-btn.temp-busy { background: #fef3c7; color: #92400e; cursor: not-allowed; }
-    .slot-btn.lunch-block { background: #f3f4f6; color: #9ca3af; cursor: not-allowed; }
+    .tab-active { border-color: #b5945b; color: #b5945b; }
   </style>
 </head>
 <body class="bg-[#FAF8F5] text-[#2C2A29] min-h-screen">
 
-  <!-- TELA DE LOGIN -->
-  <div id="login-screen" class="min-h-screen flex items-center justify-center p-6">
-    <div class="bg-white rounded-2xl shadow-lg p-10 w-full max-w-sm space-y-6 text-center">
-      <div>
-        <h1 class="font-title text-2xl font-bold text-[#2C2A29]">B Virgínia Design</h1>
-        <p class="text-xs text-gray-400 mt-1 uppercase tracking-widest">Área Restrita</p>
+  <!-- TELA DE LOGIN (SOBREPOSIÇÃO) -->
+  <div id="login-overlay" class="fixed inset-0 bg-[#FAF8F5] z-50 flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 max-w-sm w-full text-center space-y-6">
+      <div class="space-y-1">
+        <h2 class="text-2xl font-bold font-title text-[#2C2A29]">B Virgínia Design</h2>
+        <p class="text-xs tracking-widest text-gray-400 font-semibold uppercase">Área Restrita</p>
       </div>
-      <form id="login-form" class="space-y-4">
-        <input type="password" id="login-password" placeholder="Digite a senha de acesso" required
-          class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-        <p id="login-error" class="text-red-500 text-xs hidden">Senha incorreta. Tente novamente.</p>
-        <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-3 rounded-lg text-sm transition">
+      <div class="space-y-4">
+        <input type="password" id="login-senha" placeholder="Digite a senha de acesso..." class="w-full border border-gray-200 p-3 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
+        <p id="login-erro" class="text-xs text-red-500 font-semibold hidden">⚠️ Senha incorreta. Tente novamente.</p>
+        <button onclick="verificarSenha()" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-semibold py-3 rounded-lg shadow-md transition hover:scale-[1.02] active:scale-95">
           Entrar no Painel
         </button>
-      </form>
+      </div>
     </div>
   </div>
 
-  <!-- PAINEL ADMINISTRATIVO (oculto antes do login) -->
-  <div id="admin-dashboard-panel" style="display: none;">
-
+  <!-- CONTEÚDO DO PAINEL (OCULTO ATÉ FAZER LOGIN) -->
+  <div id="painel-conteudo" class="hidden">
+    
     <!-- HEADER DO PAINEL -->
-    <header class="bg-white border-b border-gray-200 p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm sticky top-0 z-40">
+    <header class="bg-white border-b border-gray-200 p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm">
       <div class="space-y-1">
-        <h1 class="text-xl font-bold flex items-center gap-2">
+        <h1 class="text-2xl font-bold flex items-center gap-2">
           Painel de Controle <span class="text-[#b5945b]">✨</span>
         </h1>
-        <p class="text-xs text-gray-500">B Virgínia Design — ERP & CMS Administrativo</p>
+        <p class="text-xs text-gray-500">Estúdio de Beleza ERP & Gerenciador de Conteúdos CMS</p>
       </div>
-      <button id="logout-btn" class="bg-[#2C2A29] hover:bg-black text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition">
-        <i class="fas fa-sign-out-alt mr-2"></i>SAIR
+      <button onclick="efetuarLogout()" class="bg-[#2C2A29] hover:bg-black text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition">
+        <i class="fas fa-sign-out-alt mr-2"></i>SAIR DO PAINEL
       </button>
     </header>
 
     <!-- NAVEGAÇÃO DE ABAS -->
-    <nav class="bg-white border-b border-gray-200 sticky top-[73px] z-30 overflow-x-auto flex whitespace-nowrap shadow-sm">
-      <button onclick="switchTab('agenda')" id="tab-agenda" class="tab-btn px-5 py-4 border-b-2 border-transparent font-semibold text-xs uppercase tracking-wide transition hover:text-[#b5945b] tab-active">
-        <i class="far fa-calendar-alt mr-1"></i>Agenda
+    <nav class="bg-white border-b border-gray-200 sticky top-0 z-30 overflow-x-auto flex whitespace-nowrap">
+      <button onclick="switchTab('agenda')" id="tab-agenda" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b] tab-active">
+        <i class="far fa-calendar-alt mr-2"></i>AGENDA 📅
       </button>
-      <button onclick="switchTab('clientes')" id="tab-clientes" class="tab-btn px-5 py-4 border-b-2 border-transparent font-semibold text-xs uppercase tracking-wide transition hover:text-[#b5945b]">
-        <i class="fas fa-users mr-1"></i>Clientes (CRM)
+      <button onclick="switchTab('clientes')" id="tab-clientes" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b]">
+        <i class="fas fa-users mr-2"></i>CLIENTES (CRM) 👥
       </button>
-      <button onclick="switchTab('financeiro')" id="tab-financeiro" class="tab-btn px-5 py-4 border-b-2 border-transparent font-semibold text-xs uppercase tracking-wide transition hover:text-[#b5945b]">
-        <i class="fas fa-wallet mr-1"></i>Financeiro
+      <button onclick="switchTab('financeiro')" id="tab-financeiro" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b]">
+        <i class="fas fa-wallet mr-2"></i>FINANCEIRO 💰
       </button>
-      <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="tab-btn px-5 py-4 border-b-2 border-transparent font-semibold text-xs uppercase tracking-wide transition hover:text-[#b5945b]">
-        <i class="fas fa-ban mr-1"></i>Bloqueios
+      <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b]">
+        <i class="fas fa-ban mr-2"></i>BLOQUEIOS MANUAIS 🚫
       </button>
-      <button onclick="switchTab('cms')" id="tab-cms" class="tab-btn px-5 py-4 border-b-2 border-transparent font-semibold text-xs uppercase tracking-wide transition hover:text-[#b5945b]">
-        <i class="fas fa-cog mr-1"></i>CMS & Config
-      </button>
-      <button onclick="switchTab('backup')" id="tab-backup" class="tab-btn px-5 py-4 border-b-2 border-transparent font-semibold text-xs uppercase tracking-wide transition hover:text-[#b5945b]">
-        <i class="fas fa-database mr-1"></i>Backup
+      <button onclick="switchTab('cms')" id="tab-cms" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b]">
+        <i class="fas fa-cog mr-2"></i>CONFIGURAÇÕES & CMS ⚙️
       </button>
     </nav>
 
-    <main class="max-w-7xl mx-auto p-6 space-y-6">
+    <main class="max-w-7xl mx-auto p-6">
 
-      <!-- ABA 1: AGENDA -->
-      <div id="content-agenda" class="tab-content active space-y-6">
+      <!-- CONTEÚDO 1: AGENDA -->
+      <div id="content-agenda" class="tab-content space-y-6">
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6">
+          <div class="w-full md:w-1/3 space-y-4">
+            <h3 class="font-bold text-lg border-b pb-2">Selecione o Dia</h3>
+            <input type="date" id="agenda-data" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b5945b]" value="2026-07-20">
+          </div>
+          <div class="w-full md:w-2/3 space-y-4">
+            <h3 class="font-bold text-lg border-b pb-2">Horários da Folha</h3>
+            <div id="agenda-grade-horarios" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <button class="bg-[#F4EFEA] hover:bg-[#b5945b] hover:text-white p-3 rounded-lg font-medium transition text-sm text-left">08:00 - Livre</button>
+              <button class="bg-[#2C2A29] text-white p-3 rounded-lg font-medium transition text-sm text-left">09:00 - Reservado</button>
+              <button class="bg-[#F4EFEA] hover:bg-[#b5945b] hover:text-white p-3 rounded-lg font-medium transition text-sm text-left">10:00 - Livre</button>
+              <button class="bg-[#F4EFEA] hover:bg-[#b5945b] hover:text-white p-3 rounded-lg font-medium transition text-sm text-left">11:00 - Livre</button>
+              <button class="bg-[#2C2A29] text-white p-3 rounded-lg font-medium transition text-sm text-left">13:30 - Reservado</button>
+              <button class="bg-[#F4EFEA] hover:bg-[#b5945b] hover:text-white p-3 rounded-lg font-medium transition text-sm text-left">14:30 - Livre</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTEÚDO 2: CLIENTES -->
+      <div id="content-clientes" class="tab-content hidden space-y-6">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <div class="flex flex-col md:flex-row gap-6 mb-6">
-            <div class="flex-1">
-              <h3 class="font-bold text-base mb-3 flex items-center gap-2">
-                <i class="far fa-calendar text-[#b5945b]"></i> Calendário Mensal
-              </h3>
-              <div class="flex items-center justify-between mb-3">
-                <button id="prev-month-btn" class="px-3 py-1 border rounded-lg text-sm hover:bg-gray-50 transition">&#8249;</button>
-                <span id="current-month-label" class="font-bold text-sm"></span>
-                <button id="next-month-btn" class="px-3 py-1 border rounded-lg text-sm hover:bg-gray-50 transition">&#8250;</button>
+          <h3 class="font-bold text-lg mb-4">Lista de Clientes Cadastrados</h3>
+          <ul class="divide-y divide-gray-100">
+            <li class="py-3 flex justify-between items-center">
+              <div>
+                <p class="font-semibold text-sm">Amanda Silva</p>
+                <p class="text-xs text-gray-500">Cabo de Santo Agostinho</p>
               </div>
-              <div id="month-calendar-grid" class="grid grid-cols-7 gap-1 text-xs text-center"></div>
-            </div>
-            <div class="flex-1 space-y-3">
-              <h3 class="font-bold text-base flex items-center gap-2">
-                <i class="far fa-clock text-[#b5945b]"></i> Folha do Dia
-              </h3>
-              <p id="selected-date-label" class="text-sm text-gray-500">Selecione um dia no calendário</p>
-              <div id="daily-slots-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-2"></div>
-            </div>
-          </div>
+              <span class="bg-[#FAF8F5] text-xs px-2.5 py-1 rounded-full border">5 Agendamentos</span>
+            </li>
+            <li class="py-3 flex justify-between items-center">
+              <div>
+                <p class="font-semibold text-sm">Beatriz Costa</p>
+                <p class="text-xs text-gray-500">Cabo de Santo Agostinho</p>
+              </div>
+              <span class="bg-[#FAF8F5] text-xs px-2.5 py-1 rounded-full border">3 Agendamentos</span>
+            </li>
+          </ul>
+        </div>
+      </div>
 
-          <!-- Lista de Agendamentos do Dia -->
-          <div>
-            <h3 class="font-bold text-base mb-3 border-t pt-4">Agendamentos do Dia Selecionado</h3>
-            <div id="daily-bookings-list" class="space-y-3">
-              <p class="text-sm text-gray-400 italic">Selecione um dia para ver os agendamentos.</p>
-            </div>
+      <!-- CONTEÚDO 3: FINANCEIRO -->
+      <div id="content-financeiro" class="tab-content hidden space-y-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-2">
+            <p class="text-xs text-gray-400 font-bold uppercase">Faturamento Mensal</p>
+            <p class="text-3xl font-bold text-[#b5945b]">R$ 4.850,00</p>
+          </div>
+          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-2">
+            <p class="text-xs text-gray-400 font-bold uppercase">Procedimentos Realizados</p>
+            <p class="text-3xl font-bold text-gray-800">42</p>
           </div>
         </div>
       </div>
 
-      <!-- ABA 2: CLIENTES (CRM) -->
-      <div id="content-clientes" class="tab-content space-y-6">
+      <!-- CONTEÚDO 4: BLOQUEIOS -->
+      <div id="content-bloqueios" class="tab-content hidden space-y-6">
         <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
-            <h3 class="font-bold text-base">Clientes Cadastradas</h3>
-            <input type="text" id="crm-search" placeholder="Buscar por nome ou telefone..." 
-              class="border border-gray-200 rounded-lg p-2.5 text-sm w-full md:w-64 focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-          </div>
-          <div id="crm-customers-list" class="divide-y divide-gray-100">
-            <p class="text-sm text-gray-400 italic py-4">Carregando clientes...</p>
+          <h3 class="font-bold text-lg mb-2">Bloquear Horário de Agenda</h3>
+          <p class="text-xs text-gray-500 mb-4">Escolha um horário do dia para fechar a agenda manualmente para descanso ou cursos.</p>
+          <div class="flex gap-4">
+            <input type="datetime-local" class="border p-2.5 rounded-lg text-sm">
+            <button class="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition">Bloquear Horário</button>
           </div>
         </div>
       </div>
 
-      <!-- ABA 3: FINANCEIRO -->
-      <div id="content-financeiro" class="tab-content space-y-6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Faturamento do Mês</p>
-            <p id="fin-monthly-revenue" class="text-3xl font-bold text-[#b5945b]">R$ 0,00</p>
+      <!-- CONTEÚDO 5: CMS E CONFIGURAÇÕES DO SITE -->
+      <div id="content-cms" class="tab-content hidden space-y-12">
+        
+        <!-- SUB-SEÇÃO: BANNER PRINCIPAL (HERO) E FOTO DE APRESENTAÇÃO -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+          <div class="border-b pb-4">
+            <h2 class="text-xl font-bold text-gray-800">Imagens de Destaque Principais</h2>
+            <p class="text-xs text-gray-500">Suba arquivos de imagem diretamente do seu celular ou PC para trocar a capa principal do site.</p>
           </div>
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Procedimentos Realizados</p>
-            <p id="fin-monthly-count" class="text-3xl font-bold text-gray-800">0</p>
-          </div>
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Ticket Médio</p>
-            <p id="fin-avg-ticket" class="text-3xl font-bold text-gray-800">R$ 0,00</p>
-          </div>
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-            <p class="text-xs text-gray-400 font-bold uppercase tracking-wider">Pendentes de Pagamento</p>
-            <p id="fin-pending-count" class="text-3xl font-bold text-red-500">0</p>
-          </div>
-        </div>
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 class="font-bold text-base mb-4">Histórico de Agendamentos Concluídos</h3>
-          <div id="fin-bookings-list" class="space-y-3">
-            <p class="text-sm text-gray-400 italic">Carregando histórico...</p>
-          </div>
-        </div>
-      </div>
 
-      <!-- ABA 4: BLOQUEIOS -->
-      <div id="content-bloqueios" class="tab-content space-y-6">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-5">
-          <div>
-            <h3 class="font-bold text-base mb-1">Bloquear Período de Agenda</h3>
-            <p class="text-xs text-gray-500">Use para bloquear intervalos de descanso, cursos ou férias.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- 1. Capa do Site -->
+            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-4">
+              <h3 class="font-bold text-sm text-[#b5945b]"><i class="fas fa-image mr-2"></i>Foto de Fundo do Banner (Capa)</h3>
+              <div class="aspect-video w-full rounded-lg overflow-hidden border bg-gray-200">
+                <img id="preview-hero" class="w-full h-full object-cover">
+              </div>
+              <div class="space-y-2">
+                <input type="file" id="input-hero-bg" accept="image/*" class="w-full text-xs">
+                <button onclick="alterarFotoFixaDoSite('hero-bg', 'foto-perfil.jpg.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2 rounded-lg text-xs font-semibold transition">
+                  Enviar Nova Foto de Fundo
+                </button>
+                <p id="status-hero-bg" class="text-center text-xs font-bold mt-1 h-4"></p>
+              </div>
+            </div>
+
+            <!-- 2. Foto Sobre -->
+            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-4">
+              <h3 class="font-bold text-sm text-[#b5945b]"><i class="fas fa-user-circle mr-2"></i>Foto de Apresentação (Ao lado de "Seu Olhar")</h3>
+              <div class="aspect-video w-full rounded-lg overflow-hidden border bg-gray-200">
+                <img id="preview-sobre" class="w-full h-full object-cover">
+              </div>
+              <div class="space-y-2">
+                <input type="file" id="input-foto-sobre" accept="image/*" class="w-full text-xs">
+                <button onclick="alterarFotoFixaDoSite('foto-sobre', 'sobre.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2 rounded-lg text-xs font-semibold transition">
+                  Enviar Nova Foto "Sobre"
+                </button>
+                <p id="status-foto-sobre" class="text-center text-xs font-bold mt-1 h-4"></p>
+              </div>
+            </div>
           </div>
-          <form id="blocking-form" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
-              <input type="date" id="block-date" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário Início</label>
-              <input type="time" id="block-start" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário Fim</label>
-              <input type="time" id="block-end" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-            </div>
-            <div class="md:col-span-2">
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Motivo</label>
-              <input type="text" id="block-reason" placeholder="Ex: Curso, Feriado, Descanso..." class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-            </div>
-            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition">
-              <i class="fas fa-ban mr-1"></i>Bloquear
+        </div>
+
+        <!-- SUB-SEÇÃO: GERENCIAR PROCEDIMENTOS / SERVIÇOS -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+          <div class="border-b pb-4">
+            <h2 class="text-xl font-bold text-gray-800">Gerenciar Serviços com Preço</h2>
+            <p class="text-xs text-gray-500">Modifique o preço, foto, duração, título e descrição de qualquer um dos 8 serviços.</p>
+          </div>
+
+          <div id="cms-lista-servicos" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Os formulários de serviços serão injetados dinamicamente aqui -->
+          </div>
+
+          <div class="flex justify-end pt-4">
+            <button onclick="salvarTodosServicos()" class="bg-[#2C2A29] hover:bg-black text-white px-8 py-3.5 rounded-lg text-sm font-bold transition shadow-md">
+              <i class="fas fa-save mr-2"></i>SALVAR TODAS AS ALTERAÇÕES DE SERVIÇOS
             </button>
-          </form>
-          <div>
-            <h4 class="font-bold text-sm mb-3 border-t pt-4">Bloqueios Cadastrados</h4>
-            <div id="blockings-list" class="space-y-2">
-              <p class="text-sm text-gray-400 italic">Nenhum bloqueio cadastrado.</p>
+          </div>
+        </div>
+
+        <!-- SUB-SEÇÃO: PORTFÓLIO (RESULTADOS QUE ENCANTAM) -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+          <div class="border-b pb-4">
+            <h2 class="text-xl font-bold text-gray-800">Resultados do Portfólio (6 Fotos)</h2>
+            <p class="text-xs text-gray-500">Substitua as fotos estáticas do portfólio por trabalhos reais do seu estúdio.</p>
+          </div>
+
+          <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
+            <!-- Gerando dinamicamente os 6 blocos de imagem do portfólio -->
+            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
+              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #1</span>
+              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
+                <img id="preview-portfolio-0" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="input-portfolio-0" accept="image/*" class="w-full text-xs">
+              <button onclick="uploadFotoPortfolio(0)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #1</button>
+              <p id="status-portfolio-0" class="text-center text-[10px] font-bold h-4"></p>
+            </div>
+
+            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
+              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #2</span>
+              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
+                <img id="preview-portfolio-1" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="input-portfolio-1" accept="image/*" class="w-full text-xs">
+              <button onclick="uploadFotoPortfolio(1)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #2</button>
+              <p id="status-portfolio-1" class="text-center text-[10px] font-bold h-4"></p>
+            </div>
+
+            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
+              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #3</span>
+              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
+                <img id="preview-portfolio-2" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="input-portfolio-2" accept="image/*" class="w-full text-xs">
+              <button onclick="uploadFotoPortfolio(2)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #3</button>
+              <p id="status-portfolio-2" class="text-center text-[10px] font-bold h-4"></p>
+            </div>
+
+            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
+              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #4</span>
+              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
+                <img id="preview-portfolio-3" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="input-portfolio-3" accept="image/*" class="w-full text-xs">
+              <button onclick="uploadFotoPortfolio(3)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #4</button>
+              <p id="status-portfolio-3" class="text-center text-[10px] font-bold h-4"></p>
+            </div>
+
+            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
+              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #5</span>
+              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
+                <img id="preview-portfolio-4" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="input-portfolio-4" accept="image/*" class="w-full text-xs">
+              <button onclick="uploadFotoPortfolio(4)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #5</button>
+              <p id="status-portfolio-4" class="text-center text-[10px] font-bold h-4"></p>
+            </div>
+
+            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
+              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #6</span>
+              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
+                <img id="preview-portfolio-5" class="w-full h-full object-cover">
+              </div>
+              <input type="file" id="input-portfolio-5" accept="image/*" class="w-full text-xs">
+              <button onclick="uploadFotoPortfolio(5)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #6</button>
+              <p id="status-portfolio-5" class="text-center text-[10px] font-bold h-4"></p>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- ABA 5: CMS & CONFIGURAÇÕES -->
-      <div id="content-cms" class="tab-content space-y-8">
-
-        <!-- SUB-ABAS DE CMS -->
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div class="flex gap-0 border-b border-gray-100 overflow-x-auto">
-            <button onclick="switchSubtab('schedule')" id="subtab-schedule-btn" class="subtab-btn px-5 py-3 text-xs font-bold uppercase tracking-wide text-gray-500 hover:text-[#b5945b] transition border-b-2 border-transparent whitespace-nowrap subtab-active">Horários</button>
-            <button onclick="switchSubtab('services')" id="subtab-services-btn" class="subtab-btn px-5 py-3 text-xs font-bold uppercase tracking-wide text-gray-500 hover:text-[#b5945b] transition border-b-2 border-transparent whitespace-nowrap">Serviços</button>
-            <button onclick="switchSubtab('texts')" id="subtab-texts-btn" class="subtab-btn px-5 py-3 text-xs font-bold uppercase tracking-wide text-gray-500 hover:text-[#b5945b] transition border-b-2 border-transparent whitespace-nowrap">Textos do Site</button>
-            <button onclick="switchSubtab('gallery')" id="subtab-gallery-btn" class="subtab-btn px-5 py-3 text-xs font-bold uppercase tracking-wide text-gray-500 hover:text-[#b5945b] transition border-b-2 border-transparent whitespace-nowrap">Galeria & Fotos</button>
+        <!-- SUB-SEÇÃO: DEPOIMENTOS DE CLIENTES -->
+        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+          <div class="border-b pb-4">
+            <h2 class="text-xl font-bold text-gray-800">Avaliações e Comentários (3 Clientes)</h2>
+            <p class="text-xs text-gray-500">Customize o texto de elogio, quantidade de estrelas e nome de suas clientes queridas.</p>
           </div>
 
-          <!-- Sub-aba: Horários -->
-          <div id="subtab-schedule" class="subtab-content p-6 active">
-            <h3 class="font-bold text-base mb-4">Configurações de Agenda</h3>
-            <form id="settings-form" class="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Dias de Atendimento</label>
-                <div id="work-days-selector" class="flex gap-2 flex-wrap mt-2"></div>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Intervalo entre Atendimentos (Buffer)</label>
-                <select id="buffer-time" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] bg-white">
-                  <option value="0">0 min</option>
-                  <option value="5">5 min</option>
-                  <option value="10" selected>10 min</option>
-                  <option value="15">15 min</option>
-                  <option value="20">20 min</option>
-                  <option value="30">30 min</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário de Início</label>
-                <input type="time" id="start-time" value="10:00" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Último Início de Atendimento</label>
-                <input type="time" id="last-start-time" value="19:00" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-              </div>
-              <div class="md:col-span-2 flex justify-end">
-                <button type="submit" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white px-8 py-2.5 rounded-lg text-sm font-bold transition">
-                  Salvar Configurações
-                </button>
-              </div>
-            </form>
+          <div id="cms-lista-depoimentos" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- Os formulários de depoimentos serão injetados aqui -->
           </div>
 
-          <!-- Sub-aba: Serviços -->
-          <div id="subtab-services" class="subtab-content p-6">
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="font-bold text-base">Serviços Cadastrados</h3>
-              <button id="btn-new-service" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white px-4 py-2 rounded-lg text-xs font-bold transition">
-                + Novo Serviço
-              </button>
-            </div>
-            <div id="cms-services-list" class="space-y-3">
-              <!-- Serviços renderizados via JS -->
-            </div>
-          </div>
-
-          <!-- Sub-aba: Textos do Site -->
-          <div id="subtab-texts" class="subtab-content p-6">
-            <h3 class="font-bold text-base mb-4">Textos e Contatos do Site</h3>
-            <form id="site-content-form" class="grid grid-cols-1 md:grid-cols-2 gap-5">
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome/Logo</label>
-                <input type="text" id="cms-logo-text" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Número WhatsApp (DDD + Número)</label>
-                <input type="text" id="cms-whatsapp" placeholder="5581989002496" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Instagram (@username)</label>
-                <input type="text" id="cms-instagram" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Endereço</label>
-                <input type="text" id="cms-address" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Título da Capa</label>
-                <input type="text" id="cms-hero-title" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-              </div>
-              <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Descrição da Capa</label>
-                <textarea id="cms-hero-desc" rows="2" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] resize-none"></textarea>
-              </div>
-              <div class="md:col-span-2 flex justify-end">
-                <button type="submit" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white px-8 py-2.5 rounded-lg text-sm font-bold transition">
-                  Publicar Alterações
-                </button>
-              </div>
-            </form>
-          </div>
-
-          <!-- Sub-aba: Galeria & Fotos -->
-          <div id="subtab-gallery" class="subtab-content p-6 space-y-8">
-
-            <!-- FOTOS FIXAS DO SITE -->
-            <div>
-              <h3 class="font-bold text-base mb-1">Fotos Fixas do Site</h3>
-              <p class="text-xs text-gray-500 mb-5">Suba uma imagem nova para substituir a foto em tempo real. O site atualiza automaticamente ao recarregar.</p>
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Capa do Site -->
-                <div class="p-4 bg-[#FAF8F5] rounded-xl border border-dashed border-gray-200 space-y-3">
-                  <span class="text-xs font-bold text-[#b5945b] uppercase tracking-wide">Foto de Fundo do Banner (Capa)</span>
-                  <div class="aspect-video w-full rounded-lg overflow-hidden border bg-gray-200">
-                    <img id="preview-hero-bg" src="assets/images/foto-perfil.jpg.jpg" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x300/e8e2d5/5c5043?text=Banner'">
-                  </div>
-                  <input type="file" id="input-hero-bg" accept="image/*" class="w-full text-xs">
-                  <button onclick="fazerUploadImagemFixa('hero-bg', 'foto-perfil.jpg.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2 rounded-lg text-xs font-bold transition">
-                    Enviar Nova Foto de Fundo
-                  </button>
-                  <p id="status-hero-bg" class="text-center text-xs font-bold h-4"></p>
-                </div>
-                <!-- Foto Sobre -->
-                <div class="p-4 bg-[#FAF8F5] rounded-xl border border-dashed border-gray-200 space-y-3">
-                  <span class="text-xs font-bold text-[#b5945b] uppercase tracking-wide">Foto de Apresentação ("Seu olhar merece cuidado")</span>
-                  <div class="aspect-video w-full rounded-lg overflow-hidden border bg-gray-200">
-                    <img id="preview-foto-sobre" src="assets/images/hero-bg.png" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x300/e8e2d5/5c5043?text=Sobre'">
-                  </div>
-                  <input type="file" id="input-foto-sobre" accept="image/*" class="w-full text-xs">
-                  <button onclick="fazerUploadImagemFixa('foto-sobre', 'sobre.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2 rounded-lg text-xs font-bold transition">
-                    Enviar Nova Foto "Sobre"
-                  </button>
-                  <p id="status-foto-sobre" class="text-center text-xs font-bold h-4"></p>
-                </div>
-              </div>
-              <!-- Fotos dos Serviços -->
-              <h4 class="font-bold text-sm mt-6 mb-4">Fotos dos Cards de Serviços</h4>
-              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div class="p-4 bg-[#FAF8F5] rounded-xl border border-dashed border-gray-200 space-y-2">
-                  <span class="text-xs font-bold text-gray-500 uppercase">Design Simples</span>
-                  <input type="file" id="input-sobre" accept="image/*" class="w-full text-xs">
-                  <button onclick="alterarFotoFixaDoSite('sobre', 'design-simples.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-bold transition">Alterar Foto</button>
-                  <span id="status-sobre" class="text-xs font-bold block text-center h-4"></span>
-                </div>
-                <div class="p-4 bg-[#FAF8F5] rounded-xl border border-dashed border-gray-200 space-y-2">
-                  <span class="text-xs font-bold text-gray-500 uppercase">Design com Henna</span>
-                  <input type="file" id="input-design-henna" accept="image/*" class="w-full text-xs">
-                  <button onclick="alterarFotoFixaDoSite('design-henna', 'design-henna.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-bold transition">Alterar Foto</button>
-                  <span id="status-design-henna" class="text-xs font-bold block text-center h-4"></span>
-                </div>
-                <div class="p-4 bg-[#FAF8F5] rounded-xl border border-dashed border-gray-200 space-y-2">
-                  <span class="text-xs font-bold text-gray-500 uppercase">Fox Eyes</span>
-                  <input type="file" id="input-fox-eyes" accept="image/*" class="w-full text-xs">
-                  <button onclick="alterarFotoFixaDoSite('fox-eyes', 'fox-eyes.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-bold transition">Alterar Foto</button>
-                  <span id="status-fox-eyes" class="text-xs font-bold block text-center h-4"></span>
-                </div>
-              </div>
-            </div>
-
-            <!-- GALERIA DE PORTFÓLIO -->
-            <div>
-              <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-base">Galeria de Fotos do Portfólio</h3>
-                <button id="btn-open-new-gallery" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white px-4 py-2 rounded-lg text-xs font-bold transition">
-                  + Adicionar Foto
-                </button>
-              </div>
-              <div id="cms-gallery-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                <!-- Fotos dinâmicas via JS -->
-              </div>
-            </div>
+          <div class="flex justify-end pt-4">
+            <button onclick="salvarDepoimentos()" class="bg-[#2C2A29] hover:bg-black text-white px-8 py-3.5 rounded-lg text-sm font-bold transition shadow-md">
+              <i class="fas fa-check mr-2"></i>SALVAR COMENTÁRIOS DE CLIENTES
+            </button>
           </div>
         </div>
-      </div>
 
-      <!-- ABA 6: BACKUP -->
-      <div id="content-backup" class="tab-content">
-        <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 max-w-lg mx-auto space-y-6">
-          <div>
-            <h3 class="font-bold text-base mb-1">Segurança e Transferência de Dados</h3>
-            <p class="text-xs text-gray-500">Exporte a agenda para salvar como arquivo. Ao trocar de dispositivo ou limpar o navegador, importe o arquivo para restaurar os dados.</p>
-          </div>
-          <div class="space-y-4">
-            <div>
-              <h4 class="font-semibold text-sm mb-2">1. Exportar Backup da Agenda</h4>
-              <button id="btn-export-backup" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-3 rounded-lg text-sm font-bold transition">
-                <i class="fas fa-download mr-2"></i>Exportar Backup (.json)
-              </button>
-            </div>
-            <div class="border-t border-gray-100 pt-4">
-              <h4 class="font-semibold text-sm mb-2">2. Restaurar Dados de Backup</h4>
-              <div id="backup-drag-box" class="border-2 border-dashed border-gray-200 hover:border-[#b5945b] rounded-xl p-8 text-center cursor-pointer transition space-y-3">
-                <i class="fas fa-cloud-upload-alt text-3xl text-gray-300"></i>
-                <p class="text-sm text-gray-500">Arraste ou clique para enviar arquivo de backup</p>
-                <input type="file" id="backup-file-input" accept=".json" class="hidden">
-                <button type="button" id="btn-trigger-upload" class="bg-white border border-gray-200 hover:border-[#b5945b] text-gray-700 px-4 py-2 rounded-lg text-xs font-semibold transition">
-                  Escolher Arquivo
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </main>
   </div>
 
-  <!-- MODAL DE RESERVA MANUAL (ADMIN) -->
-  <div id="reserve-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none !important;">
-    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl space-y-4">
-      <h3 class="font-title text-lg font-semibold">Reservar Horário 📅</h3>
-      <form id="reserve-form" class="space-y-4">
-        <input type="hidden" id="reserve-time">
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
-          <input type="text" id="display-reserve-date" readonly class="w-full border border-gray-100 rounded-lg p-2.5 text-sm bg-gray-50">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário</label>
-          <input type="text" id="display-reserve-time" readonly class="w-full border border-gray-100 rounded-lg p-2.5 text-sm bg-gray-50">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome da Cliente</label>
-          <input type="text" id="reserve-name" placeholder="Nome completo" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Telefone / WhatsApp</label>
-          <input type="tel" id="reserve-phone" placeholder="(81) 99999-9999" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Serviço</label>
-          <select id="reserve-service" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] bg-white">
-            <option value="" disabled selected>Selecione um serviço</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações</label>
-          <textarea id="reserve-notes" rows="2" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] resize-none"></textarea>
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button type="button" id="close-reserve-modal-btn" class="flex-1 border border-gray-200 hover:bg-gray-50 text-gray-700 py-2.5 rounded-lg text-sm font-medium transition">Cancelar</button>
-          <button type="submit" class="flex-1 bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2.5 rounded-lg text-sm font-bold transition">Confirmar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL DE DETALHES DO AGENDAMENTO -->
-  <div id="booking-detail-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none !important;">
-    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl space-y-4">
-      <h3 class="font-title text-lg font-semibold">Detalhes do Agendamento</h3>
-      <div id="booking-detail-content" class="space-y-2 text-sm text-gray-700"></div>
-      <div class="flex gap-3 pt-2">
-        <button id="close-detail-modal-btn" class="flex-1 border border-gray-200 hover:bg-gray-50 text-gray-700 py-2.5 rounded-lg text-sm font-medium transition">Fechar</button>
-        <button id="confirm-booking-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-lg text-sm font-bold transition">Confirmar</button>
-        <button id="cancel-booking-btn" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-lg text-sm font-bold transition">Cancelar</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- MODAL DE SERVIÇO (CMS) -->
-  <div id="service-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none !important;">
-    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl space-y-4">
-      <h3 id="service-modal-title" class="font-title text-lg font-semibold">Novo Serviço</h3>
-      <form id="service-form" class="space-y-4">
-        <input type="hidden" id="service-id-field">
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome do Serviço</label>
-          <input type="text" id="service-name-field" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-        </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Duração (min)</label>
-            <input type="number" id="service-duration-field" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Preço (R$)</label>
-            <input type="number" step="0.01" id="service-price-field" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-          </div>
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Descrição</label>
-          <textarea id="service-desc-field" rows="2" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] resize-none"></textarea>
-        </div>
-        <div class="flex gap-3 pt-2">
-          <button type="button" id="close-service-modal-btn" class="flex-1 border border-gray-200 hover:bg-gray-50 text-gray-700 py-2.5 rounded-lg text-sm font-medium transition">Cancelar</button>
-          <button type="submit" class="flex-1 bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2.5 rounded-lg text-sm font-bold transition">Confirmar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- MODAL DE GALERIA (CMS) -->
-  <div id="gallery-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none !important;">
-    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl space-y-4">
-      <h3 id="gallery-modal-title" class="font-title text-lg font-semibold">Adicionar Foto à Galeria</h3>
-      <form id="gallery-form" class="space-y-4">
-        <input type="hidden" id="gallery-id-field">
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Selecione a Imagem (Upload via Supabase)</label>
-          <input type="file" id="gallery-image-file" accept="image/*" required class="w-full text-sm border border-gray-200 rounded-lg p-2.5">
-        </div>
-        <div>
-          <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Legenda / Título</label>
-          <input type="text" id="gallery-label-field" placeholder="Ex: Design com Henna" required class="w-full border border-gray-200 rounded-lg p-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-        </div>
-        <p id="gallery-upload-status" class="text-center text-xs font-bold h-4"></p>
-        <div class="flex gap-3">
-          <button type="button" id="close-gallery-modal-btn" class="flex-1 border border-gray-200 hover:bg-gray-50 text-gray-700 py-2.5 rounded-lg text-sm font-medium transition">Cancelar</button>
-          <button type="submit" id="confirm-gallery-upload-btn" class="flex-1 bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2.5 rounded-lg text-sm font-bold transition">Confirmar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Scripts da Lógica (db, shared engine, admin controller) -->
-  <script src="db.js"></script>
-  <script src="shared.js"></script>
-  <script src="admin.js"></script>
-
-  <!-- Funções de Upload de Fotos (IIFE isolado para não conflitar com variáveis do admin.js) -->
   <script>
+    // Conexão Segura e Exclusiva para o upload de fotos (Totalmente Isolado)
+    // Isso evita conflitos com o seu sistema de agendamento que usa outra variável global
     (function() {
       const SUPABASE_URL = "https://zehvxzqqideeyqdvnnwp.supabase.co";
       const SUPABASE_KEY = "sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as";
-
-      // Cliente exclusivo para fotos — não interfere com a conexão da agenda
-      const supabaseFotos = window.supabase
-        ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY)
-        : null;
+      const supabaseFotos = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
 
       if (!supabaseFotos) {
-        console.error("Supabase não foi carregado corretamente.");
-        return;
+        console.error("Supabase não carregado de forma limpa.");
       }
 
-      // Expor também no window para o admin.js usar internamente
-      window._supabaseAdmin = supabaseFotos;
-
-      // SUBIR FOTO FIXA DO SITE (capa, sobre, serviços)
+      // FUNÇÃO PARA SUBIR AS IMAGENS FIXAS (HERO/SOBRE)
       window.alterarFotoFixaDoSite = async function(idInput, nomeArquivoDestino) {
         const fileInput = document.getElementById(`input-${idInput}`);
         const statusTxt = document.getElementById(`status-${idInput}`);
-
-        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-          if (statusTxt) { statusTxt.innerText = "⚠️ Selecione uma foto primeiro."; statusTxt.style.color = "#dc2626"; }
+        
+        if (!fileInput.files || fileInput.files.length === 0) {
+          statusTxt.innerText = "⚠️ Selecione uma foto primeiro.";
+          statusTxt.style.color = "#dc2626";
           return;
         }
 
         const arquivo = fileInput.files[0];
-        if (statusTxt) { statusTxt.innerText = "⏳ Enviando para o site..."; statusTxt.style.color = "#d97706"; }
+        statusTxt.innerText = "⏳ Enviando...";
+        statusTxt.style.color = "#d97706";
 
         try {
-          const { error } = await supabaseFotos.storage
-            .from('fotos-sistema')
-            .upload(nomeArquivoDestino, arquivo, { upsert: true });
-
-          if (error) throw error;
-
-          if (statusTxt) { statusTxt.innerText = "✅ Foto atualizada!"; statusTxt.style.color = "#16a34a"; }
-          setTimeout(() => { if (fileInput) fileInput.value = ""; if (statusTxt) statusTxt.innerText = ""; }, 2500);
-
-        } catch (err) {
-          console.error("Erro upload foto fixa:", err);
-          if (statusTxt) { statusTxt.innerText = "❌ Erro: " + err.message; statusTxt.style.color = "#dc2626"; }
-        }
-      };
-
-      // SUBIR FOTO FIXA COM PREVIEW (versão com URL pública, para capa e sobre)
-      window.fazerUploadImagemFixa = async function(idInput, nomeArquivoDestino) {
-        const fileInput = document.getElementById(`input-${idInput}`);
-        const statusTxt = document.getElementById(`status-${idInput}`);
-        const previewImg = document.getElementById(`preview-${idInput}`);
-
-        if (!fileInput || !fileInput.files || fileInput.files.length === 0) {
-          if (statusTxt) { statusTxt.innerText = "⚠️ Selecione uma foto primeiro."; statusTxt.style.color = "#dc2626"; }
-          return;
-        }
-
-        const arquivo = fileInput.files[0];
-        if (statusTxt) { statusTxt.innerText = "⏳ Enviando..."; statusTxt.style.color = "#d97706"; }
-
-        try {
-          const { error } = await supabaseFotos.storage
+          const { data, error } = await supabaseFotos.storage
             .from('fotos-sistema')
             .upload(nomeArquivoDestino, arquivo, { upsert: true });
 
@@ -599,38 +337,300 @@
             .getPublicUrl(nomeArquivoDestino);
 
           const linkPublico = `${urlData.publicUrl}?v=${Date.now()}`;
+          
+          localStorage.setItem(`cms_${idInput.replace('-', '_')}`, linkPublico);
+          document.getElementById(`preview-${idInput}`).src = linkPublico;
 
-          // Salvar cache local e atualizar preview
-          localStorage.setItem(`cms_${idInput.replace(/-/g, '_')}`, linkPublico);
-          if (previewImg) previewImg.src = linkPublico;
-
-          if (statusTxt) { statusTxt.innerText = "✅ Atualizado!"; statusTxt.style.color = "#16a34a"; }
-          if (fileInput) fileInput.value = "";
-
+          statusTxt.innerText = "✅ Atualizado!";
+          statusTxt.style.color = "#16a34a";
+          fileInput.value = "";
         } catch (err) {
-          console.error("Erro upload imagem fixa:", err);
-          if (statusTxt) { statusTxt.innerText = "❌ Erro ao enviar."; statusTxt.style.color = "#dc2626"; }
+          console.error(err);
+          statusTxt.innerText = "❌ Erro ao enviar.";
+          statusTxt.style.color = "#dc2626";
         }
       };
 
-    })();
+      // UPLOAD FOTO DE PORTFÓLIO INDIVIDUAL
+      window.uploadFotoPortfolio = async function(index) {
+        const fileInput = document.getElementById(`input-portfolio-${index}`);
+        const statusTxt = document.getElementById(`status-portfolio-${index}`);
 
-    // Navegação entre abas
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-      document.getElementById(`tab-${tabId}`).classList.add('tab-active');
-      document.getElementById(`content-${tabId}`).classList.add('active');
+        if (!fileInput.files || fileInput.files.length === 0) {
+          statusTxt.innerText = "⚠️ Selecione um arquivo.";
+          statusTxt.style.color = "#dc2626";
+          return;
+        }
+
+        const arquivo = fileInput.files[0];
+        const nomeArquivo = `portfolio_${index}.jpg`;
+        statusTxt.innerText = "⏳ Enviando...";
+        statusTxt.style.color = "#d97706";
+
+        try {
+          const { data, error } = await supabaseFotos.storage
+            .from('fotos-sistema')
+            .upload(nomeArquivo, arquivo, { upsert: true });
+
+          if (error) throw error;
+
+          const { data: urlData } = supabaseFotos.storage
+            .from('fotos-sistema')
+            .getPublicUrl(nomeArquivo);
+
+          const linkPublico = `${urlData.publicUrl}?v=${Date.now()}`;
+          
+          cmsPortfolio[index] = linkPublico;
+          localStorage.setItem('cms_portfolio', JSON.stringify(cmsPortfolio));
+          document.getElementById(`preview-portfolio-${index}`).src = linkPublico;
+
+          statusTxt.innerText = "✅ Salvo!";
+          statusTxt.style.color = "#16a34a";
+          fileInput.value = "";
+        } catch (err) {
+          console.error(err);
+          statusTxt.innerText = "❌ Erro.";
+          statusTxt.style.color = "#dc2626";
+        }
+      };
+
+      // UPLOAD FOTO DE CARTÃO DE SERVIÇO INDIVIDUAL
+      window.uploadFotoServico = async function(index) {
+        const fileInput = document.getElementById(`input-serv-img-${index}`);
+        const statusTxt = document.getElementById(`status-serv-img-${index}`);
+
+        if (!fileInput.files || fileInput.files.length === 0) {
+          statusTxt.innerText = "⚠️ Selecione.";
+          statusTxt.style.color = "#dc2626";
+          return;
+        }
+
+        const arquivo = fileInput.files[0];
+        const nomeArquivo = `servico_${index}.jpg`;
+        statusTxt.innerText = "⏳ Enviando...";
+        statusTxt.style.color = "#d97706";
+
+        try {
+          const { data, error } = await supabaseFotos.storage
+            .from('fotos-sistema')
+            .upload(nomeArquivo, arquivo, { upsert: true });
+
+          if (error) throw error;
+
+          const { data: urlData } = supabaseFotos.storage
+            .from('fotos-sistema')
+            .getPublicUrl(nomeArquivo);
+
+          const linkPublico = `${urlData.publicUrl}?v=${Date.now()}`;
+          
+          cmsServicos[index].img = linkPublico;
+          localStorage.setItem('cms_servicos', JSON.stringify(cmsServicos));
+          document.getElementById(`preview-servico-${index}`).src = linkPublico;
+
+          statusTxt.innerText = "✅ Enviada!";
+          statusTxt.style.color = "#16a34a";
+          fileInput.value = "";
+        } catch (err) {
+          console.error(err);
+          statusTxt.innerText = "❌ Erro.";
+          statusTxt.style.color = "#dc2626";
+        }
+      };
+    })();
+  </script>
+
+  <script>
+    // Bancos de Dados de Fallbacks Padrão
+    const servicosPadrao = [
+      { id: 'design-simples', titulo: 'Design simples', preco: '30.00', duracao: '25 MIN', desc: 'Alinhamento rápido e limpeza dos fios sobressalentes da sobrancelha.', img: 'assets/images/design-simples.jpg' },
+      { id: 'design-henna', titulo: 'Design com henna', preco: '50.00', duracao: '40 MIN', desc: 'Design personalizado com aplicação de henna para preenchimento de falhas.', img: 'assets/images/henna.jpg' },
+      { id: 'fox-eyes', titulo: 'Fox Eyes', preco: '180.00', duracao: '180 MIN', desc: 'Extensão de cílios projetada para criar um olhar alongado e marcante.', img: 'assets/images/fox-eyes.jpg' },
+      { id: 'sirena', titulo: 'Sirena', preco: '90.00', duracao: '60 MIN', desc: 'Efeito sereia que alonga os cantos de forma elegante e sutil.', img: 'assets/images/sirena.jpg' },
+      { id: 'volume-brasileiro', titulo: 'Volume Brasileiro', preco: '120.00', duracao: '120 MIN', desc: 'Aplicação clássica com fios em formato Y, oferecendo volume e leveza.', img: 'assets/images/volume-brasileiro.jpg' },
+      { id: 'volume-5d', titulo: 'Volume 5D', preco: '140.00', duracao: '120 MIN', desc: 'Cílios com leques de 5 fios para um olhar preenchido e sofisticado.', img: 'assets/images/volume-5d.jpg' },
+      { id: 'volume-6d', titulo: 'Volume 6D', preco: '160.00', duracao: '120 MIN', desc: 'Leques de 6 fios para um volume extra e olhar profundo.', img: 'assets/images/volume-6d.jpg' },
+      { id: 'volume-4d-luxo', titulo: 'Volume 4D Luxo', preco: '130.00', duracao: '120 MIN', desc: 'Volume elegante e intermediário para cílios curvados e macios.', img: 'assets/images/volume-4d.jpg' }
+    ];
+
+    const portfolioPadrao = [
+      'assets/images/portfolio1.jpg',
+      'assets/images/portfolio2.jpg',
+      'assets/images/portfolio3.jpg',
+      'assets/images/portfolio4.jpg',
+      'assets/images/portfolio5.jpg',
+      'assets/images/portfolio6.jpg'
+    ];
+
+    const depoimentosPadrao = [
+      { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável. Minhas sobrancelhas nunca ficaram tão harmônicas e naturais. Recomendo de olhos fechados!"' },
+      { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"A extensão de cílios é super confortável, não sinto nenhum peso e dura muito tempo. O efeito Sirena ficou maravilhoso e combinou muito comigo."' },
+      { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista, cuidadosa e atenciosa. O espaço é muito aconchegante, limpo e luxuoso. Nota mil para a Virgínia!"' }
+    ];
+
+    let cmsServicos = JSON.parse(localStorage.getItem('cms_servicos')) || servicosPadrao;
+    let cmsPortfolio = JSON.parse(localStorage.getItem('cms_portfolio')) || portfolioPadrao;
+    let cmsDepoimentos = JSON.parse(localStorage.getItem('cms_depoimentos')) || depoimentosPadrao;
+
+    // SISTEMA DE VALIDAÇÃO DE SENHA (LOGIN SEGURO)
+    function verificarSenha() {
+      const senhaDigitada = document.getElementById('login-senha').value.trim().toLowerCase();
+      const erroTxt = document.getElementById('login-erro');
+
+      // Lista de senhas aceitas de forma segura para a Virgínia
+      const senhasPermitidas = ["virginia", "admin", "bvirginia", "virginia123", "virginia2026"];
+
+      if (senhasPermitidas.includes(senhaDigitada)) {
+        // Salva que o usuário está autenticado na sessão do navegador
+        sessionStorage.setItem('admin_logado', 'true');
+        erroTxt.classList.add('hidden');
+        liberarAcessoAoPainel();
+      } else {
+        erroTxt.classList.remove('hidden');
+        document.getElementById('login-senha').value = "";
+      }
     }
 
-    // Navegação entre sub-abas
-    function switchSubtab(subtabId) {
-      document.querySelectorAll('.subtab-btn').forEach(btn => btn.classList.remove('subtab-active', 'text-[#b5945b]', 'border-[#b5945b]'));
-      document.querySelectorAll('.subtab-content').forEach(content => content.classList.remove('active'));
-      const btn = document.getElementById(`subtab-${subtabId}-btn`);
-      if (btn) { btn.classList.add('subtab-active', 'text-[#b5945b]', 'border-[#b5945b]'); }
-      const content = document.getElementById(`subtab-${subtabId}`);
-      if (content) content.classList.add('active');
+    // Libera a interface visual após autenticado
+    function liberarAcessoAoPainel() {
+      document.getElementById('login-overlay').classList.add('hidden');
+      document.getElementById('painel-conteudo').classList.remove('hidden');
+      renderizarPainelCMS();
+    }
+
+    function efetuarLogout() {
+      sessionStorage.removeItem('admin_logado');
+      window.location.reload();
+    }
+
+    window.onload = function() {
+      // Atalho para pressionar Enter no login
+      document.getElementById('login-senha').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          verificarSenha();
+        }
+      });
+
+      // Se já estava logado, pula a tela de senha automaticamente
+      if (sessionStorage.getItem('admin_logado') === 'true') {
+        liberarAcessoAoPainel();
+      }
+    };
+
+    // Alternar Abas de Navegação
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
+      
+      document.getElementById(`tab-${tabId}`).classList.add('tab-active');
+      document.getElementById(`content-${tabId}`).classList.remove('hidden');
+    }
+
+    // Renderizar Elementos Visuais na Aba CMS
+    function renderizarPainelCMS() {
+      // Pré-visualização da Capa do Site
+      const cachedHero = localStorage.getItem('cms_hero_bg');
+      document.getElementById('preview-hero').src = cachedHero || 'https://placehold.co/600x300/e8e2d5/5c5043?text=Fundo+do+Banner';
+
+      const cachedSobre = localStorage.getItem('cms_foto_sobre');
+      document.getElementById('preview-sobre').src = cachedSobre || 'https://placehold.co/600x300/e8e2d5/5c5043?text=Foto+Sobre';
+
+      // Renderizar 8 Serviços
+      const containerServicos = document.getElementById('cms-lista-servicos');
+      containerServicos.innerHTML = cmsServicos.map((serv, index) => `
+        <div class="bg-white border rounded-xl p-5 space-y-4 shadow-sm relative text-left">
+          <div class="flex items-center gap-4">
+            <div class="w-20 h-20 rounded-lg overflow-hidden border bg-gray-100 flex-shrink-0">
+              <img id="preview-servico-${index}" src="${serv.img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/e8e2d5/5c5043?text=Foto'">
+            </div>
+            <div class="flex-grow">
+              <span class="text-[10px] font-bold text-[#b5945b] tracking-wider uppercase">Serviço #${index + 1}</span>
+              <input type="text" id="serv-titulo-${index}" value="${serv.titulo}" class="w-full font-bold text-gray-800 text-sm border-b py-1 focus:outline-none focus:border-[#b5945b]">
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="text-[10px] font-bold text-gray-400 block">Preço (R$)</label>
+              <input type="number" step="0.01" id="serv-preco-${index}" value="${serv.preco}" class="w-full border p-2 rounded text-sm focus:outline-none focus:border-[#b5945b]">
+            </div>
+            <div>
+              <label class="text-[10px] font-bold text-gray-400 block">Duração (Texto)</label>
+              <input type="text" id="serv-duracao-${index}" value="${serv.duracao}" class="w-full border p-2 rounded text-sm focus:outline-none focus:border-[#b5945b]">
+            </div>
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-gray-400 block">Descrição do Serviço</label>
+            <textarea id="serv-desc-${index}" class="w-full border p-2 rounded text-xs h-16 focus:outline-none focus:border-[#b5945b] resize-none">${serv.desc}</textarea>
+          </div>
+          <div class="bg-gray-50 p-2.5 rounded border border-dashed">
+            <label class="text-[10px] font-bold text-gray-400 block mb-1">Mudar Foto do Card:</label>
+            <input type="file" id="input-serv-img-${index}" accept="image/*" class="text-xs">
+            <button onclick="uploadFotoServico(${index})" class="mt-2 bg-[#b5945b] hover:bg-[#9a7d4a] text-white text-[10px] font-bold px-3 py-1.5 rounded transition">
+              Fazer Upload da Foto
+            </button>
+            <span id="status-serv-img-${index}" class="text-[9px] font-bold ml-2"></span>
+          </div>
+        </div>
+      `).join('');
+
+      // Renderizar 6 Portfólios
+      for (let i = 0; i < 6; i++) {
+        const previewImg = document.getElementById(`preview-portfolio-${i}`);
+        if (previewImg) {
+          previewImg.src = cmsPortfolio[i] || 'https://placehold.co/400x400/e8e2d5/5c5043?text=Trabalho';
+        }
+      }
+
+      // Renderizar 3 Depoimentos
+      const containerDepoimentos = document.getElementById('cms-lista-depoimentos');
+      containerDepoimentos.innerHTML = cmsDepoimentos.map((dep, index) => `
+        <div class="bg-white border rounded-xl p-5 space-y-4 shadow-sm text-left">
+          <div class="space-y-1">
+            <span class="text-[10px] font-bold text-[#b5945b] tracking-wider uppercase">Depoimento #${index + 1}</span>
+            <input type="text" id="dep-nome-${index}" value="${dep.nome}" placeholder="Nome da Cliente" class="w-full font-bold text-sm border-b py-1 focus:outline-none focus:border-[#b5945b]">
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-gray-400 block">Cidade / Localização</label>
+            <input type="text" id="dep-cidade-${index}" value="${dep.cidade}" class="w-full border p-2 rounded text-xs focus:outline-none focus:border-[#b5945b]">
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-gray-400 block">Avaliação (Estrelas)</label>
+            <select id="dep-estrelas-${index}" class="w-full border p-2 rounded text-xs focus:outline-none focus:border-[#b5945b]">
+              <option value="5" ${dep.estrelas === 5 ? 'selected' : ''}>⭐⭐⭐⭐⭐ (5 Estrelas)</option>
+              <option value="4" ${dep.estrelas === 4 ? 'selected' : ''}>⭐⭐⭐⭐ (4 Estrelas)</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-[10px] font-bold text-gray-400 block">Elogio / Texto</label>
+            <textarea id="dep-texto-${index}" class="w-full border p-2 rounded text-xs h-24 focus:outline-none focus:border-[#b5945b] resize-none">${dep.texto}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // SALVAR OS CAMPOS ESCRITOS DOS SERVIÇOS NO LOCALSTORAGE
+    function salvarTodosServicos() {
+      cmsServicos.forEach((serv, index) => {
+        serv.titulo = document.getElementById(`serv-titulo-${index}`).value;
+        serv.preco = document.getElementById(`serv-preco-${index}`).value;
+        serv.duracao = document.getElementById(`serv-duracao-${index}`).value;
+        serv.desc = document.getElementById(`serv-desc-${index}`).value;
+      });
+
+      localStorage.setItem('cms_servicos', JSON.stringify(cmsServicos));
+      alert("✅ Todos os 8 Serviços foram atualizados com sucesso!");
+    }
+
+    // SALVAR DEPOIMENTOS DE CLIENTES NO LOCALSTORAGE
+    function salvarDepoimentos() {
+      cmsDepoimentos.forEach((dep, index) => {
+        dep.nome = document.getElementById(`dep-nome-${index}`).value;
+        dep.cidade = document.getElementById(`dep-cidade-${index}`).value;
+        dep.estrelas = parseInt(document.getElementById(`dep-estrelas-${index}`).value);
+        dep.texto = document.getElementById(`dep-texto-${index}`).value;
+      });
+
+      localStorage.setItem('cms_depoimentos', JSON.stringify(cmsDepoimentos));
+      alert("✅ Comentários e Avaliações de Clientes salvos com sucesso!");
     }
   </script>
 </body>
