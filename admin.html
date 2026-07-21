@@ -10,251 +10,185 @@
   <style>
     body { font-family: 'Inter', sans-serif; }
     .font-title { font-family: 'Playfair Display', serif; }
-    .tab-btn.active {
-      background-color: #b5945b;
-      color: white;
-      border-color: #b5945b;
-    }
+    .tab-btn.active { background-color: #b5945b; color: white; border-color: #b5945b; }
   </style>
 </head>
 <body class="bg-[#FAF8F5] text-[#2C2A29] p-4 md:p-8">
 
   <div class="max-w-7xl mx-auto space-y-6">
     
-    <!-- HEADER -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-200 pb-5 gap-4">
       <div>
-        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Painel de Gestão Completo</span>
-        <h1 class="text-3xl font-title font-bold text-[#2C2A29]">B Virgínia Design - Restrito 🔒</h1>
+        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Painel de Gestão Restrito</span>
+        <h1 class="text-3xl font-title font-bold text-[#2C2A29]">B Virgínia Design 🔒</h1>
       </div>
       <a href="index.html" class="bg-gray-800 hover:bg-black text-white px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider transition flex items-center gap-2">
         <i class="fas fa-external-link-alt"></i> Ver Site
       </a>
     </div>
 
-    <!-- MENU DE ABAS -->
+    <!-- NAVEGAÇÃO POR ABAS -->
     <div class="flex flex-wrap gap-2 border-b border-gray-200 pb-4">
       <button onclick="mudarAba('agendamentos')" id="tab-agendamentos" class="tab-btn active border border-gray-300 bg-white text-gray-700 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
-        <i class="fas fa-calendar-check text-sm"></i> Agendamentos Recebidos
+        <i class="fas fa-calendar-check text-sm"></i> Agendamentos
       </button>
       <button onclick="mudarAba('bloqueios')" id="tab-bloqueios" class="tab-btn border border-gray-300 bg-white text-gray-700 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
         <i class="fas fa-clock text-sm"></i> Bloqueio de Horários
       </button>
       <button onclick="mudarAba('servicos')" id="tab-servicos" class="tab-btn border border-gray-300 bg-white text-gray-700 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
-        <i class="fas fa-[#b5945b] fa-cut text-sm"></i> Serviços & Preços
+        <i class="fas fa-cut text-sm"></i> Serviços & Preços
       </button>
       <button onclick="mudarAba('fotos')" id="tab-fotos" class="tab-btn border border-gray-300 bg-white text-gray-700 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
-        <i class="fas fa-image text-sm"></i> Fotos do Site & Galeria
+        <i class="fas fa-image text-sm"></i> Fotos do Site
       </button>
       <button onclick="mudarAba('depoimentos')" id="tab-depoimentos" class="tab-btn border border-gray-300 bg-white text-gray-700 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
         <i class="fas fa-star text-sm"></i> Avaliações
       </button>
       <button onclick="mudarAba('configuracoes')" id="tab-configuracoes" class="tab-btn border border-gray-300 bg-white text-gray-700 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
-        <i class="fas fa-cog text-sm"></i> Configurações de Contato
+        <i class="fas fa-cog text-sm"></i> Contato
       </button>
     </div>
 
-    <!-- ABA 1: AGENDAMENTOS RECEBIDOS -->
+    <!-- AGENDAMENTOS -->
     <div id="conteudo-agendamentos" class="aba-conteudo space-y-6">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h2 class="text-xl font-title font-bold">Solicitações de Agendamento das Clientes</h2>
-            <p class="text-xs text-gray-500">Veja aqui todas as solicitações feitas pelo formulário do site.</p>
+            <h2 class="text-xl font-title font-bold">Solicitações de Agendamento</h2>
+            <p class="text-xs text-gray-500">Agendamentos recebidos pelo formulário.</p>
           </div>
           <button onclick="limparAgendamentosAntigos()" class="border border-red-200 text-red-600 hover:bg-red-50 px-3 py-2 rounded-lg text-xs font-bold transition">
             <i class="fas fa-trash-alt mr-1"></i> Limpar Histórico
           </button>
         </div>
-
-        <div id="lista-agendamentos-container" class="space-y-3">
-          <!-- Injetado dinamicamente -->
-        </div>
+        <div id="lista-agendamentos-container" class="space-y-3"></div>
       </div>
     </div>
 
-    <!-- ABA 2: BLOQUEIO DE HORÁRIOS -->
+    <!-- BLOQUEIOS -->
     <div id="conteudo-bloqueios" class="aba-conteudo space-y-6 hidden">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
         <div>
           <h2 class="text-xl font-title font-bold">Bloquear Horários na Agenda</h2>
-          <p class="text-xs text-gray-500">Bloqueie horários em que não haverá atendimento (ex: folga, saída ou almoço).</p>
+          <p class="text-xs text-gray-500">Expediente: 10:00 às 19:00 (Almoço bloqueado: 12:00 às 14:00).</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div class="space-y-5 bg-[#FAF8F5] p-5 rounded-xl border border-gray-200/60">
             <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Selecione o Dia:</label>
-              <input type="date" id="block-date" onchange="renderizarGradeHorarios()" class="w-full border border-gray-300 rounded-lg p-3 text-sm font-bold bg-white focus:ring-2 focus:ring-[#b5945b]">
+              <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Data:</label>
+              <input type="date" id="block-date" onchange="renderizarGradeHorarios()" class="w-full border border-gray-300 rounded-lg p-3 text-sm font-bold bg-white">
             </div>
 
             <div class="border-t border-gray-200 pt-4 space-y-3">
-              <h3 class="text-xs font-bold text-[#b5945b] uppercase"><i class="fas fa-user-clock mr-1"></i> Bloquear Intervalo de Horário</h3>
+              <h3 class="text-xs font-bold text-[#b5945b] uppercase">Bloquear Período</h3>
               <div class="grid grid-cols-2 gap-2">
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-600 uppercase">Saída</label>
-                  <select id="range-start" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white"></select>
-                </div>
-                <div>
-                  <label class="block text-[10px] font-bold text-gray-600 uppercase">Volta</label>
-                  <select id="range-end" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white"></select>
-                </div>
+                <div><label class="block text-[10px] font-bold uppercase">Saída</label><select id="range-start" class="w-full border rounded p-2 text-xs bg-white"></select></div>
+                <div><label class="block text-[10px] font-bold uppercase">Volta</label><select id="range-end" class="w-full border rounded p-2 text-xs bg-white"></select></div>
               </div>
-              <button onclick="bloquearIntervalo()" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white text-xs font-bold py-3 rounded-lg transition uppercase tracking-wider">
-                Bloquear Período
-              </button>
-              <button onclick="desbloquearDiaInteiro()" class="w-full border border-gray-300 hover:bg-gray-100 text-gray-700 text-xs font-semibold py-2 rounded-lg transition">
-                Desbloquear Todos os Horários do Dia
-              </button>
+              <button onclick="bloquearIntervalo()" class="w-full bg-[#b5945b] text-white text-xs font-bold py-3 rounded-lg uppercase">Bloquear Período</button>
+              <button onclick="desbloquearDiaInteiro()" class="w-full border text-gray-700 text-xs font-semibold py-2 rounded-lg">Desbloquear Dia Inteiro</button>
             </div>
           </div>
 
           <div class="lg:col-span-2 space-y-3">
-            <label class="block text-xs font-bold text-gray-500 uppercase">Clique no Horário para Bloquear / Desbloquear:</label>
+            <label class="block text-xs font-bold text-gray-500 uppercase">Clique para Bloquear/Desbloquear:</label>
             <div id="slots-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[420px] overflow-y-auto p-1 border border-gray-100 rounded-xl"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- ABA 3: SERVIÇOS E PREÇOS -->
+    <!-- SERVIÇOS -->
     <div id="conteudo-servicos" class="aba-conteudo space-y-6 hidden">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div>
-            <h2 class="text-xl font-title font-bold">Serviços e Procedimentos</h2>
-            <p class="text-xs text-gray-500">Altere nome, valor, descrição e foto dos serviços exibidos no site.</p>
-          </div>
+        <div class="flex justify-between items-center">
+          <h2 class="text-xl font-title font-bold">Serviços e Procedimentos</h2>
           <div class="flex gap-2">
-            <button onclick="adicionarServico()" class="bg-[#b5945b] text-white font-bold px-4 py-2.5 rounded-xl text-xs uppercase tracking-wider">
-              + Novo Serviço
-            </button>
-            <button onclick="salvarServicos()" class="bg-[#2C2A29] text-white font-bold px-5 py-2.5 rounded-xl text-xs uppercase tracking-wider shadow">
-              Salvar Serviços
-            </button>
+            <button onclick="adicionarServico()" class="bg-[#b5945b] text-white font-bold px-4 py-2.5 rounded-xl text-xs uppercase">+ Novo Serviço</button>
+            <button onclick="salvarServicos()" class="bg-[#2C2A29] text-white font-bold px-5 py-2.5 rounded-xl text-xs uppercase">Salvar Serviços</button>
           </div>
         </div>
         <div id="servicos-admin-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
       </div>
     </div>
 
-    <!-- ABA 4: FOTOS DO SITE -->
+    <!-- FOTOS DO SITE -->
     <div id="conteudo-fotos" class="aba-conteudo space-y-6 hidden">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
         <div class="flex justify-between items-center">
-          <div>
-            <h2 class="text-xl font-title font-bold">Imagens Principais e Portfólio</h2>
-            <p class="text-xs text-gray-500">As fotos enviadas são otimizadas automaticamente e aparecem no site na mesma hora.</p>
-          </div>
-          <button onclick="salvarFotosSite()" class="bg-[#2C2A29] text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider shadow">
-            Salvar Todas as Fotos
-          </button>
+          <h2 class="text-xl font-title font-bold">Fotos do Site</h2>
+          <button onclick="salvarFotosSite()" class="bg-[#2C2A29] text-white font-bold px-6 py-3 rounded-xl text-xs uppercase">Salvar Fotos</button>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div class="space-y-3 bg-[#FAF8F5] p-4 rounded-xl border border-gray-200">
-            <label class="block text-xs font-bold text-gray-700 uppercase">Foto do Topo (Hero Banner)</label>
-            <input type="file" accept="image/*" onchange="processarUploadImagem(this, 'input-hero-bg', 'prev-hero-bg')" class="text-xs block w-full file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#b5945b] file:text-white cursor-pointer">
-            <input type="text" id="input-hero-bg" placeholder="URL ou Imagem em Base64" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white">
-            <div class="h-36 bg-gray-100 rounded-lg overflow-hidden border">
-              <img id="prev-hero-bg" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x300/e8e2d5/5c5043?text=Fundo+Hero'">
-            </div>
+          <div class="space-y-3 bg-[#FAF8F5] p-4 rounded-xl border">
+            <label class="block text-xs font-bold uppercase">Foto do Topo (Hero)</label>
+            <input type="file" accept="image/*" onchange="processarUploadImagem(this, 'input-hero-bg', 'prev-hero-bg')" class="text-xs block w-full file:py-1 file:px-2 file:bg-[#b5945b] file:text-white">
+            <input type="text" id="input-hero-bg" class="w-full border rounded p-2 text-xs bg-white">
+            <div class="h-32 bg-gray-100 rounded overflow-hidden border"><img id="prev-hero-bg" class="w-full h-full object-cover"></div>
           </div>
-
-          <div class="space-y-3 bg-[#FAF8F5] p-4 rounded-xl border border-gray-200">
-            <label class="block text-xs font-bold text-gray-700 uppercase">Foto de Apresentação (Seção Sobre)</label>
-            <input type="file" accept="image/*" onchange="processarUploadImagem(this, 'input-foto-sobre', 'prev-foto-sobre')" class="text-xs block w-full file:mr-2 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:bg-[#b5945b] file:text-white cursor-pointer">
-            <input type="text" id="input-foto-sobre" placeholder="URL ou Imagem em Base64" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white">
-            <div class="h-36 bg-gray-100 rounded-lg overflow-hidden border">
-              <img id="prev-foto-sobre" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/600x300/e8e2d5/5c5043?text=Foto+Sobre'">
-            </div>
+          <div class="space-y-3 bg-[#FAF8F5] p-4 rounded-xl border">
+            <label class="block text-xs font-bold uppercase">Foto Apresentação (Sobre)</label>
+            <input type="file" accept="image/*" onchange="processarUploadImagem(this, 'input-foto-sobre', 'prev-foto-sobre')" class="text-xs block w-full file:py-1 file:px-2 file:bg-[#b5945b] file:text-white">
+            <input type="text" id="input-foto-sobre" class="w-full border rounded p-2 text-xs bg-white">
+            <div class="h-32 bg-gray-100 rounded overflow-hidden border"><img id="prev-foto-sobre" class="w-full h-full object-cover"></div>
           </div>
         </div>
-
-        <div class="border-t border-gray-100 pt-6 space-y-4">
+        <div class="border-t pt-4 space-y-3">
           <div class="flex justify-between items-center">
-            <h3 class="text-base font-title font-bold text-[#2C2A29]">Fotos do Portfólio (Resultados)</h3>
-            <button onclick="adicionarFotoPortfolio()" class="bg-[#b5945b] text-white font-bold px-4 py-2 rounded-lg text-xs uppercase">
-              + Adicionar Foto ao Portfólio
-            </button>
+            <h3 class="text-base font-bold">Portfólio</h3>
+            <button onclick="adicionarFotoPortfolio()" class="bg-[#b5945b] text-white px-3 py-1.5 rounded text-xs uppercase">+ Adicionar Foto</button>
           </div>
-          <div id="portfolio-admin-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4"></div>
+          <div id="portfolio-admin-container" class="grid grid-cols-2 sm:grid-cols-4 gap-4"></div>
         </div>
       </div>
     </div>
 
-    <!-- ABA 5: DEPOIMENTOS -->
+    <!-- DEPOIMENTOS -->
     <div id="conteudo-depoimentos" class="aba-conteudo space-y-6 hidden">
       <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6">
         <div class="flex justify-between items-center">
-          <div>
-            <h2 class="text-xl font-title font-bold">Avaliações das Clientes (5 Depoimentos)</h2>
-            <p class="text-xs text-gray-500">Configure os elogios exibidos na seção de depoimentos.</p>
-          </div>
-          <button onclick="salvarDepoimentos()" class="bg-[#2C2A29] text-white font-bold px-6 py-3 rounded-xl text-xs uppercase shadow">
-            Salvar Avaliações
-          </button>
+          <h2 class="text-xl font-title font-bold">Avaliações (5 Clientes)</h2>
+          <button onclick="salvarDepoimentos()" class="bg-[#2C2A29] text-white font-bold px-6 py-3 rounded-xl text-xs uppercase">Salvar Comentários</button>
         </div>
-        <div id="depoimentos-admin-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4"></div>
+        <div id="depoimentos-admin-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"></div>
       </div>
     </div>
 
-    <!-- ABA 6: CONFIGURAÇÕES -->
+    <!-- CONFIGURAÇÕES -->
     <div id="conteudo-configuracoes" class="aba-conteudo space-y-6 hidden">
-      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-6 max-w-2xl">
-        <h2 class="text-xl font-title font-bold">Configurações de Contato e Endereço</h2>
-        <div class="space-y-4">
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">WhatsApp da Betânia (Com DDD)</label>
-            <input type="text" id="cfg-whatsapp" placeholder="81989002496" class="w-full border border-gray-300 rounded-lg p-3 text-sm bg-white">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-700 uppercase mb-1">Endereço Exibido</label>
-            <input type="text" id="cfg-endereco" placeholder="Bela Vista, Cabo de Santo Agostinho – PE" class="w-full border border-gray-300 rounded-lg p-3 text-sm bg-white">
-          </div>
-          <button onclick="salvarConfiguracoes()" class="bg-[#b5945b] text-white font-bold px-6 py-3 rounded-xl text-xs uppercase tracking-wider shadow">
-            Salvar Configurações
-          </button>
+      <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4 max-w-2xl">
+        <h2 class="text-xl font-title font-bold">Contato</h2>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">WhatsApp Betânia</label>
+          <input type="text" id="cfg-whatsapp" class="w-full border rounded p-3 text-sm bg-white">
         </div>
+        <button onclick="salvarConfiguracoes()" class="bg-[#b5945b] text-white font-bold px-6 py-3 rounded-xl text-xs uppercase">Salvar</button>
       </div>
     </div>
 
   </div>
 
   <script>
-    // COMPRESSOR AUTOMÁTICO DE FOTOS DENTRO DO PAINEL
     function processarUploadImagem(fileInput, targetInputId, previewImgId) {
       const file = fileInput.files[0];
       if (!file) return;
-
       const reader = new FileReader();
       reader.onload = function(e) {
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
           const ctx = canvas.getContext('2d');
-          
-          let width = img.width;
-          let height = img.height;
-          const maxDim = 1000;
-
+          let width = img.width, height = img.height, maxDim = 1000;
           if (width > maxDim || height > maxDim) {
-            if (width > height) {
-              height = Math.round((height * maxDim) / width);
-              width = maxDim;
-            } else {
-              width = Math.round((width * maxDim) / height);
-              height = maxDim;
-            }
+            if (width > height) { height = Math.round((height * maxDim) / width); width = maxDim; }
+            else { width = Math.round((width * maxDim) / height); height = maxDim; }
           }
-
-          canvas.width = width;
-          canvas.height = height;
+          canvas.width = width; canvas.height = height;
           ctx.drawImage(img, 0, 0, width, height);
-
-          const base64Otimizada = canvas.toDataURL('image/jpeg', 0.75);
-          if (targetInputId) document.getElementById(targetInputId).value = base64Otimizada;
-          if (previewImgId) document.getElementById(previewImgId).src = base64Otimizada;
+          const base64 = canvas.toDataURL('image/jpeg', 0.75);
+          if (targetInputId) document.getElementById(targetInputId).value = base64;
+          if (previewImgId) document.getElementById(previewImgId).src = base64;
         };
         img.src = e.target.result;
       };
@@ -264,73 +198,39 @@
     function mudarAba(nomeAba) {
       document.querySelectorAll('.aba-conteudo').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-
       document.getElementById(`conteudo-${nomeAba}`).classList.remove('hidden');
       document.getElementById(`tab-${nomeAba}`).classList.add('active');
-
       if (nomeAba === 'agendamentos') carregarAgendamentosRecebidos();
     }
 
-    // 1. ABA AGENDAMENTOS
     function carregarAgendamentosRecebidos() {
       const list = JSON.parse(localStorage.getItem('cms_agendamentos')) || [];
       const container = document.getElementById('lista-agendamentos-container');
-
       if (list.length === 0) {
-        container.innerHTML = `
-          <div class="p-8 text-center bg-gray-50 rounded-xl border border-dashed border-gray-300 text-gray-500 text-sm">
-            Nenhuma solicitação de agendamento registrada até o momento.
-          </div>`;
+        container.innerHTML = `<div class="p-8 text-center bg-gray-50 rounded-xl text-gray-500 text-sm">Nenhuma solicitação de agendamento registrada.</div>`;
         return;
       }
-
-      const wspBetania = localStorage.getItem('cms_whatsapp') || '5581989002496';
-
-      container.innerHTML = list.map(item => {
-        const dataFmt = item.data ? item.data.split('-').reverse().join('/') : item.data;
-        return `
-          <div class="bg-[#FAF8F5] p-4 rounded-xl border border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div class="space-y-1">
-              <div class="flex items-center gap-2">
-                <span class="font-bold text-sm text-[#2C2A29]">${item.nome}</span>
-                <span class="text-[10px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold uppercase">${item.status || 'Pendente'}</span>
-                <span class="text-[10px] text-gray-400">${item.dataCriacao || ''}</span>
-              </div>
-              <p class="text-xs text-gray-600">✨ <strong>Serviço:</strong> ${item.servico} | 📅 <strong>Data:</strong> ${dataFmt} às ⏰ <strong>${item.horario}</strong></p>
-              <p class="text-xs text-gray-500">📱 <strong>WhatsApp:</strong> ${item.telefone} ${item.obs ? `| 📝 <strong>Obs:</strong> ${item.obs}` : ''}</p>
-            </div>
-            <div class="flex items-center gap-2 w-full md:w-auto">
-              <a href="https://wa.me/${item.telefone.replace(/\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(item.nome)}!%20Sou%20Bet%C3%A2nia%20da%20B%20Virg%C3%ADnia%20Design.%20Recebi%20sua%20solicita%C3%A7%C3%A3o%20para%20${encodeURIComponent(dataFmt)}%20%C3%A0s%20${encodeURIComponent(item.horario)}." 
-                 target="_blank" 
-                 class="bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold px-3 py-2 rounded-lg flex items-center gap-1 shadow">
-                <i class="fab fa-whatsapp"></i> Falar com Cliente
-              </a>
-              <button onclick="removerAgendamento(${item.id})" class="text-red-500 hover:text-red-700 bg-white border border-gray-200 p-2 rounded-lg text-xs" title="Excluir">
-                <i class="fas fa-trash"></i>
-              </button>
-            </div>
-          </div>`;
-      }).join('');
-    }
-
-    function removerAgendamento(id) {
-      let list = JSON.parse(localStorage.getItem('cms_agendamentos')) || [];
-      list = list.filter(item => item.id !== id);
-      localStorage.setItem('cms_agendamentos', JSON.stringify(list));
-      carregarAgendamentosRecebidos();
+      container.innerHTML = list.map(item => `
+        <div class="bg-[#FAF8F5] p-4 rounded-xl border flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div class="space-y-1">
+            <span class="font-bold text-sm">${item.nome}</span>
+            <p class="text-xs text-gray-600">✨ <strong>Serviço:</strong> ${item.servico} | 📅 <strong>Data:</strong> ${item.data.split('-').reverse().join('/')} às ⏰ <strong>${item.horario}</strong></p>
+            <p class="text-xs text-gray-500">📱 <strong>WhatsApp:</strong> ${item.telefone} ${item.obs ? `| Obs: ${item.obs}` : ''}</p>
+          </div>
+          <a href="https://wa.me/${item.telefone.replace(/\D/g, '')}?text=Ol%C3%A1%20${encodeURIComponent(item.nome)}!%20Sou%20Bet%C3%A2nia%20da%20B%20Virg%C3%ADnia%20Design." target="_blank" class="bg-[#25D366] text-white text-xs font-bold px-3 py-2 rounded-lg"><i class="fab fa-whatsapp"></i> Falar com Cliente</a>
+        </div>`).join('');
     }
 
     function limparAgendamentosAntigos() {
-      if (confirm("Tem certeza que deseja apagar todo o histórico de agendamentos salvos?")) {
+      if (confirm("Apagar todo o histórico de solicitações?")) {
         localStorage.setItem('cms_agendamentos', JSON.stringify([]));
         carregarAgendamentosRecebidos();
       }
     }
 
-    // HORÁRIOS
     function gerarHorarios15min() {
       const lista = [];
-      for (let h = 8; h <= 19; h++) {
+      for (let h = 10; h <= 19; h++) {
         for (let m = 0; m < 60; m += 15) {
           if (h === 19 && m > 0) break;
           lista.push(`${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`);
@@ -346,11 +246,15 @@
       const grid = document.getElementById('slots-grid');
 
       grid.innerHTML = TODOS_HORARIOS.map(horario => {
-        const estaBloqueado = bloqueados.includes(horario);
+        const [h] = horario.split(':').map(Number);
+        const ehAlmoco = (h >= 12 && h < 14);
+        const estaBloqueado = bloqueados.includes(horario) || ehAlmoco;
+
         return `
-          <button onclick="toggleBloqueio('${horario}')" class="${estaBloqueado ? 'bg-red-50 text-red-700 border-red-200' : 'bg-[#FAF8F5] text-[#2C2A29] border-gray-200'} border p-2 rounded-lg text-xs font-semibold flex items-center justify-between transition">
+          <button ${ehAlmoco ? 'disabled' : `onclick="toggleBloqueio('${horario}')"`} 
+                  class="${ehAlmoco ? 'bg-amber-100 text-amber-800 border-amber-300' : (estaBloqueado ? 'bg-red-50 text-red-700 border-red-200' : 'bg-[#FAF8F5] text-[#2C2A29] border-gray-200')} border p-2 rounded-lg text-xs font-semibold flex items-center justify-between">
             <span>${horario}</span>
-            <span class="text-[9px] font-bold">${estaBloqueado ? 'Bloqueado 🔒' : 'Livre'}</span>
+            <span class="text-[9px] font-bold">${ehAlmoco ? 'Almoço 🍱' : (estaBloqueado ? 'Bloqueado 🔒' : 'Livre')}</span>
           </button>`;
       }).join('');
     }
@@ -369,15 +273,12 @@
       const data = document.getElementById('block-date').value;
       const inicio = document.getElementById('range-start').value;
       const fim = document.getElementById('range-end').value;
-      if (inicio >= fim) return alert("Horário de saída deve ser menor que o de volta!");
-
       const todos = JSON.parse(localStorage.getItem('cms_bloqueios')) || {};
       let dia = todos[data] || [];
       TODOS_HORARIOS.forEach(h => { if (h >= inicio && h < fim && !dia.includes(h)) dia.push(h); });
       todos[data] = dia;
       localStorage.setItem('cms_bloqueios', JSON.stringify(todos));
       renderizarGradeHorarios();
-      alert("Intervalo de horário bloqueado!");
     }
 
     function desbloquearDiaInteiro() {
@@ -388,22 +289,26 @@
       renderizarGradeHorarios();
     }
 
-    // SERVIÇOS
     function carregarServicosAdmin() {
       const SERVICOS_PADRAO = [
-        { nome: "Design Simples", preco: "R$ 35,00", desc: "Higienização, alinhamento simétrico e remoção de fios com pinça.", foto: "assets/images/galeria-1.png" },
-        { nome: "Design com Henna", preco: "R$ 50,00", desc: "Design personalizado com aplicação de henna de alta fixação.", foto: "assets/images/galeria-2.png" },
-        { nome: "Volume Brasileiro", preco: "R$ 130,00", desc: "Fios em formato Y para leveza, retenção e preenchimento marcante.", foto: "assets/images/galeria-3.png" }
+        { nome: "Design simples", preco: "R$ 35,00", desc: "Duração: 25 min", foto: "assets/images/galeria-1.png" },
+        { nome: "Design com henna", preco: "R$ 50,00", desc: "Duração: 40 min", foto: "assets/images/galeria-2.png" },
+        { nome: "Sirena", preco: "R$ 140,00", desc: "Duração: 1h", foto: "assets/images/galeria-4.png" },
+        { nome: "Brasileiro", preco: "R$ 130,00", desc: "Duração: 2h", foto: "assets/images/galeria-3.png" },
+        { nome: "5D", preco: "R$ 150,00", desc: "Duração: 2h", foto: "assets/images/galeria-5.png" },
+        { nome: "6D", preco: "R$ 160,00", desc: "Duração: 2h", foto: "assets/images/galeria-6.png" },
+        { nome: "4D Luxo", preco: "R$ 150,00", desc: "Duração: 2h", foto: "assets/images/galeria-1.png" },
+        { nome: "Fox eyes", preco: "R$ 180,00", desc: "Duração: 3h", foto: "assets/images/galeria-4.png" }
       ];
       const servicos = JSON.parse(localStorage.getItem('cms_servicos')) || SERVICOS_PADRAO;
       document.getElementById('servicos-admin-container').innerHTML = servicos.map((s, i) => `
-        <div class="bg-[#FAF8F5] p-4 rounded-xl border border-gray-200/80 space-y-3 relative">
-          <button onclick="removerServico(${i})" class="absolute top-3 right-3 text-red-500 hover:text-red-700 text-xs font-bold"><i class="fas fa-trash"></i></button>
+        <div class="bg-[#FAF8F5] p-4 rounded-xl border space-y-3 relative">
+          <button onclick="removerServico(${i})" class="absolute top-3 right-3 text-red-500 text-xs font-bold"><i class="fas fa-trash"></i></button>
           <div><label class="block text-[10px] font-bold uppercase">Nome</label><input type="text" id="srv-nome-${i}" value="${s.nome}" class="w-full border rounded p-2 text-xs font-bold bg-white"></div>
           <div><label class="block text-[10px] font-bold uppercase">Preço</label><input type="text" id="srv-preco-${i}" value="${s.preco}" class="w-full border rounded p-2 text-xs font-bold text-[#b5945b] bg-white"></div>
           <div>
-            <label class="block text-[10px] font-bold uppercase">Foto do Procedimento</label>
-            <input type="file" accept="image/*" onchange="processarUploadImagem(this, 'srv-foto-${i}')" class="text-[10px] mb-1 block w-full file:mr-2 file:py-1 file:px-2 file:rounded file:bg-[#b5945b] file:text-white">
+            <label class="block text-[10px] font-bold uppercase">Foto</label>
+            <input type="file" accept="image/*" onchange="processarUploadImagem(this, 'srv-foto-${i}')" class="text-[10px] mb-1 block w-full file:py-1 file:px-2 file:bg-[#b5945b] file:text-white">
             <input type="text" id="srv-foto-${i}" value="${s.foto || ''}" class="w-full border rounded p-2 text-xs bg-white">
           </div>
           <div><label class="block text-[10px] font-bold uppercase">Descrição</label><textarea id="srv-desc-${i}" rows="2" class="w-full border rounded p-2 text-xs bg-white">${s.desc || ''}</textarea></div>
@@ -419,7 +324,7 @@
         foto: document.getElementById(`srv-foto-${i}`).value.trim()
       }));
       localStorage.setItem('cms_servicos', JSON.stringify(novos));
-      alert("Serviços atualizados com sucesso!");
+      alert("Serviços salvos!");
     }
 
     function adicionarServico() {
@@ -436,23 +341,21 @@
       carregarServicosAdmin();
     }
 
-    // FOTOS DO SITE
     function carregarFotosSite() {
       const hero = localStorage.getItem('cms_hero_bg') || '';
       const sobre = localStorage.getItem('cms_foto_sobre') || '';
       document.getElementById('input-hero-bg').value = hero;
       if (hero) document.getElementById('prev-hero-bg').src = hero;
-
       document.getElementById('input-foto-sobre').value = sobre;
       if (sobre) document.getElementById('prev-foto-sobre').src = sobre;
 
       const portfolio = JSON.parse(localStorage.getItem('cms_portfolio')) || ['assets/images/galeria-1.png', 'assets/images/galeria-2.png'];
       document.getElementById('portfolio-admin-container').innerHTML = portfolio.map((url, i) => `
-        <div class="bg-[#FAF8F5] p-3 rounded-xl border space-y-2 relative">
-          <button onclick="removerFotoPortfolio(${i})" class="absolute top-2 right-2 text-red-500 bg-white px-2 py-1 rounded-full text-xs shadow"><i class="fas fa-trash"></i></button>
-          <div class="h-28 bg-gray-100 rounded overflow-hidden border"><img id="prev-port-${i}" src="${url}" class="w-full h-full object-cover"></div>
-          <input type="file" accept="image/*" onchange="processarUploadImagem(this, 'port-foto-${i}', 'prev-port-${i}')" class="text-[9px] block w-full file:mr-1 file:py-1 file:px-2 file:rounded file:bg-[#b5945b] file:text-white">
-          <input type="text" id="port-foto-${i}" value="${url}" class="w-full border rounded p-1 text-[10px] bg-white">
+        <div class="bg-[#FAF8F5] p-2 rounded border space-y-1 relative">
+          <button onclick="removerFotoPortfolio(${i})" class="absolute top-1 right-1 text-red-500 bg-white px-1.5 py-0.5 rounded text-[10px]"><i class="fas fa-trash"></i></button>
+          <div class="h-20 bg-gray-100 rounded overflow-hidden"><img id="prev-port-${i}" src="${url}" class="w-full h-full object-cover"></div>
+          <input type="file" accept="image/*" onchange="processarUploadImagem(this, 'port-foto-${i}', 'prev-port-${i}')" class="text-[8px] block w-full file:py-0.5 file:px-1 file:bg-[#b5945b] file:text-white">
+          <input type="text" id="port-foto-${i}" value="${url}" class="w-full border rounded p-1 text-[9px] bg-white">
         </div>`).join('');
     }
 
@@ -465,8 +368,7 @@
       const port = JSON.parse(localStorage.getItem('cms_portfolio')) || [];
       const novosPort = port.map((_, i) => document.getElementById(`port-foto-${i}`).value.trim());
       localStorage.setItem('cms_portfolio', JSON.stringify(novosPort));
-
-      alert("🎉 Fotos do site salvas com sucesso!");
+      alert("Fotos atualizadas!");
     }
 
     function adicionarFotoPortfolio() {
@@ -483,14 +385,13 @@
       carregarFotosSite();
     }
 
-    // DEPOIMENTOS
     function carregarDepoimentosAdmin() {
       const DEPOIMENTOS_PADRAO = [
-        { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável."' },
-        { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Extensão super confortável."' },
-        { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista."' },
-        { nome: 'Daniela Lima', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Lash Lifting maravilhoso."' },
-        { nome: 'Eduarda Santos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Henna com cor super natural."' }
+        { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível."' },
+        { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Cílios perfeitos."' },
+        { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Espaço acolhedor."' },
+        { nome: 'Daniela Lima', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Lash Lifting top."' },
+        { nome: 'Eduarda Santos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Design impecável."' }
       ];
       const deps = JSON.parse(localStorage.getItem('cms_depoimentos')) || DEPOIMENTOS_PADRAO;
       document.getElementById('depoimentos-admin-container').innerHTML = deps.slice(0, 5).map((dep, i) => `
@@ -505,7 +406,7 @@
               <option value="4" ${dep.estrelas == 4 ? 'selected' : ''}>⭐⭐⭐⭐ (4)</option>
             </select>
           </div>
-          <div><label class="block text-[10px] font-bold">Texto</label><textarea id="dep-texto-${i}" rows="3" class="w-full border rounded p-1.5 text-xs bg-white">${dep.texto}</textarea></div>
+          <div><label class="block text-[10px] font-bold">Texto</label><textarea id="dep-texto-${i}" rows="2" class="w-full border rounded p-1.5 text-xs bg-white">${dep.texto}</textarea></div>
         </div>`).join('');
     }
 
@@ -520,34 +421,28 @@
         });
       }
       localStorage.setItem('cms_depoimentos', JSON.stringify(novos));
-      alert("Depoimentos atualizados!");
+      alert("Avaliações salvas!");
     }
 
-    // CONFIGURAÇÕES
     function carregarConfiguracoes() {
       document.getElementById('cfg-whatsapp').value = localStorage.getItem('cms_whatsapp') || '5581989002496';
-      document.getElementById('cfg-endereco').value = localStorage.getItem('cms_endereco') || 'Bela Vista, Cabo de Santo Agostinho – PE';
     }
 
     function salvarConfiguracoes() {
       const wsp = document.getElementById('cfg-whatsapp').value.trim();
-      const end = document.getElementById('cfg-endereco').value.trim();
       if (wsp) localStorage.setItem('cms_whatsapp', wsp);
-      if (end) localStorage.setItem('cms_endereco', end);
       alert("Configurações salvas!");
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('block-date').value = new Date().toISOString().split('T')[0];
-
-      // Povoar selects
       const sStart = document.getElementById('range-start');
       const sEnd = document.getElementById('range-end');
       TODOS_HORARIOS.forEach(h => {
         sStart.innerHTML += `<option value="${h}">${h}</option>`;
         sEnd.innerHTML += `<option value="${h}">${h}</option>`;
       });
-      sStart.value = "12:00"; sEnd.value = "13:30";
+      sStart.value = "10:00"; sEnd.value = "12:00";
 
       carregarAgendamentosRecebidos();
       renderizarGradeHorarios();
