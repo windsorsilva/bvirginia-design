@@ -70,7 +70,7 @@
                 <h2 class="text-xl font-bold mb-4">Agenda Diária de Atendimentos</h2>
                 <div class="bg-white p-6 rounded shadow border">
                     <div id="lista-agendamentos-hoje" class="space-y-4">
-                        <p class="text-gray-500 text-sm">Carregando agendamentos do dia...</p>
+                        <p class="text-gray-500 text-sm">Nenhum agendamento para hoje.</p>
                     </div>
                 </div>
             </section>
@@ -88,7 +88,7 @@
                             </tr>
                         </thead>
                         <tbody id="tabela-clientes">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Carregando lista de clientes...</td></tr>
+                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado ainda.</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -125,7 +125,7 @@
                                 </tr>
                             </thead>
                             <tbody id="extrato-financeiro">
-                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda.</td></tr>
+                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda. O financeiro atualizará automaticamente.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -133,10 +133,11 @@
             </section>
 
             <section id="sec-bloqueios" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário</h2>
+                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário / Dias Inteiros</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Horário na Agenda</h3>
+                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
+                        <p class="text-xs text-gray-500 mb-4">Dica para bloquear o dia todo (ex: dia 22): defina o horário de início como <b>00:00</b> e fim como <b>23:59</b>.</p>
                         <form onsubmit="salvarBloqueio(event)" class="space-y-4">
                             <div>
                                 <label class="block text-xs font-bold uppercase">Data</label>
@@ -145,22 +146,22 @@
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
                                     <label class="block text-xs font-bold uppercase">Hora Início</label>
-                                    <input type="time" id="bloq-inicio" required class="w-full border p-2 rounded mt-1">
+                                    <input type="time" id="bloq-inicio" value="00:00" required class="w-full border p-2 rounded mt-1">
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold uppercase">Hora Fim</label>
-                                    <input type="time" id="bloq-fim" required class="w-full border p-2 rounded mt-1">
+                                    <input type="time" id="bloq-fim" value="23:59" required class="w-full border p-2 rounded mt-1">
                                 </div>
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase">Motivo</label>
-                                <input type="text" id="bloq-motivo" placeholder="Ex: Intervalo pessoal, médico" class="w-full border p-2 rounded mt-1">
+                                <input type="text" id="bloq-motivo" placeholder="Ex: Folga, Dia sem atendimento, Médico" class="w-full border p-2 rounded mt-1">
                             </div>
                             <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded">CADASTRAR BLOQUEIO</button>
                         </form>
                     </div>
                     <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários Bloqueados</h3>
+                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários e Dias Bloqueados</h3>
                         <div id="lista-bloqueios-cadastrados" class="space-y-2 text-sm">
                             <p class="text-gray-500">Nenhum bloqueio cadastrado.</p>
                         </div>
@@ -170,11 +171,11 @@
 
             <section id="sec-cms" class="tab-content hidden">
                 <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
-                    <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS / SERVIÇOS</button>
-                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">HORÁRIO DE FUNCIONAMENTO</button>
-                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">GERENCIADOR DE CONTEÚDO (TEXTOS)</button>
-                    <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES & DEPOIMENTOS ⭐</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS DO SITE</button>
+                    <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
+                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE</button>
+                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS (CMS)</button>
+                    <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
+                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS (UPLOAD / PC / CELULAR)</button>
                 </div>
 
                 <div id="subsec-procedimentos" class="subtab-content">
@@ -275,20 +276,19 @@
                     <div class="flex justify-between items-center mb-6">
                         <div>
                             <h3 class="text-lg font-bold">Depoimentos & Avaliações dos Clientes</h3>
-                            <p class="text-xs text-gray-500">Edite, troque mensalmente ou adicione novos comentários para exibir no site.</p>
+                            <p class="text-xs text-gray-500">Edite, troque mensalmente ou adicione novos comentários.</p>
                         </div>
                         <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold hover:opacity-90">
                             + NOVO DEPOIMENTO
                         </button>
                     </div>
-
-                    <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        </div>
+                    <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
                 <div id="subsec-galeria" class="subtab-content hidden">
-                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site</h3>
-                    <p class="text-xs text-gray-500 mb-6">Altere os links das fotos do site. As legendas indicam exatamente onde cada imagem é exibida no layout.</p>
+                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site (Upload Completo)</h3>
+                    <p class="text-xs text-gray-500 mb-6">Envie fotos diretamente do seu dispositivo (PC ou Celular) ou cole um link de URL. A atualização é aplicada instantaneamente.</p>
+                    
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
             </section>
@@ -310,7 +310,7 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const SENHA_ADMIN = 'virginia123';
 
-        // PROCEDIMENTOS EDITÁVEIS
+        // PROCEDIMENTOS
         let procedimentos = [
             { id: 1, nome: "Design Simples", duracao: "30 min", preco: 30.00 },
             { id: 2, nome: "Design com Henna", duracao: "45 min", preco: 45.00 },
@@ -321,14 +321,14 @@
             { id: 7, nome: "Combo Brow + Lash", duracao: "90 min", preco: 160.00 }
         ];
 
-        // AVALIAÇÕES E DEPOIMENTOS EDITÁVEIS
+        // AVALIAÇÕES
         let avaliacoes = [
             { id: 1, nome: "Mariana Costa", estrelas: 5, texto: "Atendimento maravilhoso! O Lash Lifting durou super bem e minhas sobrancelhas ficaram perfeitas e naturais." },
             { id: 2, nome: "Juliana Andrade", estrelas: 5, texto: "Ambiente muito aconchegante e profissionalismo impecável. Não troco a Virgínia por nada!" },
             { id: 3, nome: "Camila Ribeiro", estrelas: 5, texto: "O Design com Henna ficou na cor exata do meu cabelo. Super recomendo o estúdio!" }
         ];
 
-        // FOTOS COM POSIÇÃO/LEGENDA
+        // FOTOS COM POSIÇÃO
         let fotosSite = [
             { id: 'capa', posicao: 'Fundo da Capa (Hero Section)', url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800' },
             { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800' },
@@ -337,6 +337,8 @@
             { id: 'galeria-1', posicao: 'Galeria - Foto 1 (Resultado Sobrancelhas)', url: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=500' },
             { id: 'galeria-2', posicao: 'Galeria - Foto 2 (Estúdio / Ambiente)', url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=500' }
         ];
+
+        let bloqueios = [];
 
         function verificarSenha(e) {
             e.preventDefault();
@@ -355,6 +357,7 @@
             renderizarAvaliacoes();
             renderizarFotos();
             carregarFinanceiro();
+            renderizarBloqueios();
         }
 
         function logout() {
@@ -376,7 +379,6 @@
             document.getElementById(`subtab-${subTabId}`).classList.add('active-subtab');
         }
 
-        // RENDERIZAR PROCEDIMENTOS
         function renderizarProcedimentos() {
             const container = document.getElementById('grid-procedimentos');
             container.innerHTML = procedimentos.map(p => `
@@ -397,7 +399,7 @@
                             </div>
                         </div>
                         <div class="flex space-x-2 pt-2">
-                            <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded hover:opacity-90">SALVAR ALTERAÇÕES</button>
+                            <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded hover:opacity-90">SALVAR</button>
                             <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">EXCLUIR</button>
                         </div>
                     </div>
@@ -411,140 +413,181 @@
                 procedimentos[index].nome = document.getElementById(`proc-nome-${id}`).value;
                 procedimentos[index].duracao = document.getElementById(`proc-tempo-${id}`).value;
                 procedimentos[index].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
-                alert('Procedimento atualizado com sucesso!');
+                alert('Procedimento atualizado!');
                 carregarFinanceiro();
             }
         }
 
         function excluirProcedimento(id) {
-            if (confirm('Deseja excluir este procedimento?')) {
+            if (confirm('Deseja excluir?')) {
                 procedimentos = procedimentos.filter(p => p.id !== id);
                 renderizarProcedimentos();
             }
         }
 
         function adicionarNovoProcedimento() {
-            const novo = { id: Date.now(), nome: "Novo Procedimento", duracao: "30 min", preco: 0.00 };
-            procedimentos.push(novo);
+            procedimentos.push({ id: Date.now(), nome: "Novo Procedimento", duracao: "30 min", preco: 0.00 });
             renderizarProcedimentos();
         }
 
-        // RENDERIZAR AVALIAÇÕES / DEPOIMENTOS
         function renderizarAvaliacoes() {
             const container = document.getElementById('grid-avaliacoes');
             container.innerHTML = avaliacoes.map(a => `
                 <div class="bg-white p-5 rounded shadow border border-gray-200 space-y-3">
                     <div class="grid grid-cols-2 gap-3">
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Nome da Cliente</label>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">Cliente</label>
                             <input type="text" id="aval-nome-${a.id}" value="${a.nome}" class="w-full border p-2 rounded text-sm font-bold mt-1">
                         </div>
                         <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Avaliação (1 a 5 Estrelas)</label>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">Estrelas</label>
                             <select id="aval-estrelas-${a.id}" class="w-full border p-2 rounded text-sm font-bold mt-1">
-                                <option value="5" ${a.estrelas === 5 ? 'selected' : ''}>⭐⭐⭐⭐⭐ (5 Estrelas)</option>
-                                <option value="4" ${a.estrelas === 4 ? 'selected' : ''}>⭐⭐⭐⭐ (4 Estrelas)</option>
-                                <option value="3" ${a.estrelas === 3 ? 'selected' : ''}>⭐⭐⭐ (3 Estrelas)</option>
+                                <option value="5" ${a.estrelas === 5 ? 'selected' : ''}>⭐⭐⭐⭐⭐</option>
+                                <option value="4" ${a.estrelas === 4 ? 'selected' : ''}>⭐⭐⭐⭐</option>
                             </select>
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase">Texto do Depoimento</label>
-                        <textarea id="aval-texto-${a.id}" rows="3" class="w-full border p-2 rounded text-sm mt-1">${a.texto}</textarea>
+                        <label class="block text-xs font-bold text-gray-500 uppercase">Comentário</label>
+                        <textarea id="aval-texto-${a.id}" rows="2" class="w-full border p-2 rounded text-sm mt-1">${a.texto}</textarea>
                     </div>
-                    <div class="flex space-x-2 pt-2">
-                        <button onclick="salvarAvaliacao(${a.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded hover:opacity-90">SALVAR DEPOIMENTO</button>
-                        <button onclick="excluirAvaliacao(${a.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">EXCLUIR</button>
+                    <div class="flex space-x-2">
+                        <button onclick="salvarAvaliacao(${a.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">SALVAR</button>
+                        <button onclick="excluirAvaliacao(${a.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
                     </div>
                 </div>
             `).join('');
         }
 
         function salvarAvaliacao(id) {
-            const index = avaliacoes.findIndex(a => a.id === id);
-            if (index !== -1) {
-                avaliacoes[index].nome = document.getElementById(`aval-nome-${id}`).value;
-                avaliacoes[index].estrelas = parseInt(document.getElementById(`aval-estrelas-${id}`).value);
-                avaliacoes[index].texto = document.getElementById(`aval-texto-${id}`).value;
-                alert('Depoimento atualizado e publicado!');
+            const item = avaliacoes.find(a => a.id === id);
+            if (item) {
+                item.nome = document.getElementById(`aval-nome-${id}`).value;
+                item.estrelas = parseInt(document.getElementById(`aval-estrelas-${id}`).value);
+                item.texto = document.getElementById(`aval-texto-${id}`).value;
+                alert('Avaliação atualizada!');
             }
         }
 
         function excluirAvaliacao(id) {
-            if (confirm('Deseja excluir este depoimento?')) {
-                avaliacoes = avaliacoes.filter(a => a.id !== id);
-                renderizarAvaliacoes();
-            }
-        }
-
-        function adicionarNovoComentario() {
-            const novo = { id: Date.now(), nome: "Nova Cliente", estrelas: 5, texto: "Digite aqui a nova avaliação..." };
-            avaliacoes.push(novo);
+            avaliacoes = avaliacoes.filter(a => a.id !== id);
             renderizarAvaliacoes();
         }
 
-        // CÁLCULO FINANCEIRO DINÂMICO
-        function carregarFinanceiro() {
-            let agendamentosExemplo = [
-                { data: '2026-07-21 09:00', cliente: 'Maria Silva', procId: 1 },
-                { data: '2026-07-21 10:00', cliente: 'Fernanda Souza', procId: 2 },
-                { data: '2026-07-21 14:00', cliente: 'Camila Lima', procId: 4 }
-            ];
+        function adicionarNovoComentario() {
+            avaliacoes.push({ id: Date.now(), nome: "Nova Cliente", estrelas: 5, texto: "Excelente atendimento!" });
+            renderizarAvaliacoes();
+        }
 
+        // FINANCEIRO ZERADO INICIALMENTE
+        function carregarFinanceiro() {
+            let agendamentosExemplo = []; // Começa vazio (R$ 0,00)
             let faturamentoTotal = 0;
             let totalAgendamentos = agendamentosExemplo.length;
-            let htmlExtrato = '';
-
-            agendamentosExemplo.forEach(ag => {
-                let proc = procedimentos.find(p => p.id === ag.procId) || { nome: 'Serviço', preco: 0 };
-                faturamentoTotal += proc.preco;
-                htmlExtrato += `
-                    <tr class="border-b">
-                        <td class="p-2">${ag.data}</td>
-                        <td class="p-2 font-semibold">${ag.cliente}</td>
-                        <td class="p-2">${proc.nome}</td>
-                        <td class="p-2 text-green-700 font-bold">R$ ${proc.preco.toFixed(2)}</td>
-                    </tr>
-                `;
-            });
+            let htmlExtrato = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda. O financeiro atualizará automaticamente.</td></tr>`;
 
             document.getElementById('fin-faturamento').innerText = `R$ ${faturamentoTotal.toFixed(2)}`;
             document.getElementById('fin-qtd-agendamentos').innerText = totalAgendamentos;
-            document.getElementById('fin-ticket-medio').innerText = totalAgendamentos > 0 ? `R$ ${(faturamentoTotal/totalAgendamentos).toFixed(2)}` : 'R$ 0,00';
+            document.getElementById('fin-ticket-medio').innerText = `R$ 0,00`;
             document.getElementById('extrato-financeiro').innerHTML = htmlExtrato;
         }
 
-        // RENDERIZAR FOTOS
-        function renderizarFotos() {
-            const container = document.getElementById('grid-fotos-site');
-            container.innerHTML = fotosSite.map(f => `
-                <div class="bg-white p-4 rounded shadow border space-y-3">
-                    <img src="${f.url}" class="w-full h-40 object-cover rounded border" alt="${f.posicao}">
+        // BLOQUEIOS (SUPORTE A DIA INTEIRO OU PERÍODO)
+        function salvarBloqueio(e) {
+            e.preventDefault();
+            const data = document.getElementById('bloq-data').value;
+            const inicio = document.getElementById('bloq-inicio').value;
+            const fim = document.getElementById('bloq-fim').value;
+            const motivo = document.getElementById('bloq-motivo').value || 'Bloqueio de Agenda';
+
+            bloqueios.push({ id: Date.now(), data, inicio, fim, motivo });
+            renderizarBloqueios();
+            alert('Bloqueio cadastrado com sucesso!');
+        }
+
+        function renderizarBloqueios() {
+            const container = document.getElementById('lista-bloqueios-cadastrados');
+            if (bloqueios.length === 0) {
+                container.innerHTML = `<p class="text-gray-500">Nenhum bloqueio cadastrado.</p>`;
+                return;
+            }
+            container.innerHTML = bloqueios.map(b => `
+                <div class="flex justify-between items-center bg-gray-50 p-3 rounded border">
                     <div>
-                        <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded mb-1">POSIÇÃO NO SITE</span>
-                        <h4 class="font-bold text-sm text-gray-800">${f.posicao}</h4>
+                        <p class="font-bold text-gray-800">📅 ${b.data} (${b.inicio} às ${b.fim})</p>
+                        <p class="text-xs text-gray-600">${b.motivo}</p>
                     </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase">URL / Link da Imagem</label>
-                        <input type="text" id="foto-url-${f.id}" value="${f.url}" class="w-full border p-2 rounded text-xs mt-1">
-                    </div>
-                    <button onclick="salvarFoto('${f.id}')" class="w-full bg-gold text-white text-xs font-bold py-2 rounded">ALTERAR FOTO</button>
+                    <button onclick="removerBloqueio(${b.id})" class="text-red-500 text-xs font-bold hover:underline">Remover</button>
                 </div>
             `).join('');
         }
 
-        function salvarFoto(id) {
-            const f = fotosSite.find(item => item.id === id);
-            if (f) {
-                f.url = document.getElementById(`foto-url-${id}`).value;
+        function removerBloqueio(id) {
+            bloqueios = bloqueios.filter(b => b.id !== id);
+            renderizarBloqueios();
+        }
+
+        // UPLOAD DE FOTOS (COMPUTADOR, CELULAR E URL) COM SUPABASE STORAGE
+        function renderizarFotos() {
+            const container = document.getElementById('grid-fotos-site');
+            container.innerHTML = fotosSite.map(f => `
+                <div class="bg-white p-4 rounded shadow border space-y-3">
+                    <img id="img-preview-${f.id}" src="${f.url}" class="w-full h-40 object-cover rounded border" alt="${f.posicao}">
+                    <div>
+                        <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded mb-1">LOCAL NO SITE</span>
+                        <h4 class="font-bold text-sm text-gray-800">${f.posicao}</h4>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Enviar do PC / Celular</label>
+                        <input type="file" id="file-${f.id}" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase">Ou cole a URL</label>
+                        <input type="text" id="foto-url-${f.id}" value="${f.url}" class="w-full border p-2 rounded text-xs mt-1">
+                    </div>
+                    <button onclick="salvarFoto('${f.id}')" class="w-full bg-gold text-white text-xs font-bold py-2 rounded">ATUALIZAR FOTO NO SITE</button>
+                </div>
+            `).join('');
+        }
+
+        async function salvarFoto(id) {
+            const fileInput = document.getElementById(`file-${id}`);
+            let novaUrl = document.getElementById(`foto-url-${id}`).value;
+
+            // Se o usuário selecionou arquivo do computador ou celular
+            if (fileInput.files && fileInput.files[0]) {
+                const file = fileInput.files[0];
+                const fileName = `foto_${id}_${Date.now()}.${file.name.split('.').pop()}`;
+
+                alert('Enviando foto, aguarde...');
+                
+                // Faz upload para o Supabase Storage (Bucket: imagens-site)
+                const { data, error } = await _supabase.storage.from('imagens-site').upload(fileName, file);
+
+                if (error) {
+                    alert('Erro ao enviar imagem. Verifique se o bucket "imagens-site" está criado como Public no Supabase.');
+                    console.error(error);
+                    return;
+                }
+
+                // Pega a URL pública gerada
+                const { data: publicUrlData } = _supabase.storage.from('imagens-site').getPublicUrl(fileName);
+                novaUrl = publicUrlData.publicUrl;
+            }
+
+            const item = fotosSite.find(f => f.id === id);
+            if (item) {
+                item.url = novaUrl;
+                document.getElementById(`foto-url-${id}`).value = novaUrl;
+                document.getElementById(`img-preview-${id}`).src = novaUrl;
                 renderizarFotos();
-                alert('Foto alterada com sucesso!');
+                alert('Foto atualizada com sucesso no site!');
             }
         }
 
         function salvarTextosCMS(e) {
             e.preventDefault();
-            alert('Textos do site salvos e atualizados com sucesso!');
+            alert('Textos atualizados com sucesso!');
         }
 
         window.onload = function() {
