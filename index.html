@@ -41,7 +41,7 @@
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Exclusividade e Arte</span>
       <h2 id="site-titulo-sobre" class="text-3xl md:text-4xl font-title font-semibold">Seu olhar merece cuidado</h2>
       <p class="text-gray-600 leading-relaxed">Na B Virgínia Design, cada atendimento é pensado para realçar sua beleza de forma única, delicada e sofisticada.</p>
-      <p class="text-gray-600 leading-relaxed">Localizado em <strong id="site-localizacao-txt">Bela Vista, Cabo de Santo Agostinho – PE</strong>.</p>
+      <p class="text-gray-600 leading-relaxed">Localizado em <strong><a id="site-localizacao-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b]"><span id="site-localizacao-txt">Bela Vista, Cabo de Santo Agostinho – PE</span> 📍</a></strong></p>
     </div>
   </section>
 
@@ -82,7 +82,7 @@
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
         <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00.</p>
         <div class="space-y-3 text-sm text-gray-600 pt-2">
-          <p>📍 <span id="footer-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></p>
+          <p>📍 <a id="footer-local-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b]"><span id="footer-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></a></p>
           <p>💬 <span id="footer-wsp-info">+55 81 98900-2496</span></p>
         </div>
       </div>
@@ -138,14 +138,16 @@
         <ul class="space-y-2 text-sm">
           <li><a href="#" class="hover:text-[#b5945b] transition">Início</a></li>
           <li><a href="#servicos" class="hover:text-[#b5945b] transition">Procedimentos & Valores</a></li>
+          <li><a id="footer-instagram-link" href="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" target="_blank" class="hover:text-[#b5945b] transition">Instagram Oficial 📸</a></li>
           <li><a href="admin.html" class="text-[#b5945b] font-bold hover:underline">Painel Admin ⚙️</a></li>
         </ul>
       </div>
       <div class="space-y-3">
         <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Contato & Localização</h4>
         <div id="footer-localizacao-bloco" class="text-sm space-y-2">
-          <p>📍 Bela Vista, Cabo de Santo Agostinho – PE</p>
-          <p>💬 +55 81 98900-2496</p>
+          <p>📍 <a id="footer-local-map-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-gray-300">Bela Vista, Cabo de Santo Agostinho – PE</a></p>
+          <p>💬 <span id="footer-wsp-info">+55 81 98900-2496</span></p>
+          <p>📸 <a id="footer-insta-text-link" href="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" target="_blank" class="hover:underline text-[#b5945b]">@bvirginiadesign</a></p>
         </div>
       </div>
     </div>
@@ -235,7 +237,7 @@
                 if (f.id === 'capa' && f.url) document.getElementById('hero-section').style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${f.url}')`;
                 if (f.id === 'sobre' && f.url) document.getElementById('foto-sobre-element').src = f.url;
               });
-              const portImgs = fotos.filter(f => f.id.startsWith('galeria-')).map(f => f.url);
+              const portImgs = fotos.filter(f => f.id.startsWith('galeria-') || f.id.startsWith('galeria')).map(f => f.url);
               if (portImgs.length > 0) renderizarPortfolio(portImgs);
             }
             if (c.chave === 'procedimentos') {
@@ -253,6 +255,14 @@
               if(txts.localizacao) {
                 document.getElementById('site-localizacao-txt').innerText = txts.localizacao;
                 document.getElementById('footer-local-info').innerText = txts.localizacao;
+                const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(txts.localizacao)}`;
+                document.getElementById('site-localizacao-link').href = mapsUrl;
+                document.getElementById('footer-local-link').href = mapsUrl;
+                document.getElementById('footer-local-map-link').href = mapsUrl;
+              }
+              if(txts.instagram) {
+                document.getElementById('footer-instagram-link').href = txts.instagram;
+                document.getElementById('footer-insta-text-link').href = txts.instagram;
               }
               if(txts.whatsapp) {
                 document.getElementById('footer-wsp-info').innerText = `+${txts.whatsapp}`;
