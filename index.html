@@ -223,7 +223,7 @@
   <script src="shared.js"></script>
   <script src="scripts.js"></script>
 
-  <!-- Carregamento Dinâmico de Conteúdo CMS e Fotos do Supabase -->
+  <!-- Carregamento Dinâmico de Conteúdo CMS, Fotos e Fallback do Supabase -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const BUCKET_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co/storage/v1/object/public/fotos-sistema/';
@@ -234,14 +234,28 @@
         'foto-sobre':          'sobre.jpg',
         'foto-design-simples': 'design-simples.jpg',
         'foto-design-henna':   'design-henna.jpg',
-        'foto-fox-eyes':       'fox-eyes.jpg'
+        'foto-fox-eyes':        'fox-eyes.jpg'
       };
+
+      // Lista de Serviços Padrão (Fallback de contingência caso os arquivos dinâmicos falhem)
+      const SERVICOS_PADRAO = [
+        { nome: "Design Simples", preco: "R$ 35,00", desc: "Higienização, alinhamento simétrico e remoção de fios com pinça.", foto: "assets/images/galeria-1.png", supabaseId: "foto-design-simples" },
+        { nome: "Design com Henna", preco: "R$ 50,00", desc: "Design personalizado com aplicação de henna de alta fixação.", foto: "assets/images/galeria-2.png", supabaseId: "foto-design-henna" },
+        { nome: "Volume Brasileiro", preco: "R$ 130,00", desc: "Fios em formato Y para leveza, retenção e preenchimento marcante.", foto: "assets/images/galeria-3.png" },
+        { nome: "Efeito Fox Eyes / Sirena", preco: "R$ 140,00", desc: "Cílios com mapeamento alongado no canto externo para olhar sensual.", foto: "assets/images/galeria-4.png", supabaseId: "foto-fox-eyes" },
+        { nome: "Volume Egípcio", preco: "R$ 140,00", desc: "Fios em formato W que oferecem textura incrível e efeito volumoso.", foto: "assets/images/galeria-5.png" },
+        { nome: "Lash Lifting", preco: "R$ 100,00", desc: "Curvatura e tintura dos cílios naturais, promovendo efeito curvex duradouro.", foto: "assets/images/galeria-6.png" },
+        { nome: "Brown Lamination", preco: "R$ 110,00", desc: "Alinhamento e nutrição dos fios das sobrancelhas para efeito encorpado.", foto: "assets/images/galeria-1.png" },
+        { nome: "Manutenção de Cílios", preco: "R$ 80,00", desc: "Preenchimento dos fios para manter a extensão impecável e volumosa.", foto: "assets/images/galeria-2.png" }
+      ];
 
       // Hero: verificar cache local primeiro
       const cachedHeroBg = localStorage.getItem('cms_hero_bg');
       if (cachedHeroBg) {
-        document.getElementById('hero-section').style.backgroundImage =
-          `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${cachedHeroBg}')`;
+        const heroSection = document.getElementById('hero-section');
+        if (heroSection) {
+          heroSection.style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${cachedHeroBg}')`;
+        }
       }
 
       // Foto de Apresentação: verificar cache local
@@ -251,7 +265,7 @@
         if (imgSobre) imgSobre.src = cachedFotoSobre;
       }
 
-      // Carregar fotos do Supabase (fallback silencioso para local se não existirem)
+      // Função de carregamento das fotos do Supabase
       function carregarFotoSupabase(idElemento, nomeArquivo) {
         const img = document.getElementById(idElemento);
         if (!img) return;
@@ -263,8 +277,37 @@
 
       Object.entries(imagensDinamicas).forEach(([id, arquivo]) => carregarFotoSupabase(id, arquivo));
 
-      // Após scripts.js renderizar os cards (300ms), re-varrer data-supabase-id
+      // Garantir renderização dos Serviços (Fallback após 300ms se dynamic-services estiver vazio)
       setTimeout(() => {
+        const containerServicos = document.getElementById('dynamic-services');
+        if (containerServicos && containerServicos.children.length === 0) {
+          const servicosSalvos = JSON.parse(localStorage.getItem('cms_servicos'));
+          const listaServicos = (servicosSalvos && servicosSalvos.length > 0) ? servicosSalvos : SERVICOS_PADRAO;
+
+          containerServicos.innerHTML = listaServicos.map(s => `
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-gray-100">
+              <div>
+                <div class="h-48 overflow-hidden relative">
+                  <img src="${s.foto || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" 
+                       alt="${s.nome}" 
+                       ${s.supabaseId ? `data-supabase-id="${s.supabaseId}"` : ''} 
+                       class="w-full h-full object-cover transition duration-500 hover:scale-105"
+                       onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'">
+                </div>
+                <div class="p-6 space-y-3">
+                  <h3 class="font-title text-xl font-semibold text-[#2C2A29]">${s.nome}</h3>
+                  <p class="text-xs text-gray-500 leading-relaxed">${s.desc || s.descricao || ''}</p>
+                </div>
+              </div>
+              <div class="p-6 pt-0 flex items-center justify-between border-t border-gray-50 mt-4">
+                <span class="text-[#b5945b] font-bold text-lg">${s.preco}</span>
+                <a href="https://wa.me/5581989002496?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20o%20servi%C3%A7o%3A%20${encodeURIComponent(s.nome)}" target="_blank" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white text-xs px-4 py-2 rounded-lg transition uppercase font-semibold">Agendar</a>
+              </div>
+            </div>
+          `).join('');
+        }
+
+        // Re-varrer imagens dinâmicas vindas do Supabase
         document.querySelectorAll('[data-supabase-id]').forEach(img => {
           const chave = img.getAttribute('data-supabase-id');
           const arquivo = imagensDinamicas[chave];
@@ -276,7 +319,7 @@
         });
       }, 400);
 
-      // Portfólio: carregar fotos do localStorage (salvas via painel CMS) ou padrão
+      // Portfólio
       const portfolioPadrao = [
         'assets/images/galeria-1.png',
         'assets/images/galeria-2.png',
