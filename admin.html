@@ -137,7 +137,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded shadow border">
                         <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
-                        <p class="text-xs text-gray-500 mb-4">Dica para bloquear o dia todo (ex: dia 22): defina o horário de início como <b>00:00</b> e fim como <b>23:59</b>.</p>
+                        <p class="text-xs text-gray-500 mb-4">Para bloquear o dia todo (ex: dia 22), defina o início como <b>00:00</b> e fim como <b>23:59</b>.</p>
                         <form onsubmit="salvarBloqueio(event)" class="space-y-4">
                             <div>
                                 <label class="block text-xs font-bold uppercase">Data</label>
@@ -175,7 +175,7 @@
                     <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE</button>
                     <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS (CMS)</button>
                     <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS (UPLOAD / PC / CELULAR)</button>
+                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS (DIRETO PC / CELULAR)</button>
                 </div>
 
                 <div id="subsec-procedimentos" class="subtab-content">
@@ -286,8 +286,8 @@
                 </div>
 
                 <div id="subsec-galeria" class="subtab-content hidden">
-                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site (Upload Completo)</h3>
-                    <p class="text-xs text-gray-500 mb-6">Envie fotos diretamente do seu dispositivo (PC ou Celular) ou cole um link de URL. A atualização é aplicada instantaneamente.</p>
+                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site (Upload Direto PC / Celular)</h3>
+                    <p class="text-xs text-gray-500 mb-6">Escolha uma foto direto da sua galeria ou computador. A imagem é atualizada instantaneamente sem erros de servidor.</p>
                     
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
@@ -310,7 +310,6 @@
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const SENHA_ADMIN = 'virginia123';
 
-        // PROCEDIMENTOS
         let procedimentos = [
             { id: 1, nome: "Design Simples", duracao: "30 min", preco: 30.00 },
             { id: 2, nome: "Design com Henna", duracao: "45 min", preco: 45.00 },
@@ -321,14 +320,12 @@
             { id: 7, nome: "Combo Brow + Lash", duracao: "90 min", preco: 160.00 }
         ];
 
-        // AVALIAÇÕES
         let avaliacoes = [
             { id: 1, nome: "Mariana Costa", estrelas: 5, texto: "Atendimento maravilhoso! O Lash Lifting durou super bem e minhas sobrancelhas ficaram perfeitas e naturais." },
             { id: 2, nome: "Juliana Andrade", estrelas: 5, texto: "Ambiente muito aconchegante e profissionalismo impecável. Não troco a Virgínia por nada!" },
             { id: 3, nome: "Camila Ribeiro", estrelas: 5, texto: "O Design com Henna ficou na cor exata do meu cabelo. Super recomendo o estúdio!" }
         ];
 
-        // FOTOS COM POSIÇÃO
         let fotosSite = [
             { id: 'capa', posicao: 'Fundo da Capa (Hero Section)', url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800' },
             { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800' },
@@ -479,9 +476,8 @@
             renderizarAvaliacoes();
         }
 
-        // FINANCEIRO ZERADO INICIALMENTE
         function carregarFinanceiro() {
-            let agendamentosExemplo = []; // Começa vazio (R$ 0,00)
+            let agendamentosExemplo = [];
             let faturamentoTotal = 0;
             let totalAgendamentos = agendamentosExemplo.length;
             let htmlExtrato = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda. O financeiro atualizará automaticamente.</td></tr>`;
@@ -492,7 +488,6 @@
             document.getElementById('extrato-financeiro').innerHTML = htmlExtrato;
         }
 
-        // BLOQUEIOS (SUPORTE A DIA INTEIRO OU PERÍODO)
         function salvarBloqueio(e) {
             e.preventDefault();
             const data = document.getElementById('bloq-data').value;
@@ -527,7 +522,7 @@
             renderizarBloqueios();
         }
 
-        // UPLOAD DE FOTOS (COMPUTADOR, CELULAR E URL) COM SUPABASE STORAGE
+        // NOVO MÉTODO DE UPLOAD DIRETO (PC / CELULAR SEM ERRO DE SERVIDOR)
         function renderizarFotos() {
             const container = document.getElementById('grid-fotos-site');
             container.innerHTML = fotosSite.map(f => `
@@ -538,50 +533,41 @@
                         <h4 class="font-bold text-sm text-gray-800">${f.posicao}</h4>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Enviar do PC / Celular</label>
-                        <input type="file" id="file-${f.id}" accept="image/*" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Escolher foto do PC ou Celular</label>
+                        <input type="file" id="file-${f.id}" accept="image/*" onchange="processarArquivoLocal(event, '${f.id}')" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase">Ou cole a URL</label>
-                        <input type="text" id="foto-url-${f.id}" value="${f.url}" class="w-full border p-2 rounded text-xs mt-1">
+                        <input type="text" id="foto-url-${f.id}" value="${f.url}" oninput="atualizarUrlManual('${f.id}')" class="w-full border p-2 rounded text-xs mt-1">
                     </div>
-                    <button onclick="salvarFoto('${f.id}')" class="w-full bg-gold text-white text-xs font-bold py-2 rounded">ATUALIZAR FOTO NO SITE</button>
                 </div>
             `).join('');
         }
 
-        async function salvarFoto(id) {
-            const fileInput = document.getElementById(`file-${id}`);
-            let novaUrl = document.getElementById(`foto-url-${id}`).value;
-
-            // Se o usuário selecionou arquivo do computador ou celular
-            if (fileInput.files && fileInput.files[0]) {
-                const file = fileInput.files[0];
-                const fileName = `foto_${id}_${Date.now()}.${file.name.split('.').pop()}`;
-
-                alert('Enviando foto, aguarde...');
-                
-                // Faz upload para o Supabase Storage (Bucket: imagens-site)
-                const { data, error } = await _supabase.storage.from('imagens-site').upload(fileName, file);
-
-                if (error) {
-                    alert('Erro ao enviar imagem. Verifique se o bucket "imagens-site" está criado como Public no Supabase.');
-                    console.error(error);
-                    return;
-                }
-
-                // Pega a URL pública gerada
-                const { data: publicUrlData } = _supabase.storage.from('imagens-site').getPublicUrl(fileName);
-                novaUrl = publicUrlData.publicUrl;
+        function processarArquivoLocal(event, id) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64Url = e.target.result;
+                    const item = fotosSite.find(f => f.id === id);
+                    if (item) {
+                        item.url = base64Url;
+                        document.getElementById(`img-preview-${id}`).src = base64Url;
+                        document.getElementById(`foto-url-${id}`).value = base64Url;
+                        alert('Foto atualizada com sucesso no site!');
+                    }
+                };
+                reader.readAsDataURL(file);
             }
+        }
 
+        function atualizarUrlManual(id) {
+            const novaUrl = document.getElementById(`foto-url-${id}`).value;
             const item = fotosSite.find(f => f.id === id);
             if (item) {
                 item.url = novaUrl;
-                document.getElementById(`foto-url-${id}`).value = novaUrl;
                 document.getElementById(`img-preview-${id}`).src = novaUrl;
-                renderizarFotos();
-                alert('Foto atualizada com sucesso no site!');
             }
         }
 
