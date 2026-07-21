@@ -1,658 +1,227 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo - B Virginia Design ✨</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS Client -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root {
-            --primary-gold: #c5a059;
-            --primary-dark: #1a1a1a;
-        }
-        .bg-gold { background-color: var(--primary-gold); }
-        .text-gold { color: var(--primary-gold); }
-        .border-gold { border-color: var(--primary-gold); }
-        .active-tab { border-bottom: 3px solid var(--primary-gold); font-weight: bold; color: #000; }
-        .active-subtab { background-color: #f3f4f6; border-bottom: 2px solid var(--primary-gold); font-weight: bold; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin | B Virgínia Design</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
+<body class="bg-gray-100 font-sans p-6">
+  <div class="max-w-6xl mx-auto space-y-8">
+    
+    <!-- CABEÇALHO ADMIN -->
+    <div class="flex justify-between items-center bg-white p-6 rounded-xl shadow">
+      <h1 class="text-2xl font-bold text-gray-800">Painel de Controle — Betânia</h1>
+      <a href="index.html" class="bg-black text-white text-xs px-4 py-2 rounded-lg font-bold">Ver Site Principal ↗</a>
+    </div>
 
-    <!-- 1. MODAL DE LOGIN / SENHA -->
-    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full border-t-4 border-gold text-center">
-            <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">B Virginia Design ✨</h2>
-            <p class="text-sm text-gray-600 mb-6">Acesso exclusivo ao gerenciamento do site</p>
-            
-            <form onsubmit="verificarSenha(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1 text-left">Senha do Administrador</label>
-                    <input type="password" id="input-senha" placeholder="••••••••" required 
-                           class="w-full border rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
-                </div>
-                <p id="login-error" class="text-red-500 text-xs font-semibold hidden">Senha incorreta! Tente novamente.</p>
-                <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow hover:opacity-90 transition">
-                    ENTRAR NO PAINEL
-                </button>
-            </form>
-            <div class="mt-6 border-t pt-4">
-                <a href="/index.html" class="text-xs text-gray-500 hover:underline">← Voltar ao site principal</a>
-            </div>
+    <!-- MÓDULO FINANCEIRO -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="bg-emerald-600 text-white p-6 rounded-xl shadow">
+        <span class="text-xs uppercase font-bold tracking-wider">Faturamento Total Acumulado</span>
+        <h2 id="total-financeiro" class="text-3xl font-bold mt-2">R$ 0,00</h2>
+      </div>
+      <div class="bg-blue-600 text-white p-6 rounded-xl shadow">
+        <span class="text-xs uppercase font-bold tracking-wider">Total de Agendamentos</span>
+        <h2 id="total-agendamentos-count" class="text-3xl font-bold mt-2">0</h2>
+      </div>
+      <div class="bg-purple-600 text-white p-6 rounded-xl shadow">
+        <span class="text-xs uppercase font-bold tracking-wider">Clientes Cadastradas</span>
+        <h2 id="total-clientes-count" class="text-3xl font-bold mt-2">0</h2>
+      </div>
+    </div>
+
+    <!-- CONSULTA DE AGENDA POR CALENDÁRIO -->
+    <div class="bg-white p-6 rounded-xl shadow space-y-4">
+      <div class="flex justify-between items-center flex-wrap gap-4">
+        <h2 class="text-xl font-bold text-gray-800">📅 Agenda de Atendimentos</h2>
+        <div class="flex items-center gap-2">
+          <label class="text-xs font-bold text-gray-600">Filtrar por Data:</label>
+          <input type="date" id="filtro-data-agenda" onchange="carregarAgendaData()" class="border border-gray-300 rounded p-2 text-sm font-bold">
         </div>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b bg-gray-50 text-xs font-bold text-gray-500 uppercase">
+              <th class="p-3">Horário</th>
+              <th class="p-3">Cliente</th>
+              <th class="p-3">WhatsApp</th>
+              <th class="p-3">Serviço</th>
+              <th class="p-3">Valor</th>
+              <th class="p-3">Status</th>
+              <th class="p-3">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-agenda" class="text-sm"></tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- 2. PAINEL PRINCIPAL -->
-    <div id="admin-content" class="hidden">
-        <!-- CABEÇALHO -->
-        <header class="bg-white border-b px-6 py-4 flex flex-wrap justify-between items-center shadow-sm">
-            <div>
-                <h1 class="text-2xl font-serif font-bold">Painel da Agenda ✨</h1>
-                <p class="text-xs text-gray-500">Gestão B Virginia Design</p>
-            </div>
-            <button onclick="logout()" class="bg-black text-white px-4 py-2 rounded text-xs font-semibold hover:bg-red-600 transition">
-                SAIR DO PAINEL 🚪
-            </button>
-        </header>
-
-        <!-- ABAS PRINCIPAIS -->
-        <nav class="bg-white border-b overflow-x-auto">
-            <div class="flex space-x-6 px-6 text-sm font-medium text-gray-600 min-w-max">
-                <button onclick="switchTab('agenda')" id="tab-agenda" class="py-3 px-2 active-tab">AGENDA 📅</button>
-                <button onclick="switchTab('clientes')" id="tab-clientes" class="py-3 px-2">CLIENTES (CRM) 👥</button>
-                <button onclick="switchTab('financeiro')" id="tab-financeiro" class="py-3 px-2">FINANCEIRO 💰</button>
-                <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="py-3 px-2">BLOQUEIOS MANUAIS 🚫</button>
-                <button onclick="switchTab('cms')" id="tab-cms" class="py-3 px-2">CONFIGURAÇÕES & CMS ⚙️</button>
-                <button onclick="switchTab('backup')" id="tab-backup" class="py-3 px-2">BACKUP & RESTAURAÇÃO 💾</button>
-            </div>
-        </nav>
-
-        <main class="max-w-7xl mx-auto p-6">
-
-            <!-- TAB 1: AGENDA -->
-            <section id="sec-agenda" class="tab-content">
-                <h2 class="text-xl font-bold mb-4">Agenda Diária de Atendimentos</h2>
-                <div class="bg-white p-6 rounded shadow border">
-                    <div id="lista-agendamentos-hoje" class="space-y-4">
-                        <p class="text-gray-500 text-sm">Nenhum agendamento para hoje.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 2: CLIENTES -->
-            <section id="sec-clientes" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Base de Clientes Cadastrados</h2>
-                <div class="bg-white p-6 rounded shadow border overflow-x-auto">
-                    <table class="w-full text-left text-sm">
-                        <thead>
-                            <tr class="border-b bg-gray-50">
-                                <th class="p-3">NOME</th>
-                                <th class="p-3">TELEFONE / WHATSAPP</th>
-                                <th class="p-3">ÚLTIMO SERVIÇO</th>
-                                <th class="p-3">TOTAL AGENDADO</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-clientes">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado ainda.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- TAB 3: FINANCEIRO ZERADO -->
-            <section id="sec-financeiro" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Relatório Financeiro Automático</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-amber-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Faturamento Previsto (Mês)</p>
-                        <h3 id="fin-faturamento" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-blue-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Agendamentos Realizados</p>
-                        <h3 id="fin-qtd-agendamentos" class="text-2xl font-bold text-gray-800 mt-2">0</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-green-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Ticket Médio por Cliente</p>
-                        <h3 id="fin-ticket-medio" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded shadow border">
-                    <h3 class="font-bold text-lg mb-4 border-b pb-2">Extrato de Serviços Agendados</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead>
-                                <tr class="border-b bg-gray-50">
-                                    <th class="p-2">DATA/HORA</th>
-                                    <th class="p-2">CLIENTE</th>
-                                    <th class="p-2">PROCEDIMENTO</th>
-                                    <th class="p-2">VALOR</th>
-                                </tr>
-                            </thead>
-                            <tbody id="extrato-financeiro">
-                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda. O financeiro atualizará automaticamente.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 4: BLOQUEIOS MANUAIS -->
-            <section id="sec-bloqueios" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário / Dias Inteiros</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
-                        <p class="text-xs text-gray-500 mb-4">Para bloquear o dia todo, defina o início como <b>00:00</b> e fim como <b>23:59</b>.</p>
-                        <form onsubmit="salvarBloqueio(event)" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Data</label>
-                                <input type="date" id="bloq-data" required class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Hora Início</label>
-                                    <input type="time" id="bloq-inicio" value="00:00" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Hora Fim</label>
-                                    <input type="time" id="bloq-fim" value="23:59" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Motivo</label>
-                                <input type="text" id="bloq-motivo" placeholder="Ex: Folga, Dia sem atendimento" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded">CADASTRAR BLOQUEIO</button>
-                        </form>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários e Dias Bloqueados</h3>
-                        <div id="lista-bloqueios-cadastrados" class="space-y-2 text-sm">
-                            <p class="text-gray-500">Nenhum bloqueio cadastrado.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 5: CONFIGURAÇÕES & CMS -->
-            <section id="sec-cms" class="tab-content hidden">
-                <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
-                    <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
-                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE</button>
-                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS (CMS)</button>
-                    <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS (COM BOTÃO SALVAR)</button>
-                </div>
-
-                <!-- SUB-ABA 1: PROCEDIMENTOS -->
-                <div id="subsec-procedimentos" class="subtab-content">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
-                        <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold hover:opacity-90">
-                            + NOVO PROCEDIMENTO
-                        </button>
-                    </div>
-                    <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </div>
-
-                <!-- SUB-ABA 2: EXPEDIENTE -->
-                <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda</h3>
-                    <form onsubmit="salvarRegras(event)" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Início do Expediente</label>
-                                <input type="time" id="cfg-inicio" value="08:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Último Início de Atendimento</label>
-                                <input type="time" id="cfg-ultimo" value="18:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Fechamento do Estúdio</label>
-                                <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Intervalo entre Atendimentos</label>
-                                <select id="cfg-intervalo" class="w-full border p-2 rounded mt-1">
-                                    <option value="5 minutos">5 minutos</option>
-                                    <option value="10 minutos" selected>10 minutos</option>
-                                    <option value="15 minutos">15 minutos</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
-                    </form>
-                </div>
-
-                <!-- SUB-ABA 3: CMS / TEXTOS -->
-                <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos Exibidos no Site</h3>
-                    <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Nome / Logo Textual</label>
-                                <input type="text" id="cms-logo" value="B Virginia Design" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Título Principal (Capa / Hero)</label>
-                                <input type="text" id="cms-titulo-capa" value="Beleza através do olhar ✨" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Descrição da Capa</label>
-                                <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1">Realce sua beleza natural com nossos serviços especializados em sobrancelhas e cílios.</textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Frase de Destaque (Rodapé)</label>
-                                <input type="text" id="cms-frase-rodape" value=" Realçando sua beleza através do olhar " class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Título da Seção Sobre</label>
-                                <input type="text" id="cms-titulo-sobre" value="Seu olhar merece cuidado especial" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Texto do Sobre (Parágrafo 1)</label>
-                                <textarea id="cms-sobre-p1" rows="3" class="w-full border p-2 rounded mt-1">Na B Virginia Design, cada atendimento é personalizado para realçar a harmonia do seu rosto de forma natural.</textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
-                                <input type="text" id="cms-whatsapp" value="5581989002496" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Instagram</label>
-                                <input type="text" id="cms-instagram" value="bvirginiadesign" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Endereço do Estúdio</label>
-                                <input type="text" id="cms-endereco" value="Bela Vista, Cabo de Santo Agostinho - PE" class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-
-                        <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow hover:opacity-90">
-                                PUBLICAR TEXTOS NO SITE
-                            </button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- SUB-ABA 4: AVALIAÇÕES -->
-                <div id="subsec-avaliacoes" class="subtab-content hidden">
-                    <div class="flex justify-between items-center mb-6">
-                        <div>
-                            <h3 class="text-lg font-bold">Depoimentos & Avaliações dos Clientes</h3>
-                            <p class="text-xs text-gray-500">Edite, troque mensalmente ou adicione novos comentários.</p>
-                        </div>
-                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold hover:opacity-90">
-                            + NOVO DEPOIMENTO
-                        </button>
-                    </div>
-                    <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </div>
-
-                <!-- SUB-ABA 5: GALERIA COM BOTÕES SALVAR -->
-                <div id="subsec-galeria" class="subtab-content hidden">
-                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site</h3>
-                    <p class="text-xs text-gray-500 mb-6">Escolha o arquivo ou cole a URL e clique em <b>SALVAR FOTO</b> em cada card.</p>
-                    
-                    <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </div>
-            </section>
-
-            <!-- TAB 6: BACKUP & RESTAURAÇÃO -->
-            <section id="sec-backup" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Backup e Seguranças</h2>
-                <div class="bg-white p-6 rounded shadow border text-center">
-                    <p class="text-gray-600 mb-4">Exporte um backup completo do banco de dados em formato JSON.</p>
-                    <button onclick="exportarBackup()" class="bg-black text-white px-6 py-2 rounded font-bold">EXPORTAR BACKUP DADOS</button>
-                </div>
-            </section>
-
-        </main>
+    <!-- BASE DE CLIENTES -->
+    <div class="bg-white p-6 rounded-xl shadow space-y-4">
+      <h2 class="text-xl font-bold text-gray-800">👥 Base de Clientes Cadastradas</h2>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b bg-gray-50 text-xs font-bold text-gray-500 uppercase">
+              <th class="p-3">Nome</th>
+              <th class="p-3">Telefone</th>
+              <th class="p-3">Último Serviço</th>
+              <th class="p-3">Total Agendamentos</th>
+              <th class="p-3">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-clientes" class="text-sm"></tbody>
+        </table>
+      </div>
     </div>
 
-    <!-- SCRIPT DE INTEGRAÇÃO COM SUPABASE -->
-    <script>
-        const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        const SENHA_ADMIN = 'virginia123';
+    <!-- GERENCIADOR DE FOTOS DAS SEÇÕES & PORTFÓLIO -->
+    <div class="bg-white p-6 rounded-xl shadow space-y-6">
+      <h2 class="text-xl font-bold text-gray-800">🖼️ Gerenciador de Imagens do Site</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">URL Foto da Capa (Hero):</label>
+          <input type="text" id="foto-url-capa" class="w-full border p-2 rounded text-sm mb-2">
+        </div>
+        <div>
+          <label class="block text-xs font-bold uppercase mb-1">URL Foto Seção Sobre Mim:</label>
+          <input type="text" id="foto-url-sobre" class="w-full border p-2 rounded text-sm mb-2">
+        </div>
+      </div>
 
-        let procedimentos = [
-            { id: 1, nome: "Design Simples", duracao: "30 min", preco: 30.00 },
-            { id: 2, nome: "Design com Henna", duracao: "45 min", preco: 45.00 },
-            { id: 3, nome: "Design com Colorimetria", duracao: "45 min", preco: 50.00 },
-            { id: 4, nome: "Brow Lamination", duracao: "60 min", preco: 90.00 },
-            { id: 5, nome: "Lash Lifting", duracao: "60 min", preco: 90.00 },
-            { id: 6, nome: "Epilação do Buço", duracao: "15 min", preco: 15.00 },
-            { id: 7, nome: "Combo Brow + Lash", duracao: "90 min", preco: 160.00 }
-        ];
+      <div>
+        <label class="block text-xs font-bold uppercase mb-1">Fotos da Galeria (Resultados que encantam) — Coloque URLs separadas por vírgula:</label>
+        <textarea id="portfolio-urls" rows="3" class="w-full border p-2 rounded text-sm"></textarea>
+      </div>
 
-        let avaliacoes = [
-            { id: 1, nome: "Mariana Costa", estrelas: 5, texto: "Atendimento maravilhoso! O Lash Lifting durou super bem e minhas sobrancelhas ficaram perfeitas e naturais." },
-            { id: 2, nome: "Juliana Andrade", estrelas: 5, texto: "Ambiente muito aconchegante e profissionalismo impecável. Não troco a Virgínia por nada!" },
-            { id: 3, nome: "Camila Ribeiro", estrelas: 5, texto: "O Design com Henna ficou na cor exata do meu cabelo. Super recomendo o estúdio!" }
-        ];
+      <button onclick="salvarFotosEGaleria()" class="bg-amber-600 text-white font-bold px-6 py-2 rounded shadow hover:bg-amber-700">Salvar Alterações de Imagens</button>
+    </div>
 
-        let fotosSite = [
-            { id: 'capa', posicao: 'Fundo da Capa (Hero Section)', url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800' },
-            { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800' },
-            { id: 'card-1', posicao: 'Card de Serviço - Design de Sobrancelha', url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=500' },
-            { id: 'card-2', posicao: 'Card de Serviço - Lash Lifting / Cílios', url: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=500' },
-            { id: 'galeria-1', posicao: 'Galeria - Foto 1 (Resultado Sobrancelhas)', url: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=500' },
-            { id: 'galeria-2', posicao: 'Galeria - Foto 2 (Estúdio / Ambiente)', url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=500' }
-        ];
+  </div>
 
-        let bloqueios = [];
+  <script>
+    const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        function verificarSenha(e) {
-            e.preventDefault();
-            if (document.getElementById('input-senha').value === SENHA_ADMIN) {
-                sessionStorage.setItem('admin_autenticado', 'true');
-                liberarPainel();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
+    async function initAdmin() {
+      document.getElementById('filtro-data-agenda').value = new Date().toISOString().split('T')[0];
+      await carregarAgendaData();
+      await carregarClientes();
+      await carregarFinanceiro();
+      await carregarConfigsFotos();
+    }
 
-        async function liberarPainel() {
-            document.getElementById('login-modal').classList.add('hidden');
-            document.getElementById('admin-content').classList.remove('hidden');
-            await carregarDadosDoBanco();
-            renderizarProcedimentos();
-            renderizarAvaliacoes();
-            renderizarFotos();
-            carregarFinanceiro();
-            renderizarBloqueios();
-        }
+    async function carregarAgendaData() {
+      const dataSel = document.getElementById('filtro-data-agenda').value;
+      const { data: ags } = await _supabase.from('agendamentos').select('*').eq('data', dataSel).order('horario', { ascending: true });
+      
+      const tbody = document.getElementById('tabela-agenda');
+      if (!ags || ags.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-gray-500">Nenhum atendimento para esta data.</td></tr>`;
+        return;
+      }
 
-        function logout() {
-            sessionStorage.removeItem('admin_autenticado');
-            window.location.reload();
-        }
+      tbody.innerHTML = ags.map(a => `
+        <tr class="border-b">
+          <td class="p-3 font-bold">${a.horario}</td>
+          <td class="p-3">${a.nome}</td>
+          <td class="p-3">${a.telefone}</td>
+          <td class="p-3">${a.servico}</td>
+          <td class="p-3 text-emerald-700 font-bold">R$ ${Number(a.valor).toFixed(2).replace('.', ',')}</td>
+          <td class="p-3"><span class="px-2 py-1 text-xs rounded font-bold ${a.status === 'Cancelado' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}">${a.status}</span></td>
+          <td class="p-3">
+            ${a.status !== 'Cancelado' ? `<button onclick="cancelarAgendamento(${a.id})" class="text-xs bg-red-600 text-white px-2 py-1 rounded">Cancelar</button>` : '-'}
+          </td>
+        </tr>
+      `).join('');
+    }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-tab'));
-            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
-        }
+    async function cancelarAgendamento(id) {
+      if (confirm("Deseja realmente cancelar este agendamento?")) {
+        await _supabase.from('agendamentos').update({ status: 'Cancelado' }).eq('id', id);
+        await carregarAgendaData();
+        await carregarFinanceiro();
+      }
+    }
 
-        function switchSubTab(subTabId) {
-            document.querySelectorAll('.subtab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('#sec-cms button').forEach(el => el.classList.remove('active-subtab'));
-            document.getElementById(`subsec-${subTabId}`).classList.remove('hidden');
-            document.getElementById(`subtab-${subTabId}`).classList.add('active-subtab');
-        }
+    async function carregarClientes() {
+      const { data: clis } = await _supabase.from('clientes').select('*');
+      document.getElementById('total-clientes-count').innerText = clis ? clis.length : 0;
+      
+      const tbody = document.getElementById('tabela-clientes');
+      tbody.innerHTML = clis.map(c => `
+        <tr class="border-b">
+          <td class="p-3 font-bold">${c.nome}</td>
+          <td class="p-3">${c.telefone}</td>
+          <td class="p-3">${c.ultimo_servico || '-'}</td>
+          <td class="p-3 font-bold text-center">${c.total_agendamentos || 1}</td>
+          <td class="p-3">
+            <button onclick="excluirCliente(${c.id})" class="text-xs bg-gray-800 text-white px-2 py-1 rounded">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+    }
 
-        async function carregarDadosDoBanco() {
-            try {
-                const { data, error } = await _supabase.from('configuracoes_site').select('*');
-                if (data && data.length > 0) {
-                    data.forEach(item => {
-                        if (item.chave === 'fotos_site') fotosSite = JSON.parse(item.valor);
-                        if (item.chave === 'procedimentos') procedimentos = JSON.parse(item.valor);
-                        if (item.chave === 'avaliacoes') avaliacoes = JSON.parse(item.valor);
-                    });
-                }
-            } catch (err) {
-                console.log('Usando dados padrão.');
-            }
-        }
+    async function excluirCliente(id) {
+      if (confirm("Tem certeza que deseja excluir esta cliente do cadastro?")) {
+        await _supabase.from('clientes').delete().eq('id', id);
+        await carregarClientes();
+      }
+    }
 
-        async function salvarNoBanco(chave, objetoDado) {
-            const valorString = JSON.stringify(objetoDado);
-            const { error } = await _supabase
-                .from('configuracoes_site')
-                .upsert({ chave: chave, valor: valorString }, { onConflict: 'chave' });
-            
-            if (error) {
-                console.error("Erro ao salvar:", error);
-                alert("Erro ao gravar no banco. Verifique se a tabela 'configuracoes_site' existe no Supabase.");
-            }
-        }
+    async function carregarFinanceiro() {
+      const { data: ags } = await _supabase.from('agendamentos').select('valor').neq('status', 'Cancelado');
+      let total = 0;
+      if (ags) {
+        total = ags.reduce((acc, curr) => acc + Number(curr.valor), 0);
+        document.getElementById('total-agendamentos-count').innerText = ags.length;
+      }
+      document.getElementById('total-financeiro').innerText = `R$ ${total.toFixed(2).replace('.', ',')}`;
+    }
 
-        function renderizarProcedimentos() {
-            const container = document.getElementById('grid-procedimentos');
-            container.innerHTML = procedimentos.map(p => `
-                <div class="bg-white p-5 rounded shadow border border-gray-200">
-                    <div class="space-y-3">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Nome do Procedimento</label>
-                            <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold mt-1">
-                        </div>
-                        <div class="grid grid-cols-2 gap-3">
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase">Duração</label>
-                                <input type="text" id="proc-tempo-${p.id}" value="${p.duracao}" class="w-full border p-2 rounded text-sm mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-gray-500 uppercase">Valor (R$)</label>
-                                <input type="number" step="0.01" id="proc-preco-${p.id}" value="${p.preco.toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700 mt-1">
-                            </div>
-                        </div>
-                        <div class="flex space-x-2 pt-2">
-                            <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded hover:opacity-90">💾 SALVAR ESTE</button>
-                            <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
-                        </div>
-                    </div>
-                </div>
-            `).join('') + `
-            <div class="md:col-span-2 mt-4">
-                <button onclick="salvarTodosProcedimentos()" class="w-full bg-black text-white font-bold py-3 rounded shadow hover:bg-gray-800">
-                    💾 SALVAR TODOS OS PROCEDIMENTOS DE UMA SÓ VEZ
-                </button>
-            </div>`;
-        }
-
-        async function salvarProcedimento(id) {
-            const index = procedimentos.findIndex(p => p.id === id);
-            if (index !== -1) {
-                procedimentos[index].nome = document.getElementById(`proc-nome-${id}`).value;
-                procedimentos[index].duracao = document.getElementById(`proc-tempo-${id}`).value;
-                procedimentos[index].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
-                await salvarNoBanco('procedimentos', procedimentos);
-                alert('✨ Procedimento salvo com sucesso no banco!');
-            }
-        }
-
-        async function salvarTodosProcedimentos() {
-            procedimentos.forEach(p => {
-                const nInput = document.getElementById(`proc-nome-${p.id}`);
-                const tInput = document.getElementById(`proc-tempo-${p.id}`);
-                const pInput = document.getElementById(`proc-preco-${p.id}`);
-                if (nInput) p.nome = nInput.value;
-                if (tInput) p.duracao = tInput.value;
-                if (pInput) p.preco = parseFloat(pInput.value);
+    async function carregarConfigsFotos() {
+      const { data: configs } = await _supabase.from('configuracoes_site').select('*');
+      if (configs) {
+        configs.forEach(c => {
+          if (c.chave === 'fotos_site') {
+            const fotos = JSON.parse(c.valor);
+            fotos.forEach(f => {
+              if (f.id === 'capa') document.getElementById('foto-url-capa').value = f.url;
+              if (f.id === 'sobre') document.getElementById('foto-url-sobre').value = f.url;
             });
-            await salvarNoBanco('procedimentos', procedimentos);
-            alert('✨ Todos os procedimentos foram salvos com sucesso!');
-        }
+          }
+          if (c.chave === 'portfolio') {
+            const port = JSON.parse(c.valor);
+            document.getElementById('portfolio-urls').value = port.join(', ');
+          }
+        });
+      }
+    }
 
-        async function excluirProcedimento(id) {
-            if (confirm('Deseja excluir?')) {
-                procedimentos = procedimentos.filter(p => p.id !== id);
-                await salvarNoBanco('procedimentos', procedimentos);
-                renderizarProcedimentos();
-            }
-        }
+    async function salvarFotosEGaleria() {
+      const capa = document.getElementById('foto-url-capa').value;
+      const sobre = document.getElementById('foto-url-sobre').value;
+      const portText = document.getElementById('portfolio-urls').value;
+      const portArr = portText.split(',').map(s => s.trim()).filter(Boolean);
 
-        function adicionarNovoProcedimento() {
-            procedimentos.push({ id: Date.now(), nome: "Novo Procedimento", duracao: "30 min", preco: 0.00 });
-            renderizarProcedimentos();
-        }
+      const fotosArr = [
+        { id: 'capa', url: capa },
+        { id: 'sobre', url: sobre }
+      ];
 
-        function renderizarAvaliacoes() {
-            const container = document.getElementById('grid-avaliacoes');
-            container.innerHTML = avaliacoes.map(a => `
-                <div class="bg-white p-5 rounded shadow border border-gray-200 space-y-3">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Cliente</label>
-                            <input type="text" id="aval-nome-${a.id}" value="${a.nome}" class="w-full border p-2 rounded text-sm font-bold mt-1">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 uppercase">Estrelas</label>
-                            <select id="aval-estrelas-${a.id}" class="w-full border p-2 rounded text-sm font-bold mt-1">
-                                <option value="5" ${a.estrelas === 5 ? 'selected' : ''}>⭐⭐⭐⭐⭐</option>
-                                <option value="4" ${a.estrelas === 4 ? 'selected' : ''}>⭐⭐⭐⭐</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase">Comentário</label>
-                        <textarea id="aval-texto-${a.id}" rows="2" class="w-full border p-2 rounded text-sm mt-1">${a.texto}</textarea>
-                    </div>
-                    <div class="flex space-x-2">
-                        <button onclick="salvarAvaliacao(${a.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">SALVAR</button>
-                        <button onclick="excluirAvaliacao(${a.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
-                    </div>
-                </div>
-            `).join('');
-        }
+      await _supabase.from('configuracoes_site').upsert([{ chave: 'fotos_site', valor: JSON.stringify(fotosArr) }]);
+      await _supabase.from('configuracoes_site').upsert([{ chave: 'portfolio', valor: JSON.stringify(portArr) }]);
 
-        async function salvarAvaliacao(id) {
-            const item = avaliacoes.find(a => a.id === id);
-            if (item) {
-                item.nome = document.getElementById(`aval-nome-${id}`).value;
-                item.estrelas = parseInt(document.getElementById(`aval-estrelas-${id}`).value);
-                item.texto = document.getElementById(`aval-texto-${id}`).value;
-                await salvarNoBanco('avaliacoes', avaliacoes);
-                alert('Avaliação salva!');
-            }
-        }
+      alert("Imagens atualizadas no Supabase com sucesso!");
+    }
 
-        async function excluirAvaliacao(id) {
-            avaliacoes = avaliacoes.filter(a => a.id !== id);
-            await salvarNoBanco('avaliacoes', avaliacoes);
-            renderizarAvaliacoes();
-        }
-
-        function adicionarNovoComentario() {
-            avaliacoes.push({ id: Date.now(), nome: "Nova Cliente", estrelas: 5, texto: "Excelente atendimento!" });
-            renderizarAvaliacoes();
-        }
-
-        function carregarFinanceiro() {
-            document.getElementById('fin-faturamento').innerText = `R$ 0,00`;
-            document.getElementById('fin-qtd-agendamentos').innerText = `0`;
-            document.getElementById('fin-ticket-medio').innerText = `R$ 0,00`;
-        }
-
-        function salvarBloqueio(e) {
-            e.preventDefault();
-            const data = document.getElementById('bloq-data').value;
-            const inicio = document.getElementById('bloq-inicio').value;
-            const fim = document.getElementById('bloq-fim').value;
-            const motivo = document.getElementById('bloq-motivo').value || 'Bloqueio de Agenda';
-
-            bloqueios.push({ id: Date.now(), data, inicio, fim, motivo });
-            renderizarBloqueios();
-            alert('Bloqueio cadastrado!');
-        }
-
-        function renderizarBloqueios() {
-            const container = document.getElementById('lista-bloqueios-cadastrados');
-            if (bloqueios.length === 0) {
-                container.innerHTML = `<p class="text-gray-500">Nenhum bloqueio cadastrado.</p>`;
-                return;
-            }
-            container.innerHTML = bloqueios.map(b => `
-                <div class="flex justify-between items-center bg-gray-50 p-3 rounded border">
-                    <div>
-                        <p class="font-bold text-gray-800">📅 ${b.data} (${b.inicio} às ${b.fim})</p>
-                        <p class="text-xs text-gray-600">${b.motivo}</p>
-                    </div>
-                    <button onclick="removerBloqueio(${b.id})" class="text-red-500 text-xs font-bold">Remover</button>
-                </div>
-            `).join('');
-        }
-
-        function removerBloqueio(id) {
-            bloqueios = bloqueios.filter(b => b.id !== id);
-            renderizarBloqueios();
-        }
-
-        // GALERIA DE FOTOS COM BOTÃO DE SALVAR VISÍVEL
-        function renderizarFotos() {
-            const container = document.getElementById('grid-fotos-site');
-            container.innerHTML = fotosSite.map(f => `
-                <div class="bg-white p-4 rounded shadow border space-y-3">
-                    <img id="img-preview-${f.id}" src="${f.url}" class="w-full h-40 object-cover rounded border" alt="${f.posicao}">
-                    <div>
-                        <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded mb-1">LOCAL NO SITE</span>
-                        <h4 class="font-bold text-sm text-gray-800">${f.posicao}</h4>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Escolher foto do PC ou Celular</label>
-                        <input type="file" id="file-${f.id}" accept="image/*" onchange="processarArquivoLocal(event, '${f.id}')" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700">
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 uppercase">Ou cole a URL</label>
-                        <input type="text" id="foto-url-${f.id}" value="${f.url}" oninput="atualizarUrlManual('${f.id}')" class="w-full border p-2 rounded text-xs mt-1">
-                    </div>
-                    <button onclick="salvarFotoBanco('${f.id}')" class="w-full bg-gold text-white text-xs font-bold py-2.5 rounded shadow hover:opacity-90">
-                        💾 SALVAR FOTO NO BANCO
-                    </button>
-                </div>
-            `).join('');
-        }
-
-        function processarArquivoLocal(event, id) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    const base64Url = e.target.result;
-                    const item = fotosSite.find(f => f.id === id);
-                    if (item) {
-                        item.url = base64Url;
-                        document.getElementById(`img-preview-${id}`).src = base64Url;
-                        document.getElementById(`foto-url-${id}`).value = base64Url;
-                    }
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function atualizarUrlManual(id) {
-            const novaUrl = document.getElementById(`foto-url-${id}`).value;
-            const item = fotosSite.find(f => f.id === id);
-            if (item) {
-                item.url = novaUrl;
-                document.getElementById(`img-preview-${id}`).src = novaUrl;
-            }
-        }
-
-        async function salvarFotoBanco(id) {
-            const item = fotosSite.find(f => f.id === id);
-            if (item) {
-                item.url = document.getElementById(`foto-url-${id}`).value;
-                await salvarNoBanco('fotos_site', fotosSite);
-                alert('✨ Foto salva com sucesso no banco de dados!');
-            }
-        }
-
-        async function salvarTextosCMS(e) {
-            e.preventDefault();
-            alert('Textos salvos!');
-        }
-
-        window.onload = function() {
-            if (sessionStorage.getItem('admin_autenticado') === 'true') {
-                liberarPainel();
-            }
-        };
-    </script>
+    window.onload = initAdmin;
+  </script>
 </body>
 </html>

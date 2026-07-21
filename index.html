@@ -4,9 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>B Virgínia Design | Sobrancelhas e Cílios em Cabo de Santo Agostinho - PE</title>
-  <meta name="description" content="Realce sua beleza com design de sobrancelhas e extensão de cílios na B Virgínia Design.">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase JS Client -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,13 +16,13 @@
 <body class="bg-[#FAF8F5] text-[#2C2A29]">
 
   <!-- HERO BANNER -->
-  <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
+  <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
     <div class="max-w-xl text-white space-y-6 z-10">
       <span class="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">B Virgínia Design</span>
       <h1 class="text-4xl md:text-5xl font-title font-bold leading-tight">Beleza através do olhar ✨</h1>
       <p class="text-lg text-gray-200">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</p>
       <div class="flex flex-col sm:flex-row gap-4 pt-4">
-        <a id="btn-hero-wsp" href="https://wa.me/5581989002496?text=Ol%C3%A1%2C%20B%20Virg%C3%ADnia%20Design!%20Gostaria%20de%20solicitar%20um%20agendamento." target="_blank" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-medium px-8 py-4 rounded-lg transition text-center shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
+        <a id="btn-hero-wsp" href="https://wa.me/5581989002496" target="_blank" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-medium px-8 py-4 rounded-lg transition text-center shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
           <i class="fab fa-whatsapp"></i> AGENDAR PELO WHATSAPP
         </a>
         <a href="#servicos" class="border border-white hover:bg-white hover:text-black text-white font-medium px-8 py-4 rounded-lg transition text-center">
@@ -37,13 +35,13 @@
   <!-- SEÇÃO SOBRE -->
   <section class="py-16 px-6 md:px-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
     <div class="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
-      <img id="foto-sobre-element" src="assets/images/hero-bg.png" alt="B Virgínia Design" class="w-full h-full object-cover transition duration-500" onerror="this.src='https://placehold.co/600x800/e8e2d5/5c5043?text=B+Virginia'">
+      <img id="foto-sobre-element" src="assets/images/hero-bg.png" alt="B Virgínia Design" class="w-full h-full object-cover transition duration-500">
     </div>
     <div class="space-y-6">
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Exclusividade e Arte</span>
       <h2 class="text-3xl md:text-4xl font-title font-semibold">Seu olhar merece cuidado</h2>
       <p class="text-gray-600 leading-relaxed">Na B Virgínia Design, cada atendimento é pensado para realçar sua beleza de forma única, delicada e sofisticada.</p>
-      <p class="text-gray-600 leading-relaxed">Localizado em <strong id="info-endereco">Bela Vista, Cabo de Santo Agostinho – PE</strong>.</p>
+      <p class="text-gray-600 leading-relaxed">Localizado em <strong>Bela Vista, Cabo de Santo Agostinho – PE</strong>.</p>
       <div class="pt-4">
         <span class="font-title italic text-2xl text-[#b5945b]">B Virgínia</span>
       </div>
@@ -59,24 +57,13 @@
     <div id="dynamic-services" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto"></div>
   </section>
 
-  <!-- PORTFÓLIO -->
+  <!-- PORTFÓLIO (RESULTADOS QUE ENCANTAM) -->
   <section class="py-20 px-6 md:px-16 max-w-7xl mx-auto">
     <div class="text-center mb-16 space-y-3">
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Portfólio</span>
       <h2 class="text-3xl md:text-4xl font-title font-semibold">Resultados que encantam</h2>
     </div>
     <div id="portfolio-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
-  </section>
-
-  <!-- DEPOIMENTOS -->
-  <section class="py-20 bg-[#F4EFEA] px-6 md:px-16">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16 space-y-3">
-        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Avaliações</span>
-        <h2 class="text-3xl md:text-4xl font-title font-semibold">O que nossas clientes dizem</h2>
-      </div>
-      <div id="depoimentos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto"></div>
-    </div>
   </section>
 
   <!-- FORMULÁRIO DE AGENDAMENTO -->
@@ -86,33 +73,28 @@
         <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
         <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00 (Almoço: 12:00 às 14:00).</p>
-        <div class="space-y-3 text-sm text-gray-600">
-          <p>📍 <span id="info-end-card">Bela Vista, Cabo de Santo Agostinho – PE</span></p>
-          <p>💬 <span id="info-wsp-card">+55 81 98900-2496</span></p>
-          <p>🕒 10:00 às 19:00 (Almoço: 12h às 14h)</p>
-        </div>
       </div>
       
       <div class="bg-white rounded-2xl shadow-md p-8 space-y-5">
         <form id="booking-form" class="space-y-5" onsubmit="enviarAgendamento(event)">
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome Completo</label>
-            <input type="text" id="form-name" placeholder="Digite seu nome completo" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
+            <input type="text" id="form-name" placeholder="Digite seu nome completo" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b]">
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">WhatsApp</label>
-            <input type="tel" id="form-phone" placeholder="(81) 99999-9999" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
+            <input type="tel" id="form-phone" placeholder="(81) 99999-9999" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b]">
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Serviço Desejado</label>
-            <select id="form-service" required onchange="atualizarHorariosDisponiveis()" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] bg-white">
+            <select id="form-service" required onchange="atualizarHorariosDisponiveis()" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b] bg-white">
               <option value="" disabled selected>Selecione um serviço</option>
             </select>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
-              <input type="date" id="form-date" required onchange="atualizarHorariosDisponiveis()" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
+              <input type="date" id="form-date" required onchange="atualizarHorariosDisponiveis()" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b]">
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário Escolhido</label>
@@ -120,17 +102,11 @@
             </div>
           </div>
 
-          <!-- SLOTS DE HORÁRIOS LIVRES -->
           <div id="slots-section" class="space-y-2" style="display: none;">
             <label class="block text-xs font-bold text-gray-500 uppercase">Horários Livres Encontrados:</label>
             <div id="slots-container" class="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-1 border border-gray-100 rounded-xl"></div>
           </div>
 
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações</label>
-            <textarea id="form-notes" rows="2" placeholder="Sua preferência ou dúvida..." class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] resize-none"></textarea>
-          </div>
-          
           <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition shadow-md text-sm uppercase tracking-wider flex items-center justify-center gap-2">
             <i class="fab fa-whatsapp text-lg"></i> Solicitar Agendamento
           </button>
@@ -139,312 +115,172 @@
     </div>
   </section>
 
-  <!-- FOOTER -->
-  <footer class="bg-[#2C2A29] text-gray-400 py-16 px-6 md:px-16">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
-      <div class="space-y-4">
-        <h3 class="font-title text-white text-xl">B Virgínia Design</h3>
-        <p class="text-sm italic text-gray-400">"Realçando sua beleza através do olhar."</p>
-      </div>
-      <div class="space-y-3">
-        <h4 class="text-white font-semibold text-sm uppercase tracking-wider">Links</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="#" class="hover:text-[#b5945b] transition">Início</a></li>
-          <li><a href="#servicos" class="hover:text-[#b5945b] transition">Serviços</a></li>
-          <li><a href="#agendamento" class="hover:text-[#b5945b] transition">Agendamento</a></li>
-          <li><a href="admin.html" class="text-[#b5945b] font-semibold">Área Restrita 🔒</a></li>
-        </ul>
-      </div>
-      <div class="space-y-3">
-        <h4 class="text-white font-semibold text-sm uppercase tracking-wider">Contato</h4>
-        <div class="text-sm space-y-2">
-          <p>📍 Bela Vista, Cabo de Santo Agostinho – PE</p>
-          <p>💬 +55 81 98900-2496</p>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <a href="https://wa.me/5581989002496" target="_blank" class="fixed bottom-6 right-6 bg-[#25D366] hover:bg-[#20ba5a] text-white p-4 rounded-full shadow-2xl transition duration-300 z-50 flex items-center justify-center hover:scale-110">
-    <i class="fab fa-whatsapp text-3xl"></i>
-  </a>
-
-  <!-- SCRIPT INTEGRADO COM SUPABASE E CACHE LOCAL -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const DURATIVEIS_MINUTOS = {
-      "Design simples": 25,
-      "Design com henna": 40,
-      "Fox eyes": 180,
-      "Sirena": 60,
-      "Brasileiro": 120,
-      "Volume Brasileiro": 120,
-      "5D": 120,
-      "6D": 120,
-      "4D Luxo": 120
-    };
-
-    function getDuracaoServico(nomeServico) {
-      if (!nomeServico) return 60;
-      for (let key in DURATIVEIS_MINUTOS) {
-        if (nomeServico.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(nomeServico.toLowerCase())) {
-          return DURATIVEIS_MINUTOS[key];
-        }
-      }
-      return 60;
-    }
+    let agendamentosExistentes = [];
+    let servicosCarregados = [];
 
     function timeToMinutes(t) { const [h, m] = t.split(':').map(Number); return h * 60 + m; }
     function minutesToTime(m) { const h = Math.floor(m / 60); const min = m % 60; return `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}`; }
 
+    async function carregarDadosSite() {
+      // 1. Carrega Fotos e Configurações
+      const { data: configs } = await _supabase.from('configuracoes_site').select('*');
+      if (configs) {
+        configs.forEach(c => {
+          if (c.chave === 'fotos_site') {
+            const fotos = JSON.parse(c.valor);
+            fotos.forEach(f => {
+              if (f.id === 'capa') document.getElementById('hero-section').style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${f.url}')`;
+              if (f.id === 'sobre') document.getElementById('foto-sobre-element').src = f.url;
+            });
+          }
+          if (c.chave === 'portfolio') {
+            const port = JSON.parse(c.valor);
+            document.getElementById('portfolio-container').innerHTML = port.map(imgUrl => `
+              <div class="rounded-2xl overflow-hidden shadow-lg aspect-square bg-[#E8E2D5]">
+                <img src="${imgUrl}" class="w-full h-full object-cover">
+              </div>
+            `).join('');
+          }
+        });
+      }
+
+      // 2. Carrega Serviços Dinâmicos do Banco
+      const { data: servs } = await _supabase.from('servicos').select('*');
+      if (servs) {
+        servicosCarregados = servs;
+        document.getElementById('dynamic-services').innerHTML = servs.map(s => `
+          <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
+            <div>
+              <img src="${s.foto_url || 'https://placehold.co/600x400'}" class="w-full h-48 object-cover">
+              <div class="p-6 space-y-2">
+                <h3 class="font-title text-xl font-semibold">${s.nome}</h3>
+                <p class="text-xs text-gray-500">⏱️ Duração: ${s.duracao_min} min</p>
+              </div>
+            </div>
+            <div class="p-6 pt-0 flex justify-between items-center border-t border-gray-50 mt-4">
+              <span class="text-[#b5945b] font-bold text-lg">R$ ${Number(s.preco).toFixed(2).replace('.', ',')}</span>
+              <a href="#agendamento" onclick="preencherServico('${s.nome}')" class="bg-[#2C2A29] text-white text-xs px-4 py-2 rounded-lg font-semibold">Agendar</a>
+            </div>
+          </div>
+        `).join('');
+
+        const select = document.getElementById('form-service');
+        select.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>' + 
+          servs.map(s => `<option value="${s.nome}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
+      }
+
+      // 3. Busca Agendamentos Salvos
+      const { data: ags } = await _supabase.from('agendamentos').select('*');
+      if (ags) agendamentosExistentes = ags;
+    }
+
     function atualizarHorariosDisponiveis() {
       const dateVal = document.getElementById('form-date').value;
       const serviceVal = document.getElementById('form-service').value;
-      const slotsSection = document.getElementById('slots-section');
-      const slotsContainer = document.getElementById('slots-container');
-      const timeInput = document.getElementById('form-time');
+      const container = document.getElementById('slots-container');
+      const section = document.getElementById('slots-section');
+      document.getElementById('form-time').value = '';
 
-      timeInput.value = '';
-      if (!dateVal || !serviceVal) { slotsSection.style.display = 'none'; return; }
-      slotsSection.style.display = 'block';
+      if (!dateVal || !serviceVal) { section.style.display = 'none'; return; }
+      section.style.display = 'block';
 
-      const todosBloqueios = JSON.parse(localStorage.getItem('cms_bloqueios')) || {};
-      const bloqueadosDia = todosBloqueios[dateVal] || [];
+      const sObj = servicosCarregados.find(s => s.nome === serviceVal);
+      const duracao = sObj ? sObj.duracao_min : 60;
 
-      const agendamentos = JSON.parse(localStorage.getItem('cms_agendamentos')) || [];
-      const agendamentosDia = agendamentos.filter(a => a.data === dateVal && a.status !== 'Cancelado');
+      const agora = new Date();
+      const hojeStr = agora.toISOString().split('T')[0];
+      const minutoAtual = agora.getHours() * 60 + agora.getMinutes();
 
-      const duracao = getDuracaoServico(serviceVal);
+      const agsDia = agendamentosExistentes.filter(a => a.data === dateVal && a.status !== 'Cancelado');
 
-      const INICIO_EXPEDIENTE = 10 * 60;
-      const ALMOCO_INICIO = 12 * 60;
-      const ALMOCO_FIM = 14 * 60;
-      const ULTIMO_HORARIO_AGENDAR = 19 * 60;
-      const FIM_EXPEDIENTE_MAX = 21 * 60;
+      const INICIO = 10 * 60; // 10:00
+      const ALMOCO_INI = 12 * 60; // 12:00
+      const ALMOCO_FIM = 14 * 60; // 14:00
+      const ULTIMO = 19 * 60; // 19:00
+      const MAX_FIM = 21 * 60; // 21:00
 
       const validos = [];
 
-      for (let min = INICIO_EXPEDIENTE; min <= ULTIMO_HORARIO_AGENDAR; min += 15) {
-        const fimProcedimento = min + duracao;
+      for (let min = INICIO; min <= ULTIMO; min += 15) {
+        const fim = min + duracao;
 
-        if (fimProcedimento > FIM_EXPEDIENTE_MAX) continue;
+        // Bloqueia horários passados se for o dia de hoje
+        if (dateVal === hojeStr && min <= minutoAtual) continue;
 
-        const invadeAlmoco = (min < ALMOCO_FIM && fimProcedimento > ALMOCO_INICIO);
-        if (invadeAlmoco) continue;
+        if (fim > MAX_FIM) continue;
+        if (min < ALMOCO_FIM && fim > ALMOCO_INI) continue;
 
         let conflito = false;
-        for (let checkMin = min; checkMin < fimProcedimento; checkMin += 15) {
-          const checkStr = minutesToTime(checkMin);
-          if (bloqueadosDia.includes(checkStr)) { conflito = true; break; }
-          
-          const emAgendamento = agendamentosDia.some(ag => {
-            const agStart = timeToMinutes(ag.horario);
-            const agDur = getDuracaoServico(ag.servico);
-            return (checkMin >= agStart && checkMin < agStart + agDur);
+        for (let check = min; check < fim; check += 15) {
+          const ocupado = agsDia.some(a => {
+            const aStart = timeToMinutes(a.horario);
+            const aServ = servicosCarregados.find(s => s.nome === a.servico);
+            const aDur = aServ ? aServ.duracao_min : 60;
+            return (check >= aStart && check < aStart + aDur);
           });
-          if (emAgendamento) { conflito = true; break; }
+          if (ocupado) { conflito = true; break; }
         }
 
         if (!conflito) validos.push(minutesToTime(min));
       }
 
-      if (validos.length === 0) {
-        const dataFmt = dateVal.split('-').reverse().join('/');
-        const wspNum = localStorage.getItem('cms_whatsapp') || '5581989002496';
-        slotsContainer.innerHTML = `
-          <div class="w-full bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-3 text-center my-2">
-            <p class="text-xs font-semibold text-amber-900 leading-relaxed">
-              <i class="fas fa-exclamation-circle text-amber-600 mr-1"></i> Sem horário vago de <strong>${duracao} min</strong> para <strong>${dataFmt}</strong>.
-            </p>
-            <a href="https://wa.me/${wspNum.replace(/\D/g, '')}?text=Ol%C3%A1%2C%20Bet%C3%A2nia!%20Gostaria%20de%20verificar%20um%20encaixe%20para%20*${encodeURIComponent(serviceVal)}*%20no%20dia%20*${encodeURIComponent(dataFmt)}*." 
-               target="_blank" 
-               class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold px-4 py-3 rounded-lg shadow-md transition hover:scale-105">
-              <i class="fab fa-whatsapp text-base"></i> Falar com Betânia no WhatsApp
-            </a>
-          </div>`;
-      } else {
-        slotsContainer.innerHTML = validos.map(h => `
-          <button type="button" onclick="selecionarHorario('${h}', this)" class="slot-btn border border-gray-200 bg-white hover:bg-[#b5945b] text-gray-700 hover:text-white px-3 py-2 rounded-lg text-xs font-bold transition shadow-sm">
-            ${h}
-          </button>`).join('');
-      }
+      container.innerHTML = validos.length === 0 
+        ? `<p class="text-xs text-red-500 font-bold p-2">Nenhum horário livre disponível para este serviço nesta data.</p>`
+        : validos.map(h => `<button type="button" onclick="setHorario('${h}', this)" class="slot-btn border bg-white px-3 py-2 rounded text-xs font-bold">${h}</button>`).join('');
     }
 
-    function selecionarHorario(horario, el) {
-      document.getElementById('form-time').value = horario;
-      document.querySelectorAll('.slot-btn').forEach(b => {
-        b.classList.remove('bg-[#b5945b]', 'text-white');
-        b.classList.add('bg-white', 'text-gray-700');
-      });
-      el.classList.remove('bg-white', 'text-gray-700');
+    function setHorario(h, el) {
+      document.getElementById('form-time').value = h;
+      document.querySelectorAll('.slot-btn').forEach(b => b.classList.remove('bg-[#b5945b]', 'text-white'));
       el.classList.add('bg-[#b5945b]', 'text-white');
     }
 
-    function enviarAgendamento(event) {
+    function preencherServico(nome) {
+      document.getElementById('form-service').value = nome;
+      atualizarHorariosDisponiveis();
+    }
+
+    async function enviarAgendamento(event) {
       event.preventDefault();
       const nome = document.getElementById('form-name').value.trim();
       const telefone = document.getElementById('form-phone').value.trim();
       const servico = document.getElementById('form-service').value;
       const data = document.getElementById('form-date').value;
       const horario = document.getElementById('form-time').value;
-      const obs = document.getElementById('form-notes').value.trim();
 
-      if (!horario) { alert("Por favor, selecione um horário disponível."); return; }
+      const sObj = servicosCarregados.find(s => s.nome === servico);
+      const valor = sObj ? sObj.preco : 0;
 
-      const agendamentos = JSON.parse(localStorage.getItem('cms_agendamentos')) || [];
-      agendamentos.unshift({
-        id: Date.now(),
-        nome, telefone, servico, data, horario, obs, status: 'Pendente',
-        dataCriacao: new Date().toLocaleDateString('pt-BR') + ' ' + new Date().toLocaleTimeString('pt-BR', {hour: '2-digit', minute:'2-digit'})
-      });
-      localStorage.setItem('cms_agendamentos', JSON.stringify(agendamentos));
+      // 1. Salva Agendamento no Supabase
+      await _supabase.from('agendamentos').insert([{ nome, telefone, servico, data, horario, valor, status: 'Confirmado' }]);
 
-      const dataFmt = data.split('-').reverse().join('/');
-      let msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n`;
-      msg += `👤 *Nome*: ${nome}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}\n`;
-      if (obs) msg += `📝 *Obs*: ${obs}\n`;
-
-      const wspNum = localStorage.getItem('cms_whatsapp') || '5581989002496';
-      window.open(`https://wa.me/${wspNum.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    // CARREGAR DADOS DO SUPABASE E ATUALIZAR INTERFACE
-    async function carregarDadosSupabase() {
-      try {
-        const { data, error } = await _supabase.from('configuracoes_site').select('*');
-        if (data && data.length > 0) {
-          data.forEach(item => {
-            // Sincroniza Fotos do Site
-            if (item.chave === 'fotos_site') {
-              const fotos = JSON.parse(item.valor);
-              fotos.forEach(f => {
-                if (f.id === 'capa') {
-                  document.getElementById('hero-section').style.backgroundImage = `linear-gradient(to right, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.45) 50%, rgba(0, 0, 0, 0.1) 100%), url('${f.url}')`;
-                  localStorage.setItem('cms_hero_bg', f.url);
-                }
-                if (f.id === 'sobre') {
-                  document.getElementById('foto-sobre-element').src = f.url;
-                  localStorage.setItem('cms_foto_sobre', f.url);
-                }
-              });
-            }
-
-            // Sincroniza Serviços
-            if (item.chave === 'procedimentos') {
-              const procs = JSON.parse(item.valor);
-              const adaptados = procs.map(p => ({
-                nome: p.nome,
-                preco: `R$ ${p.preco.toFixed(2).replace('.', ',')}`,
-                desc: `Duração: ${p.duracao}`,
-                foto: p.foto || "assets/images/galeria-1.png"
-              }));
-              localStorage.setItem('cms_servicos', JSON.stringify(adaptados));
-              renderizarServicos(adaptados);
-            }
-
-            // Sincroniza Depoimentos
-            if (item.chave === 'avaliacoes') {
-              const avals = JSON.parse(item.valor);
-              localStorage.setItem('cms_depoimentos', JSON.stringify(avals));
-              renderizarDepoimentos(avals);
-            }
-          });
-        }
-      } catch (err) {
-        console.error("Usando dados locais por falha no Supabase:", err);
+      // 2. Salva ou Atualiza Cliente na Base
+      const { data: cliExistente } = await _supabase.from('clientes').select('*').eq('telefone', telefone);
+      if (cliExistente && cliExistente.length > 0) {
+        await _supabase.from('clientes').update({
+          nome,
+          ultimo_servico: servico,
+          total_agendamentos: cliExistente[0].total_agendamentos + 1
+        }).eq('telefone', telefone);
+      } else {
+        await _supabase.from('clientes').insert([{ nome, telefone, ultimo_servico: servico, total_agendamentos: 1 }]);
       }
-    }
 
-    function renderizarServicos(listaServicos) {
-      document.getElementById('dynamic-services').innerHTML = listaServicos.map(s => `
-        <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition flex flex-col justify-between border border-gray-100">
-          <div>
-            <div class="h-48 overflow-hidden relative">
-              <img src="${s.foto || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" alt="${s.nome}" class="w-full h-full object-cover">
-            </div>
-            <div class="p-6 space-y-3">
-              <h3 class="font-title text-xl font-semibold text-[#2C2A29]">${s.nome}</h3>
-              <p class="text-xs text-gray-500">${s.desc || ''}</p>
-            </div>
-          </div>
-          <div class="p-6 pt-0 flex items-center justify-between border-t border-gray-50 mt-4">
-            <span class="text-[#b5945b] font-bold text-lg">${s.preco}</span>
-            <a href="#agendamento" onclick="preencherServicoForm('${s.nome}')" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white text-xs px-4 py-2 rounded-lg transition uppercase font-semibold">Agendar</a>
-          </div>
-        </div>
-      `).join('');
-
-      const selectServico = document.getElementById('form-service');
-      selectServico.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>';
-      listaServicos.forEach(s => {
-        const opt = document.createElement('option');
-        opt.value = s.nome;
-        opt.textContent = `${s.nome} (${s.preco})`;
-        selectServico.appendChild(opt);
-      });
-    }
-
-    function renderizarDepoimentos(cmsDep) {
-      document.getElementById('depoimentos-container').innerHTML = cmsDep.slice(0, 5).map(dep => `
-        <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
-          <div class="space-y-3">
-            <div class="flex text-[#D4AF37] gap-1">${Array.from({length: dep.estrelas || 5}).map(()=>'<i class="fas fa-star text-xs"></i>').join('')}</div>
-            <p class="text-[#2C2A29] italic leading-relaxed text-xs font-medium">${dep.texto || dep.depoimento}</p>
-          </div>
-          <div class="border-t border-gray-100 pt-3">
-            <h4 class="font-title font-semibold text-sm text-[#2C2A29]">${dep.nome}</h4>
-            <span class="text-[9px] text-gray-400 font-bold uppercase">${dep.cidade || 'CABO DE SANTO AGOSTINHO'}</span>
-          </div>
-        </div>
-      `).join('');
+      // 3. Redireciona para o WhatsApp da Betânia
+      const dataFmt = data.split('-').reverse().join('/');
+      const msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n👤 *Nome*: ${nome}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}`;
+      window.open(`https://wa.me/5581989002496?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
     document.addEventListener("DOMContentLoaded", () => {
       document.getElementById('form-date').min = new Date().toISOString().split('T')[0];
-
-      const SERVICOS_PADRAO = [
-        { nome: "Design simples", preco: "R$ 35,00", desc: "Duração: 25 min", foto: "assets/images/galeria-1.png" },
-        { nome: "Design com henna", preco: "R$ 50,00", desc: "Duração: 40 min", foto: "assets/images/galeria-2.png" },
-        { nome: "Sirena", preco: "R$ 140,00", desc: "Duração: 1h", foto: "assets/images/galeria-4.png" },
-        { nome: "Brasileiro", preco: "R$ 130,00", desc: "Duração: 2h", foto: "assets/images/galeria-3.png" },
-        { nome: "5D", preco: "R$ 150,00", desc: "Duração: 2h", foto: "assets/images/galeria-5.png" },
-        { nome: "6D", preco: "R$ 160,00", desc: "Duração: 2h", foto: "assets/images/galeria-6.png" },
-        { nome: "4D Luxo", preco: "R$ 150,00", desc: "Duração: 2h", foto: "assets/images/galeria-1.png" },
-        { nome: "Fox eyes", preco: "R$ 180,00", desc: "Duração: 3h", foto: "assets/images/galeria-4.png" }
-      ];
-
-      const listaServicos = JSON.parse(localStorage.getItem('cms_servicos')) || SERVICOS_PADRAO;
-      renderizarServicos(listaServicos);
-
-      const portfolioPadrao = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
-      const cmsPortfolio = JSON.parse(localStorage.getItem('cms_portfolio')) || portfolioPadrao;
-      document.getElementById('portfolio-container').innerHTML = cmsPortfolio.map((imgUrl, i) => `
-        <div class="group relative rounded-2xl overflow-hidden shadow-lg aspect-square bg-[#E8E2D5]">
-          <img src="${imgUrl}" alt="Trabalho ${i + 1}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/500x500/e8e2d5/5c5043?text=B+Virginia'">
-        </div>
-      `).join('');
-
-      const DEPOIMENTOS_PADRAO = [
-        { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável."' },
-        { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Extensão super confortável."' },
-        { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista."' },
-        { nome: 'Daniela Lima', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Lash Lifting maravilhoso."' },
-        { nome: 'Eduarda Santos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Henna com cor super natural."' }
-      ];
-      const cmsDep = JSON.parse(localStorage.getItem('cms_depoimentos')) || DEPOIMENTOS_PADRAO;
-      renderizarDepoimentos(cmsDep);
-
-      // Busca atualizações em tempo real do banco Supabase
-      carregarDadosSupabase();
+      carregarDadosSite();
     });
-
-    function preencherServicoForm(nome) {
-      const select = document.getElementById('form-service');
-      if (select) { select.value = nome; atualizarHorariosDisponiveis(); }
-    }
   </script>
 </body>
 </html>
