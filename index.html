@@ -169,7 +169,7 @@
     </div>
   </footer>
 
-  <!-- SCRIPT COMPLETO DO SITE DO CLIENTE -->
+  <!-- SCRIPT DO SITE DO CLIENTE -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
@@ -311,10 +311,7 @@
         return;
       }
 
-      // Horários padrão de atendimento (10:00 às 18:00 de hora em hora)
       let horariosPossiveis = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
-
-      // Verificar bloqueios cadastrados para esta data
       const bloqueiosDoDia = bloqueiosGlobais.filter(b => b.data === dataSelecionada);
       let diaTotalmenteBloqueado = false;
       let horariosBloqueados = [];
@@ -331,7 +328,6 @@
         }
       });
 
-      // Verificar agendamentos já existentes nesta data
       const agendamentosDoDia = agendamentosGlobais.filter(a => a.data === dataSelecionada).map(a => a.horario);
 
       if (diaTotalmenteBloqueado) {
@@ -340,7 +336,6 @@
         return;
       }
 
-      // Filtrar horários livres
       horariosPossiveis = horariosPossiveis.filter(h => !horariosBloqueados.includes(h) && !agendamentosDoDia.includes(h));
 
       if (horariosPossiveis.length === 0) {

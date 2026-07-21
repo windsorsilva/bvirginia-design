@@ -40,7 +40,7 @@
                 </button>
             </form>
             <div class="mt-6 border-t pt-4">
-                <a href="/index.html" class="text-xs text-gray-500 hover:underline">← Voltar ao site principal</a>
+                <a href="index.html" class="text-xs text-gray-500 hover:underline">← Voltar ao site principal</a>
             </div>
         </div>
     </div>
@@ -72,7 +72,7 @@
 
         <main class="max-w-7xl mx-auto p-6">
 
-            <!-- TAB 1: AGENDA (COM FILTRO POR CALENDÁRIO / DATA) -->
+            <!-- TAB 1: AGENDA -->
             <section id="sec-agenda" class="tab-content">
                 <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
                     <h2 class="text-xl font-bold">Agenda de Atendimentos</h2>
@@ -195,18 +195,14 @@
                     <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
                 </div>
 
-                <!-- SUB-ABA 1: PROCEDIMENTOS -->
                 <div id="subsec-procedimentos" class="subtab-content">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
-                        <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">
-                            + NOVO PROCEDIMENTO
-                        </button>
+                        <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO PROCEDIMENTO</button>
                     </div>
                     <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 2: EXPEDIENTE & BLOQUEIOS -->
                 <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
                     <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda e Bloqueios</h3>
                     <form onsubmit="salvarRegras(event)" class="space-y-4">
@@ -222,13 +218,12 @@
                         </div>
                         <div class="p-4 bg-amber-50 rounded border border-amber-200 space-y-2">
                             <h4 class="font-bold text-xs uppercase text-amber-800">Bloqueio Rápido de Dias/Horários</h4>
-                            <p class="text-xs text-amber-700">Para bloquear horários específicos ou dias inteiros, utilize também a aba dedicada <b>"BLOQUEIOS MANUAIS"</b> no topo do painel.</p>
+                            <p class="text-xs text-amber-700">Para bloquear horários específicos ou dias inteiros, utilize a aba dedicada <b>"BLOQUEIOS MANUAIS"</b> no topo do painel.</p>
                         </div>
                         <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
                     </form>
                 </div>
 
-                <!-- SUB-ABA 3: TEXTOS & INSTAGRAM (CMS) -->
                 <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
                     <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos, Localização e Instagram Exibidos no Site</h3>
                     <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -270,24 +265,20 @@
                     </form>
                 </div>
 
-                <!-- SUB-ABA 4: AVALIAÇÕES -->
                 <div id="subsec-avaliacoes" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-bold">Depoimentos & Avaliações dos Clientes</h3>
-                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">
-                            + NOVO DEPOIMENTO
-                        </button>
+                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO DEPOIMENTO</button>
                     </div>
                     <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 5: GALERIA -->
                 <div id="subsec-galeria" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
                         <button onclick="adicionarNovaFotoGaleria()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ ADICIONAR FOTO NA GALERIA</button>
                     </div>
-                    <p class="text-xs text-gray-500 mb-6">Altere fotos de capa, sobre, cards ou adicione novas fotos na galeria (via arquivo do celular/PC ou URL) e clique em **SALVAR**.</p>
+                    <p class="text-xs text-gray-500 mb-6">Altere fotos de capa, sobre, cards ou adicione novas fotos na galeria e clique em **SALVAR**.</p>
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
             </section>
@@ -303,7 +294,7 @@
         </main>
     </div>
 
-    <!-- SCRIPT COMPLETO DO ADMIN -->
+    <!-- SCRIPT DO ADMIN -->
     <script>
         const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
@@ -328,13 +319,6 @@
         let fotosSite = [
             { id: 'capa', posicao: 'Foto de Capa (Hero Section)', url: 'assets/images/foto-perfil.jpg.jpg' },
             { id: 'sobre', posicao: 'Foto "Sobre Mim"', url: 'assets/images/hero-bg.png' },
-            { id: 'card-design-simples', posicao: 'Card - Design Simples', url: 'assets/images/galeria-1.png' },
-            { id: 'card-design-henna', posicao: 'Card - Design com Henna', url: 'assets/images/galeria-2.png' },
-            { id: 'card-design-colorimetria', posicao: 'Card - Design com Colorimetria', url: 'assets/images/galeria-3.png' },
-            { id: 'card-brow-lamination', posicao: 'Card - Brow Lamination', url: 'assets/images/galeria-4.png' },
-            { id: 'card-lash-lifting', posicao: 'Card - Lash Lifting', url: 'assets/images/galeria-5.png' },
-            { id: 'card-depilacao-buco', posicao: 'Card - Depilação do Buço', url: 'assets/images/galeria-6.png' },
-            { id: 'card-combo-brow-lash', posicao: 'Card - Combo Brow + Lash', url: 'assets/images/galeria-1.png' },
             { id: 'galeria-1', posicao: 'Portfólio / Resultado 1', url: 'assets/images/galeria-1.png' },
             { id: 'galeria-2', posicao: 'Portfólio / Resultado 2', url: 'assets/images/galeria-2.png' },
             { id: 'galeria-3', posicao: 'Portfólio / Resultado 3', url: 'assets/images/galeria-3.png' }
@@ -345,7 +329,8 @@
 
         function verificarSenha(e) {
             e.preventDefault();
-            if (document.getElementById('input-senha').value === SENHA_ADMIN) {
+            const senhaDigitada = document.getElementById('input-senha').value.trim();
+            if (senhaDigitada === SENHA_ADMIN) {
                 sessionStorage.setItem('admin_autenticado', 'true');
                 liberarPainel();
             } else {
@@ -409,10 +394,7 @@
 
         async function salvarNoBanco(chave, objetoDado) {
             const valorString = JSON.stringify(objetoDado);
-            const { error } = await _supabase
-                .from('configuracoes_site')
-                .upsert({ chave: chave, valor: valorString }, { onConflict: 'chave' });
-            if (error) alert("Erro ao salvar no Supabase.");
+            await _supabase.from('configuracoes_site').upsert({ chave: chave, valor: valorString }, { onConflict: 'chave' });
         }
 
         async function carregarFinanceiroEAgendamentos() {
@@ -420,9 +402,8 @@
                 const { data: ags } = await _supabase.from('agendamentos').select('*').order('data', { ascending: true });
                 listaGlobalAgendamentos = ags || [];
                 renderizarListaAgendamentos(listaGlobalAgendamentos);
-                renderizarExtratoE Financeiro(listaGlobalAgendamentos);
+                renderizarExtratoFinanceiro(listaGlobalAgendamentos);
 
-                // Clientes CRM
                 const { data: cls } = await _supabase.from('clientes').select('*');
                 const tabelaClientes = document.getElementById('tabela-clientes');
                 if (cls && cls.length > 0) {
@@ -451,11 +432,11 @@
                     </div>
                 `).join('');
             } else {
-                container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum agendamento encontrado para este filtro.</p>`;
+                container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum agendamento encontrado.</p>`;
             }
         }
 
-        function renderizarExtratoE Financeiro(ags) {
+        function renderizarExtratoFinanceiro(ags) {
             const extrato = document.getElementById('extrato-financeiro');
             if(ags.length > 0) {
                 extrato.innerHTML = ags.map(a => `
@@ -491,7 +472,6 @@
             renderizarListaAgendamentos(listaGlobalAgendamentos);
         }
 
-        // --- PROCEDIMENTOS ---
         function renderizarProcedimentos() {
             const container = document.getElementById('grid-procedimentos');
             container.innerHTML = procedimentos.map(p => `
@@ -504,7 +484,7 @@
                     <div class="h-28 bg-gray-100 rounded overflow-hidden border flex items-center justify-center">
                         <img id="preview-proc-${p.id}" src="${p.foto_url || ''}" class="h-full w-full object-cover" onerror="this.src='https://via.placeholder.com/300?text=Foto+Serviço'">
                     </div>
-                    <input type="text" id="proc-foto-${p.id}" value="${p.foto_url || ''}" oninput="document.getElementById('preview-proc-${p.id}').src=this.value" class="w-full border p-2 text-xs rounded" placeholder="URL da foto do serviço">
+                    <input type="text" id="proc-foto-${p.id}" value="${p.foto_url || ''}" oninput="document.getElementById('preview-proc-${p.id}').src=this.value" class="w-full border p-2 text-xs rounded" placeholder="URL da foto">
                     <input type="file" accept="image/*" onchange="converterArquivoParaBase64Proc(event, ${p.id})" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-amber-50 file:text-amber-700">
                     <div class="flex space-x-2 pt-2">
                         <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
@@ -522,9 +502,8 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const base64 = e.target.result;
-                    document.getElementById(`proc-foto-${procId}`).value = base64;
-                    document.getElementById(`preview-proc-${procId}`).src = base64;
+                    document.getElementById(`proc-foto-${procId}`).value = e.target.result;
+                    document.getElementById(`preview-proc-${procId}`).src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -538,7 +517,7 @@
                 procedimentos[idx].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
                 procedimentos[idx].foto_url = document.getElementById(`proc-foto-${id}`).value;
                 await salvarNoBanco('procedimentos', procedimentos);
-                alert('✨ Procedimento salvo com sucesso!');
+                alert('✨ Procedimento salvo!');
             }
         }
 
@@ -570,7 +549,6 @@
             }
         }
 
-        // --- AVALIAÇÕES ---
         function renderizarAvaliacoes() {
             const container = document.getElementById('grid-avaliacoes');
             container.innerHTML = avaliacoes.map(a => `
@@ -597,7 +575,6 @@
             renderizarAvaliacoes();
         }
 
-        // --- FOTOS COM SUPORTE A ARQUIVO E URL ---
         function renderizarFotos() {
             const container = document.getElementById('grid-fotos-site');
             container.innerHTML = fotosSite.map((f, index) => `
@@ -621,9 +598,8 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onload = function(e) {
-                    const base64 = e.target.result;
-                    document.getElementById(`foto-url-${fotoId}`).value = base64;
-                    document.getElementById(`preview-${fotoId}`).src = base64;
+                    document.getElementById(`foto-url-${fotoId}`).value = e.target.result;
+                    document.getElementById(`preview-${fotoId}`).src = e.target.result;
                 };
                 reader.readAsDataURL(file);
             }
@@ -636,7 +612,7 @@
         }
 
         async function excluirFotoGaleria(index) {
-            if (confirm('Deseja remover esta foto da galeria?')) {
+            if (confirm('Deseja remover esta foto?')) {
                 fotosSite.splice(index, 1);
                 await salvarNoBanco('fotos_site', fotosSite);
                 renderizarFotos();
@@ -648,7 +624,7 @@
             if (idx !== -1) {
                 fotosSite[idx].url = document.getElementById(`foto-url-${id}`).value;
                 await salvarNoBanco('fotos_site', fotosSite);
-                alert('✨ Foto salva com sucesso!');
+                alert('✨ Foto salva!');
             }
         }
 
@@ -662,7 +638,7 @@
                 whatsapp: document.getElementById('cms-whatsapp').value
             };
             await salvarNoBanco('textos_cms', textos);
-            alert('✨ Textos, localização e Instagram salvos com sucesso!'); 
+            alert('✨ Textos, localização e Instagram salvos!'); 
         }
 
         async function salvarRegras(e) { e.preventDefault(); alert('Regras salvas!'); }
@@ -716,7 +692,9 @@
         }
 
         window.onload = function() {
-            if (sessionStorage.getItem('admin_autenticado') === 'true') liberarPainel();
+            if (sessionStorage.getItem('admin_autenticado') === 'true') {
+                liberarPainel();
+            }
         }
     </script>
 </body>
