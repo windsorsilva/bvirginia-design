@@ -64,20 +64,18 @@
                 <button onclick="switchTab('agenda')" id="tab-agenda" class="py-3 px-2 active-tab">AGENDA 📅</button>
                 <button onclick="switchTab('clientes')" id="tab-clientes" class="py-3 px-2">CLIENTES (CRM) 👥</button>
                 <button onclick="switchTab('financeiro')" id="tab-financeiro" class="py-3 px-2">FINANCEIRO 💰</button>
-                <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="py-3 px-2">BLOQUEIOS MANUAIS 🚫</button>
                 <button onclick="switchTab('cms')" id="tab-cms" class="py-3 px-2">CONFIGURAÇÕES & CMS ⚙️</button>
-                <button onclick="switchTab('backup')" id="tab-backup" class="py-3 px-2">BACKUP & RESTAURAÇÃO 💾</button>
             </div>
         </nav>
 
         <main class="max-w-7xl mx-auto p-6">
 
-            <!-- TAB 1: AGENDA -->
+            <!-- TAB 1: AGENDA (AGORA PUXA OS AGENDAMENTOS REAIS DOS CLIENTES) -->
             <section id="sec-agenda" class="tab-content">
-                <h2 class="text-xl font-bold mb-4">Agenda Diária de Atendimentos</h2>
+                <h2 class="text-xl font-bold mb-4">Agenda de Atendimentos Recebidos</h2>
                 <div class="bg-white p-6 rounded shadow border">
-                    <div id="lista-agendamentos-hoje" class="space-y-4">
-                        <p class="text-gray-500 text-sm">Nenhum agendamento para hoje.</p>
+                    <div id="lista-agendamentos" class="space-y-4">
+                        <p class="text-gray-500 text-sm">Carregando agendamentos...</p>
                     </div>
                 </div>
             </section>
@@ -108,7 +106,7 @@
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                     <div class="bg-white p-6 rounded shadow border border-l-4 border-amber-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Faturamento Previsto (Mês)</p>
+                        <p class="text-xs uppercase font-bold text-gray-500">Faturamento Previsto</p>
                         <h3 id="fin-faturamento" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
                     </div>
                     <div class="bg-white p-6 rounded shadow border border-l-4 border-blue-500">
@@ -120,73 +118,14 @@
                         <h3 id="fin-ticket-medio" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
                     </div>
                 </div>
-
-                <div class="bg-white p-6 rounded shadow border">
-                    <h3 class="font-bold text-lg mb-4 border-b pb-2">Extrato de Serviços Agendados</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead>
-                                <tr class="border-b bg-gray-50">
-                                    <th class="p-2">DATA/HORA</th>
-                                    <th class="p-2">CLIENTE</th>
-                                    <th class="p-2">PROCEDIMENTO</th>
-                                    <th class="p-2">VALOR</th>
-                                </tr>
-                            </thead>
-                            <tbody id="extrato-financeiro">
-                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
             </section>
 
-            <!-- TAB 4: BLOQUEIOS MANUAIS -->
-            <section id="sec-bloqueios" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário / Dias Inteiros</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
-                        <p class="text-xs text-gray-500 mb-4">Para dia todo, use início <b>00:00</b> e fim <b>23:59</b>.</p>
-                        <form onsubmit="salvarBloqueio(event)" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Data</label>
-                                <input type="date" id="bloq-data" required class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Hora Início</label>
-                                    <input type="time" id="bloq-inicio" value="00:00" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Hora Fim</label>
-                                    <input type="time" id="bloq-fim" value="23:59" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Motivo</label>
-                                <input type="text" id="bloq-motivo" placeholder="Ex: Folga" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded">CADASTRAR BLOQUEIO</button>
-                        </form>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários e Dias Bloqueados</h3>
-                        <div id="lista-bloqueios-cadastrados" class="space-y-2 text-sm">
-                            <p class="text-gray-500">Nenhum bloqueio cadastrado.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 5: CONFIGURAÇÕES & CMS -->
+            <!-- TAB 4: CONFIGURAÇÕES & CMS -->
             <section id="sec-cms" class="tab-content hidden">
                 <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
-                    <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
-                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE</button>
-                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS (CMS)</button>
+                    <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS & PREÇOS</button>
                     <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS</button>
+                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & FOTOS 🖼️</button>
                 </div>
 
                 <!-- SUB-ABA 1: PROCEDIMENTOS -->
@@ -200,98 +139,22 @@
                     <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 2: EXPEDIENTE -->
-                <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda</h3>
-                    <form onsubmit="salvarRegras(event)" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Início do Expediente</label>
-                                <input type="time" id="cfg-inicio" value="08:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Último Início de Atendimento</label>
-                                <input type="time" id="cfg-ultimo" value="18:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Fechamento do Estúdio</label>
-                                <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Intervalo entre Atendimentos</label>
-                                <select id="cfg-intervalo" class="w-full border p-2 rounded mt-1">
-                                    <option value="5 minutos">5 minutos</option>
-                                    <option value="10 minutos" selected>10 minutos</option>
-                                    <option value="15 minutos">15 minutos</option>
-                                </select>
-                            </div>
-                        </div>
-                        <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS DE EXPEDIENTE</button>
-                    </form>
-                </div>
-
-                <!-- SUB-ABA 3: CMS / TEXTOS -->
-                <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos Exibidos no Site</h3>
-                    <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Nome / Logo Textual</label>
-                                <input type="text" id="cms-logo" value="B Virginia Design" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Título Principal (Capa)</label>
-                                <input type="text" id="cms-titulo-capa" value="Beleza através do olhar ✨" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Descrição da Capa</label>
-                                <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1">Realce sua beleza natural com nossos serviços especializados.</textarea>
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
-                                <input type="text" id="cms-whatsapp" value="5581989002496" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Instagram</label>
-                                <input type="text" id="cms-instagram" value="bvirginiadesign" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Endereço</label>
-                                <input type="text" id="cms-endereco" value="Bela Vista, Cabo de Santo Agostinho - PE" class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-                        <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS NO SITE</button>
-                        </div>
-                    </form>
-                </div>
-
-                <!-- SUB-ABA 4: AVALIAÇÕES -->
+                <!-- SUB-ABA 2: AVALIAÇÕES -->
                 <div id="subsec-avaliacoes" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-bold">Depoimentos & Avaliações</h3>
-                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO DEPOIMENTO</button>
+                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">
+                            + NOVO DEPOIMENTO
+                        </button>
                     </div>
                     <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 5: GALERIA -->
+                <!-- SUB-ABA 3: GALERIA E FOTOS -->
                 <div id="subsec-galeria" class="subtab-content hidden">
-                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site</h3>
-                    <p class="text-xs text-gray-500 mb-6">Insira o link ou arquivo e clique em Salvar em cada card.</p>
+                    <h3 class="text-lg font-bold mb-2">Fotos do Site (Capa e Sobre)</h3>
+                    <p class="text-xs text-gray-500 mb-6">Cole a URL da foto ou selecione do seu computador e clique em **SALVAR ESTA FOTO**.</p>
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </div>
-            </section>
-
-            <!-- TAB 6: BACKUP -->
-            <section id="sec-backup" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Backup e Segurança</h2>
-                <div class="bg-white p-6 rounded shadow border text-center">
-                    <button onclick="exportarBackup()" class="bg-black text-white px-6 py-2 rounded font-bold">EXPORTAR BACKUP JSON</button>
                 </div>
             </section>
 
@@ -306,28 +169,21 @@
         const SENHA_ADMIN = 'virginia123';
 
         let procedimentos = [
-            { id: 1, nome: "Design Simples", duracao: "30 min", preco: 30.00 },
-            { id: 2, nome: "Design com Henna", duracao: "45 min", preco: 45.00 },
-            { id: 3, nome: "Design com Colorimetria", duracao: "45 min", preco: 50.00 },
-            { id: 4, nome: "Brow Lamination", duracao: "60 min", preco: 90.00 },
-            { id: 5, nome: "Lash Lifting", duracao: "60 min", preco: 90.00 },
-            { id: 6, nome: "Epilação do Buço", duracao: "15 min", preco: 15.00 },
-            { id: 7, nome: "Combo Brow + Lash", duracao: "90 min", preco: 160.00 }
+            { id: 1, nome: "Design Simples", duracao: "30 min", preco: 35.00 },
+            { id: 2, nome: "Design com Henna", duracao: "45 min", preco: 50.00 },
+            { id: 3, nome: "Brow Lamination", duracao: "60 min", preco: 90.00 },
+            { id: 4, nome: "Lash Lifting", duracao: "60 min", preco: 90.00 }
         ];
 
         let avaliacoes = [
-            { id: 1, nome: "Mariana Costa", estrelas: 5, texto: "Atendimento maravilhoso! O Lash Lifting durou super bem." },
-            { id: 2, nome: "Juliana Andrade", estrelas: 5, texto: "Ambiente muito aconchegante e profissionalismo impecável." }
+            { id: 1, nome: "Amanda Silva", estrelas: 5, texto: "Atendimento incrível e impecável." },
+            { id: 2, nome: "Beatriz Costa", estrelas: 5, texto: "Extensão super confortável." }
         ];
 
         let fotosSite = [
-            { id: 'capa', posicao: 'Fundo da Capa (Hero Section)', url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800' },
-            { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800' },
-            { id: 'card-1', posicao: 'Card de Serviço - Design de Sobrancelha', url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=500' },
-            { id: 'card-2', posicao: 'Card de Serviço - Lash Lifting / Cílios', url: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=500' }
+            { id: 'capa', posicao: 'Fundo da Capa (Hero Section)', url: 'assets/images/foto-perfil.jpg.jpg' },
+            { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: 'assets/images/hero-bg.png' }
         ];
-
-        let bloqueios = [];
 
         function verificarSenha(e) {
             e.preventDefault();
@@ -346,6 +202,7 @@
             renderizarProcedimentos();
             renderizarAvaliacoes();
             renderizarFotos();
+            carregarAgendamentosECRM();
         }
 
         function logout() {
@@ -369,23 +226,16 @@
 
         async function carregarDadosDoBanco() {
             try {
-                const { data, error } = await _supabase.from('configuracoes_site').select('*');
+                const { data } = await _supabase.from('configuracoes_site').select('*');
                 if (data && data.length > 0) {
                     data.forEach(item => {
                         if (item.chave === 'fotos_site') fotosSite = JSON.parse(item.valor);
                         if (item.chave === 'procedimentos') procedimentos = JSON.parse(item.valor);
                         if (item.chave === 'avaliacoes') avaliacoes = JSON.parse(item.valor);
-                        if (item.chave === 'regras_expediente') {
-                            const reg = JSON.parse(item.valor);
-                            if(document.getElementById('cfg-inicio')) document.getElementById('cfg-inicio').value = reg.inicio || '08:00';
-                            if(document.getElementById('cfg-ultimo')) document.getElementById('cfg-ultimo').value = reg.ultimo || '18:00';
-                            if(document.getElementById('cfg-fim')) document.getElementById('cfg-fim').value = reg.fim || '19:00';
-                            if(document.getElementById('cfg-intervalo')) document.getElementById('cfg-intervalo').value = reg.intervalo || '10 minutos';
-                        }
                     });
                 }
             } catch (err) {
-                console.log('Usando dados padrão.');
+                console.log('Erro ao carregar do Supabase.');
             }
         }
 
@@ -396,23 +246,55 @@
                 .upsert({ chave: chave, valor: valorString }, { onConflict: 'chave' });
             
             if (error) {
-                console.error("Erro ao salvar:", error);
                 alert("Erro ao gravar no banco Supabase.");
             }
         }
 
-        async function salvarRegras(e) {
-            e.preventDefault();
-            const regrasExpediente = {
-                inicio: document.getElementById('cfg-inicio').value,
-                ultimo: document.getElementById('cfg-ultimo').value,
-                fim: document.getElementById('cfg-fim').value,
-                intervalo: document.getElementById('cfg-intervalo').value
-            };
-            await salvarNoBanco('regras_expediente', regrasExpediente);
-            alert('✨ Regras de expediente salvas com sucesso no banco!');
+        // --- CARREGAR AGENDAMENTOS E CLIENTES REAIS ---
+        async function carregarAgendamentosECRM() {
+            try {
+                const { data: ags } = await _supabase.from('agendamentos').select('*');
+                const container = document.getElementById('lista-agendamentos');
+                
+                if (ags && ags.length > 0) {
+                    container.innerHTML = ags.map(a => `
+                        <div class="border p-4 rounded bg-gray-50 flex justify-between items-center">
+                            <div>
+                                <h4 class="font-bold text-sm">${a.nome} (${a.telefone})</h4>
+                                <p class="text-xs text-gray-600">Serviço: <b>${a.servico}</b> | Data: <b>${a.data}</b> às <b>${a.horario}</b></p>
+                            </div>
+                            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded">R$ ${Number(a.valor || 0).toFixed(2)}</span>
+                        </div>
+                    `).join('');
+
+                    // Cálculos Financeiros
+                    let faturamento = ags.reduce((acc, curr) => acc + Number(curr.valor || 0), 0);
+                    document.getElementById('fin-faturamento').innerText = `R$ ${faturamento.toFixed(2).replace('.', ',')}`;
+                    document.getElementById('fin-qtd-agendamentos').innerText = ags.length;
+                    document.getElementById('fin-ticket-medio').innerText = `R$ ${(ags.length > 0 ? faturamento / ags.length : 0).toFixed(2).replace('.', ',')}`;
+                } else {
+                    container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum agendamento recebido até o momento.</p>`;
+                }
+
+                // Carregar Clientes CRM
+                const { data: cls } = await _supabase.from('clientes').select('*');
+                const tabelaClientes = document.getElementById('tabela-clientes');
+                if (cls && cls.length > 0) {
+                    tabelaClientes.innerHTML = cls.map(c => `
+                        <tr class="border-b">
+                            <td class="p-3 font-semibold">${c.nome}</td>
+                            <td class="p-3">${c.telefone}</td>
+                            <td class="p-3">${c.ultimo_servico || '-'}</td>
+                            <td class="p-3">${c.total_agendamentos || 1}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (e) {
+                console.log("Erro ao buscar agendamentos.");
+            }
         }
 
+        // --- PROCEDIMENTOS ---
         function renderizarProcedimentos() {
             const container = document.getElementById('grid-procedimentos');
             container.innerHTML = procedimentos.map(p => `
@@ -432,10 +314,7 @@
                                 <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700 mt-1">
                             </div>
                         </div>
-                        <div class="flex space-x-2 pt-2">
-                            <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR ESTE</button>
-                            <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
-                        </div>
+                        <button onclick="salvarProcedimento(${p.id})" class="w-full bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR ESTE</button>
                     </div>
                 </div>
             `).join('') + `
@@ -453,7 +332,7 @@
                 procedimentos[index].duracao = document.getElementById(`proc-tempo-${id}`).value;
                 procedimentos[index].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
                 await salvarNoBanco('procedimentos', procedimentos);
-                alert('✨ Procedimento salvo com sucesso!');
+                alert('✨ Procedimento salvo e atualizado no site dos clientes!');
             }
         }
 
@@ -467,29 +346,22 @@
                 if (pInput) p.preco = parseFloat(pInput.value);
             });
             await salvarNoBanco('procedimentos', procedimentos);
-            alert('✨ Todos os procedimentos foram salvos com sucesso!');
-        }
-
-        async function excluirProcedimento(id) {
-            if (confirm('Deseja excluir?')) {
-                procedimentos = procedimentos.filter(p => p.id !== id);
-                await salvarNoBanco('procedimentos', procedimentos);
-                renderizarProcedimentos();
-            }
+            alert('✨ Todos os procedimentos salvos com sucesso!');
         }
 
         function adicionarNovoProcedimento() {
-            procedimentos.push({ id: Date.now(), nome: "Novo Procedimento", duracao: "30 min", preco: 0.00 });
+            procedimentos.push({ id: Date.now(), nome: "Novo Procedimento", duracao: "30 min", preco: 40.00 });
             renderizarProcedimentos();
         }
 
+        // --- AVALIAÇÕES ---
         function renderizarAvaliacoes() {
             const container = document.getElementById('grid-avaliacoes');
             container.innerHTML = avaliacoes.map(a => `
                 <div class="bg-white p-5 rounded shadow border space-y-3">
                     <input type="text" id="aval-nome-${a.id}" value="${a.nome}" class="w-full border p-2 rounded text-sm font-bold">
                     <textarea id="aval-texto-${a.id}" rows="2" class="w-full border p-2 rounded text-sm">${a.texto}</textarea>
-                    <button onclick="salvarAvaliacao(${a.id})" class="bg-gold text-white text-xs font-bold py-2 px-4 rounded">SALVAR</button>
+                    <button onclick="salvarAvaliacao(${a.id})" class="bg-gold text-white text-xs font-bold py-2 px-4 rounded">💾 SALVAR AVALIAÇÃO</button>
                 </div>
             `).join('');
         }
@@ -500,23 +372,24 @@
                 avaliacoes[index].nome = document.getElementById(`aval-nome-${id}`).value;
                 avaliacoes[index].texto = document.getElementById(`aval-texto-${id}`).value;
                 await salvarNoBanco('avaliacoes', avaliacoes);
-                alert('Avaliação salva!');
+                alert('✨ Avaliação salva com sucesso no site!');
             }
         }
 
         function adicionarNovoComentario() {
-            avaliacoes.push({ id: Date.now(), nome: "Cliente", estrelas: 5, texto: "Excelente!" });
+            avaliacoes.push({ id: Date.now(), nome: "Cliente", estrelas: 5, texto: "Excelente trabalho!" });
             renderizarAvaliacoes();
         }
 
+        // --- FOTOS / GALERIA COM BOTÃO SALVAR ---
         function renderizarFotos() {
             const container = document.getElementById('grid-fotos-site');
             container.innerHTML = fotosSite.map(f => `
                 <div class="bg-white p-4 rounded shadow border space-y-3">
                     <h4 class="font-bold text-sm">${f.posicao}</h4>
                     <img id="preview-${f.id}" src="${f.url}" class="h-28 w-full object-cover rounded border">
-                    <input type="text" id="foto-url-${f.id}" value="${f.url}" oninput="document.getElementById('preview-${f.id}').src=this.value" class="w-full border p-2 text-xs rounded">
-                    <button onclick="salvarFotoUnica('${f.id}')" class="w-full bg-gold text-white font-bold text-xs py-2 rounded">💾 SALVAR FOTO</button>
+                    <input type="text" id="foto-url-${f.id}" value="${f.url}" oninput="document.getElementById('preview-${f.id}').src=this.value" class="w-full border p-2 text-xs rounded" placeholder="Cole a URL da imagem">
+                    <button onclick="salvarFotoUnica('${f.id}')" class="w-full bg-gold text-white font-bold text-xs py-2 rounded">💾 SALVAR ESTA FOTO</button>
                 </div>
             `).join('');
         }
@@ -526,27 +399,8 @@
             if (index !== -1) {
                 fotosSite[index].url = document.getElementById(`foto-url-${id}`).value;
                 await salvarNoBanco('fotos_site', fotosSite);
-                alert('✨ Foto salva com sucesso!');
+                alert('✨ Foto atualizada com sucesso no site principal!');
             }
-        }
-
-        async function salvarTextosCMS(e) {
-            e.preventDefault();
-            alert('Textos salvos!');
-        }
-
-        async function salvarBloqueio(e) {
-            e.preventDefault();
-            alert('Bloqueio cadastrado!');
-        }
-
-        function exportarBackup() {
-            const dadosBackup = { procedimentos, avaliacoes, fotosSite };
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(dadosBackup, null, 2));
-            const dl = document.createElement('a');
-            dl.setAttribute("href", dataStr);
-            dl.setAttribute("download", "backup.json");
-            dl.click();
         }
 
         window.onload = function() {
