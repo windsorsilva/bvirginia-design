@@ -11,7 +11,7 @@
   <!-- Tailwind CSS para Estilização Premium -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Google Fonts: Inter e Playfair Display -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
   <!-- FontAwesome para Ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
@@ -118,8 +118,9 @@
           <p>🕒 Terça a Sábado, com hora marcada</p>
         </div>
       </div>
+      
       <div class="bg-white rounded-2xl shadow-md p-8 space-y-5">
-        <form id="booking-form" class="space-y-5">
+        <form id="booking-form" class="space-y-5" onsubmit="enviarAgendamento(event)">
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome Completo</label>
             <input type="text" id="form-name" placeholder="Digite seu nome completo" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
@@ -130,33 +131,36 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Serviço Desejado</label>
-            <select id="form-service" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] bg-white">
+            <select id="form-service" required onchange="atualizarHorariosDisponiveis()" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] bg-white">
               <option value="" disabled selected>Selecione um serviço</option>
             </select>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
-              <input type="date" id="form-date" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
+              <input type="date" id="form-date" required onchange="atualizarHorariosDisponiveis()" class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
             </div>
             <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário</label>
-              <input type="text" id="form-time" placeholder="Selecione abaixo" readonly required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-gray-50 cursor-not-allowed">
+              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário Selecionado</label>
+              <input type="text" id="form-time" placeholder="Clique abaixo" readonly required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-gray-50 font-bold text-[#b5945b] cursor-not-allowed">
             </div>
           </div>
-          <div id="slots-section" style="display: none;">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">Horários Disponíveis</label>
-            <div id="slots-container" class="flex flex-wrap gap-2">
-              <!-- Slots dinâmicos -->
+
+          <!-- SEÇÃO DINÂMICA DE HORÁRIOS LIVRES / OPÇÃO BETÂNIA -->
+          <div id="slots-section" class="space-y-2" style="display: none;">
+            <label class="block text-xs font-bold text-gray-500 uppercase">Escolha um Horário Disponível:</label>
+            <div id="slots-container" class="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-1 border border-gray-100 rounded-xl">
+              <!-- Botões de horários injetados via JS -->
             </div>
-            <span id="slots-loading-msg" class="text-xs text-gray-400 italic" style="display: none;">Selecione o serviço e a data para ver a disponibilidade...</span>
           </div>
+
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações</label>
             <textarea id="form-notes" rows="3" placeholder="Caso tenha alguma restrição, preferência ou dúvida..." class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] resize-none"></textarea>
           </div>
-          <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition shadow-md text-sm uppercase tracking-wider">
-            Solicitar Agendamento
+          
+          <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition shadow-md text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+            <i class="fab fa-whatsapp text-lg"></i> Solicitar Agendamento
           </button>
         </form>
       </div>
@@ -206,30 +210,157 @@
     <i class="fab fa-whatsapp text-3xl"></i>
   </a>
 
-  <!-- MODAL DE PRÉ-CONFIRMAÇÃO DO AGENDAMENTO -->
-  <div id="confirmation-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center" style="display: none !important;">
-    <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4 shadow-2xl">
-      <h3 class="font-title text-xl font-semibold mb-3">Agendamento Preparado ✨</h3>
-      <p class="text-gray-600 text-sm mb-6">Seu pedido de agendamento foi preparado. Você será direcionada para o WhatsApp para confirmar.</p>
-      <div class="flex gap-3">
-        <button id="modal-cancel-btn" class="flex-1 border border-gray-200 hover:bg-gray-50 text-gray-700 py-3 rounded-lg text-sm font-medium transition">Editar dados</button>
-        <button id="modal-confirm-btn" class="flex-1 bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-3 rounded-lg text-sm font-bold transition">Prosseguir</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Scripts de Lógica (db, shared engine, UI) -->
-  <script src="db.js"></script>
-  <script src="shared.js"></script>
-  <script src="scripts.js"></script>
-
-  <!-- Carregamento Dinâmico de Conteúdo CMS, Fotos e Fallback do Supabase -->
+  <!-- SCRIPTS E LÓGICA DE CÁLCULO DE HORÁRIOS -->
   <script>
+    // Duração estimada de cada procedimento (em minutos)
+    const DURATIVEIS_MINUTOS = {
+      "Design Simples": 30,
+      "Design com Henna": 45,
+      "Volume Brasileiro": 120,
+      "Efeito Fox Eyes / Sirena": 120,
+      "Volume Egípcio": 120,
+      "Lash Lifting": 60,
+      "Brown Lamination": 60,
+      "Brow Lamination": 60,
+      "Manutenção de Cílios": 90
+    };
+
+    function getDuracaoServico(nomeServico) {
+      if (!nomeServico) return 60;
+      for (let key in DURATIVEIS_MINUTOS) {
+        if (nomeServico.toLowerCase().includes(key.toLowerCase()) || key.toLowerCase().includes(nomeServico.toLowerCase())) {
+          return DURATIVEIS_MINUTOS[key];
+        }
+      }
+      return 60; // Duração padrão se não especificada
+    }
+
+    function timeToMinutes(timeStr) {
+      const [h, m] = timeStr.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function minutesToTime(mins) {
+      const h = Math.floor(mins / 60);
+      const m = mins % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    // Calcula horários vagos considerando duração do serviço e bloqueios
+    function atualizarHorariosDisponiveis() {
+      const dateVal = document.getElementById('form-date').value;
+      const serviceVal = document.getElementById('form-service').value;
+      const slotsSection = document.getElementById('slots-section');
+      const slotsContainer = document.getElementById('slots-container');
+      const timeInput = document.getElementById('form-time');
+
+      timeInput.value = ''; // Limpa horário selecionado anteriormente
+
+      if (!dateVal || !serviceVal) {
+        slotsSection.style.display = 'none';
+        return;
+      }
+
+      slotsSection.style.display = 'block';
+
+      // Bloqueios salvos no Admin para a data escolhida
+      const todosBloqueios = JSON.parse(localStorage.getItem('cms_bloqueios')) || {};
+      const bloqueadosDia = todosBloqueios[dateVal] || [];
+
+      const duracao = getDuracaoServico(serviceVal);
+      const numSlots15m = Math.ceil(duracao / 15);
+
+      // Expediente: 08:00 (480 min) às 19:00 (1140 min)
+      const INICIO_EXPEDIENTE = 8 * 60; 
+      const FIM_EXPEDIENTE = 19 * 60;  
+
+      const horariosValidos = [];
+
+      for (let min = INICIO_EXPEDIENTE; min <= FIM_EXPEDIENTE - duracao; min += 15) {
+        let possivel = true;
+        
+        for (let step = 0; step < numSlots15m; step++) {
+          const currentMin = min + (step * 15);
+          const currentStr = minutesToTime(currentMin);
+          
+          if (currentMin >= FIM_EXPEDIENTE || bloqueadosDia.includes(currentStr)) {
+            possivel = false;
+            break;
+          }
+        }
+
+        if (possivel) {
+          horariosValidos.push(minutesToTime(min));
+        }
+      }
+
+      // Renderização
+      if (horariosValidos.length === 0) {
+        const dataFormatada = dateVal.split('-').reverse().join('/');
+        slotsContainer.innerHTML = `
+          <div class="w-full bg-amber-50 border border-amber-200 p-4 rounded-xl space-y-3 text-center my-2">
+            <p class="text-xs font-semibold text-amber-900 leading-relaxed">
+              <i class="fas fa-exclamation-circle text-amber-600 mr-1"></i> Não encontramos horário livre suficiente para este procedimento (<strong>${duracao} min</strong>) no dia <strong>${dataFormatada}</strong>.
+            </p>
+            <a href="https://wa.me/5581989002496?text=Ol%C3%A1%2C%20Bet%C3%A2nia!%20Estou%20tentando%20agendar%20o%20servi%C3%A7o%20*${encodeURIComponent(serviceVal)}*%20para%20o%20dia%20*${encodeURIComponent(dataFormatada)}*%2C%20mas%20n%C3%A3o%20encontrei%20hor%C3%A1rio%20livre%20no%20site.%20Consegue%20verificar%20um%20encaixe%20comigo%3F" 
+               target="_blank" 
+               class="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white text-xs font-bold px-4 py-3 rounded-lg shadow-md transition hover:scale-105">
+              <i class="fab fa-whatsapp text-base"></i> Falar com Betânia no WhatsApp
+            </a>
+          </div>
+        `;
+      } else {
+        slotsContainer.innerHTML = horariosValidos.map(h => `
+          <button type="button" onclick="selecionarHorario('${h}', this)" 
+                  class="slot-btn border border-gray-200 hover:border-[#b5945b] bg-white hover:bg-[#b5945b] text-gray-700 hover:text-white px-3 py-2 rounded-lg text-xs font-bold transition duration-200 shadow-sm">
+            ${h}
+          </button>
+        `).join('');
+      }
+    }
+
+    function selecionarHorario(horario, el) {
+      document.getElementById('form-time').value = horario;
+      document.querySelectorAll('.slot-btn').forEach(btn => {
+        btn.classList.remove('bg-[#b5945b]', 'text-white', 'border-[#b5945b]');
+        btn.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
+      });
+      el.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+      el.classList.add('bg-[#b5945b]', 'text-white', 'border-[#b5945b]');
+    }
+
+    function enviarAgendamento(event) {
+      event.preventDefault();
+      const nome = document.getElementById('form-name').value.trim();
+      const telefone = document.getElementById('form-phone').value.trim();
+      const servico = document.getElementById('form-service').value;
+      const data = document.getElementById('form-date').value;
+      const horario = document.getElementById('form-time').value;
+      const obs = document.getElementById('form-notes').value.trim();
+
+      if (!horario) {
+        alert("Por favor, selecione um horário disponível na lista para continuar.");
+        return;
+      }
+
+      const dataFmt = data.split('-').reverse().join('/');
+      let msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n`;
+      msg += `👤 *Nome*: ${nome}\n`;
+      msg += `📱 *WhatsApp*: ${telefone}\n`;
+      msg += `✨ *Serviço*: ${servico}\n`;
+      msg += `📅 *Data*: ${dataFmt}\n`;
+      msg += `⏰ *Horário*: ${horario}\n`;
+      if (obs) msg += `📝 *Obs*: ${obs}\n`;
+
+      const urlWhatsApp = `https://wa.me/5581989002496?text=${encodeURIComponent(msg)}`;
+      window.open(urlWhatsApp, '_blank');
+    }
+
+    // Carregamento dos dados do CMS e Fallbacks
     document.addEventListener("DOMContentLoaded", () => {
       const BUCKET_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co/storage/v1/object/public/fotos-sistema/';
       const versaoCache = Date.now();
 
-      // Mapa de IDs de elementos → nomes de arquivo no bucket Supabase
       const imagensDinamicas = {
         'foto-sobre':          'sobre.jpg',
         'foto-design-simples': 'design-simples.jpg',
@@ -237,7 +368,6 @@
         'foto-fox-eyes':        'fox-eyes.jpg'
       };
 
-      // Lista de Serviços Padrão (Fallback de contingência)
       const SERVICOS_PADRAO = [
         { nome: "Design Simples", preco: "R$ 35,00", desc: "Higienização, alinhamento simétrico e remoção de fios com pinça.", foto: "assets/images/galeria-1.png", supabaseId: "foto-design-simples" },
         { nome: "Design com Henna", preco: "R$ 50,00", desc: "Design personalizado com aplicação de henna de alta fixação.", foto: "assets/images/galeria-2.png", supabaseId: "foto-design-henna" },
@@ -249,122 +379,56 @@
         { nome: "Manutenção de Cílios", preco: "R$ 80,00", desc: "Preenchimento dos fios para manter a extensão impecável e volumosa.", foto: "assets/images/galeria-2.png" }
       ];
 
-      // Hero: verificar cache local primeiro
-      const cachedHeroBg = localStorage.getItem('cms_hero_bg');
-      if (cachedHeroBg) {
-        const heroSection = document.getElementById('hero-section');
-        if (heroSection) {
-          heroSection.style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${cachedHeroBg}')`;
+      // Definir data mínima do formulário para HOJE
+      const todayStr = new Date().toISOString().split('T')[0];
+      document.getElementById('form-date').min = todayStr;
+
+      // Povoar Serviços no Select e Cards
+      let listaServicos = SERVICOS_PADRAO;
+      try {
+        const servicosSalvos = JSON.parse(localStorage.getItem('cms_servicos'));
+        if (servicosSalvos && Array.isArray(servicosSalvos) && servicosSalvos.length > 0) {
+          listaServicos = servicosSalvos;
         }
-      }
+      } catch (e) {}
 
-      // Foto de Apresentação: verificar cache local
-      const cachedFotoSobre = localStorage.getItem('cms_foto_sobre');
-      if (cachedFotoSobre) {
-        const imgSobre = document.getElementById('foto-sobre');
-        if (imgSobre) imgSobre.src = cachedFotoSobre;
-      }
-
-      // Função de carregamento das fotos do Supabase
-      function carregarFotoSupabase(idElemento, nomeArquivo) {
-        const img = document.getElementById(idElemento);
-        if (!img) return;
-        const urlNuvem = `${BUCKET_URL}${nomeArquivo}?v=${versaoCache}`;
-        const testeImg = new Image();
-        testeImg.onload = () => { img.src = urlNuvem; };
-        testeImg.src = urlNuvem;
-      }
-
-      Object.entries(imagensDinamicas).forEach(([id, arquivo]) => carregarFotoSupabase(id, arquivo));
-
-      // Garantir renderização dos Serviços e Selecionador do Formulário
-      setTimeout(() => {
-        let listaServicos = SERVICOS_PADRAO;
-
-        try {
-          const servicosSalvos = JSON.parse(localStorage.getItem('cms_servicos'));
-          if (servicosSalvos && Array.isArray(servicosSalvos) && servicosSalvos.length > 0) {
-            listaServicos = servicosSalvos;
-          }
-        } catch (e) {
-          console.warn("Utilizando SERVICOS_PADRAO para renderização...", e);
-        }
-
-        // 1. Povoar Cards de Serviços na tela
-        const containerServicos = document.getElementById('dynamic-services');
-        if (containerServicos && containerServicos.children.length === 0) {
-          containerServicos.innerHTML = listaServicos.map(s => `
-            <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-gray-100">
-              <div>
-                <div class="h-48 overflow-hidden relative">
-                  <img src="${s.foto || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" 
-                       alt="${s.nome}" 
-                       ${s.supabaseId ? `data-supabase-id="${s.supabaseId}"` : ''} 
-                       class="w-full h-full object-cover transition duration-500 hover:scale-105"
-                       onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'">
-                </div>
-                <div class="p-6 space-y-3">
-                  <h3 class="font-title text-xl font-semibold text-[#2C2A29]">${s.nome}</h3>
-                  <p class="text-xs text-gray-500 leading-relaxed">${s.desc || s.descricao || ''}</p>
-                </div>
+      const containerServicos = document.getElementById('dynamic-services');
+      if (containerServicos) {
+        containerServicos.innerHTML = listaServicos.map(s => `
+          <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-gray-100">
+            <div>
+              <div class="h-48 overflow-hidden relative">
+                <img src="${s.foto || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" 
+                     alt="${s.nome}" 
+                     ${s.supabaseId ? `data-supabase-id="${s.supabaseId}"` : ''} 
+                     class="w-full h-full object-cover transition duration-500 hover:scale-105"
+                     onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'">
               </div>
-              <div class="p-6 pt-0 flex items-center justify-between border-t border-gray-50 mt-4">
-                <span class="text-[#b5945b] font-bold text-lg">${s.preco}</span>
-                <a href="https://wa.me/5581989002496?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20o%20servi%C3%A7o%3A%20${encodeURIComponent(s.nome)}" target="_blank" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white text-xs px-4 py-2 rounded-lg transition uppercase font-semibold">Agendar</a>
+              <div class="p-6 space-y-3">
+                <h3 class="font-title text-xl font-semibold text-[#2C2A29]">${s.nome}</h3>
+                <p class="text-xs text-gray-500 leading-relaxed">${s.desc || s.descricao || ''}</p>
               </div>
             </div>
-          `).join('');
-        }
-
-        // 2. Povoar campo <select> do Formulário de Agendamento
-        const selectServico = document.getElementById('form-service');
-        if (selectServico && selectServico.children.length <= 1) {
-          selectServico.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>';
-          listaServicos.forEach(s => {
-            const option = document.createElement('option');
-            option.value = s.nome;
-            option.textContent = `${s.nome} (${s.preco})`;
-            selectServico.appendChild(option);
-          });
-        }
-
-        // 3. Re-varrer imagens dinâmicas vindas do Supabase
-        document.querySelectorAll('[data-supabase-id]').forEach(img => {
-          const chave = img.getAttribute('data-supabase-id');
-          if (typeof imagensDinamicas !== 'undefined' && imagensDinamicas[chave]) {
-            const arquivo = imagensDinamicas[chave];
-            const urlNuvem = `${BUCKET_URL}${arquivo}?v=${versaoCache}`;
-            const teste = new Image();
-            teste.onload = () => { img.src = urlNuvem; };
-            teste.src = urlNuvem;
-          }
-        });
-      }, 400);
-
-      // Portfólio
-      const portfolioPadrao = [
-        'assets/images/galeria-1.png',
-        'assets/images/galeria-2.png',
-        'assets/images/galeria-3.png',
-        'assets/images/galeria-4.png',
-        'assets/images/galeria-5.png',
-        'assets/images/galeria-6.png'
-      ];
-      const cmsPortfolio = JSON.parse(localStorage.getItem('cms_portfolio')) || portfolioPadrao;
-      const containerPortfolio = document.getElementById('portfolio-container');
-      if (containerPortfolio) {
-        containerPortfolio.innerHTML = cmsPortfolio.map((imgUrl, index) => `
-          <div class="group relative rounded-2xl overflow-hidden shadow-lg aspect-square bg-[#E8E2D5] fade-in-active">
-            <img src="${imgUrl}" alt="Trabalho ${index + 1}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
-              onerror="this.src='https://placehold.co/500x500/e8e2d5/5c5043?text=B+Virginia+Design'">
-            <div class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
-              <span class="text-white border border-white px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider">Ver Detalhes</span>
+            <div class="p-6 pt-0 flex items-center justify-between border-t border-gray-50 mt-4">
+              <span class="text-[#b5945b] font-bold text-lg">${s.preco}</span>
+              <a href="#agendamento" onclick="preencherServicoForm('${s.nome}')" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white text-xs px-4 py-2 rounded-lg transition uppercase font-semibold">Agendar</a>
             </div>
           </div>
         `).join('');
       }
 
-      // 5 Depoimentos de Clientes
+      const selectServico = document.getElementById('form-service');
+      if (selectServico) {
+        selectServico.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>';
+        listaServicos.forEach(s => {
+          const option = document.createElement('option');
+          option.value = s.nome;
+          option.textContent = `${s.nome} (${s.preco})`;
+          selectServico.appendChild(option);
+        });
+      }
+
+      // Depoimentos
       const depoimentosPadrao = [
         { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável. Minhas sobrancelhas nunca ficaram tão harmônicas e naturais. Recomendo de olhos fechados!"' },
         { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"A extensão de cílios é super confortável, não sinto nenhum peso e dura muito tempo. O efeito Sirena ficou maravilhoso e combinou muito comigo."' },
@@ -376,7 +440,6 @@
       const cmsDepoimentos = JSON.parse(localStorage.getItem('cms_depoimentos')) || depoimentosPadrao;
       const containerDep = document.getElementById('depoimentos-container');
       if (containerDep) {
-        containerDep.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto";
         containerDep.innerHTML = cmsDepoimentos.slice(0, 5).map(dep => `
           <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between space-y-4 fade-in-active">
             <div class="space-y-3">
@@ -392,7 +455,35 @@
           </div>
         `).join('');
       }
+
+      // Portfólio
+      const portfolioPadrao = [
+        'assets/images/galeria-1.png', 'assets/images/galeria-2.png',
+        'assets/images/galeria-3.png', 'assets/images/galeria-4.png',
+        'assets/images/galeria-5.png', 'assets/images/galeria-6.png'
+      ];
+      const cmsPortfolio = JSON.parse(localStorage.getItem('cms_portfolio')) || portfolioPadrao;
+      const containerPortfolio = document.getElementById('portfolio-container');
+      if (containerPortfolio) {
+        containerPortfolio.innerHTML = cmsPortfolio.map((imgUrl, index) => `
+          <div class="group relative rounded-2xl overflow-hidden shadow-lg aspect-square bg-[#E8E2D5] fade-in-active">
+            <img src="${imgUrl}" alt="Trabalho ${index + 1}" class="w-full h-full object-cover transition duration-500 group-hover:scale-105"
+              onerror="this.src='https://placehold.co/500x500/e8e2d5/5c5043?text=B+Virginia+Design'">
+            <div class="absolute inset-0 bg-black bg-opacity-20 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+              <span class="text-white border border-white px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wider">Ver Detalhes</span>
+            </div>
+          </div>
+        `).join('');
+      }
     });
+
+    function preencherServicoForm(nomeServico) {
+      const selectServico = document.getElementById('form-service');
+      if (selectServico) {
+        selectServico.value = nomeServico;
+        atualizarHorariosDisponiveis();
+      }
+    }
   </script>
 </body>
 </html>

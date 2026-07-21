@@ -19,7 +19,7 @@
     <!-- HEADER DA ÁREA RESTRITA -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-200 pb-6 gap-4">
       <div>
-        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Painel de Gestão</span>
+        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Painel de Gestão Completo</span>
         <h1 class="text-3xl font-title font-bold text-[#2C2A29]">B Virgínia Design - Restrito 🔒</h1>
       </div>
       <a href="index.html" class="bg-gray-800 hover:bg-black text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition flex items-center gap-2">
@@ -27,15 +27,91 @@
       </a>
     </div>
 
-    <!-- SEÇÃO 1: BLOQUEAR HORÁRIO DE AGENDA (15 MINUTOS & HORÁRIO DE VOLTA) -->
+    <!-- SEÇÃO 1: FOTOS PRINCIPAIS (HERO BANNER & SOBRE) -->
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-2xl font-title font-bold text-[#2C2A29]">Fotos do Site (Hero Banner & Sobre)</h2>
+          <p class="text-sm text-gray-500 mt-1">Envie as fotos direto do seu aparelho ou digite o link se preferir.</p>
+        </div>
+        <button onclick="salvarHeroSobre()" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
+          <i class="fas fa-save"></i> Salvar Imagens
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Hero BG -->
+        <div class="space-y-2 bg-[#FAF8F5] p-4 rounded-xl border border-gray-200/80">
+          <label class="block text-xs font-bold text-gray-700 uppercase">Imagem de Fundo (Hero Topo)</label>
+          <div class="flex items-center gap-2">
+            <input type="file" accept="image/*" onchange="uploadArquivoDireto(this, 'input-hero-bg')" class="text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#b5945b] file:text-white hover:file:bg-[#9a7d4a] cursor-pointer">
+          </div>
+          <input type="text" id="input-hero-bg" placeholder="URL ou Imagem Carregada" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]">
+        </div>
+
+        <!-- Foto Sobre -->
+        <div class="space-y-2 bg-[#FAF8F5] p-4 rounded-xl border border-gray-200/80">
+          <label class="block text-xs font-bold text-gray-700 uppercase">Foto de Apresentação (Seção Sobre)</label>
+          <div class="flex items-center gap-2">
+            <input type="file" accept="image/*" onchange="uploadArquivoDireto(this, 'input-foto-sobre')" class="text-xs text-gray-500 file:mr-3 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-[#b5945b] file:text-white hover:file:bg-[#9a7d4a] cursor-pointer">
+          </div>
+          <input type="text" id="input-foto-sobre" placeholder="URL ou Imagem Carregada" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]">
+        </div>
+      </div>
+    </div>
+
+    <!-- SEÇÃO 2: GERENCIAR SERVIÇOS E PREÇOS -->
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-2xl font-title font-bold text-[#2C2A29]">Gerenciar Serviços e Valoração</h2>
+          <p class="text-sm text-gray-500 mt-1">Adicione, edite preços ou troque a foto do procedimento enviando o arquivo direto.</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="adicionarServico()" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold px-4 py-3 rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-2">
+            <i class="fas fa-plus"></i> Novo Serviço
+          </button>
+          <button onclick="salvarServicos()" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
+            <i class="fas fa-save"></i> Salvar Serviços
+          </button>
+        </div>
+      </div>
+
+      <div id="servicos-admin-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+
+    <!-- SEÇÃO 3: PORTFÓLIO / GALERIA DE TRABALHOS -->
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-2xl font-title font-bold text-[#2C2A29]">Portfólio / Galeria de Trabalhos</h2>
+          <p class="text-sm text-gray-500 mt-1">Faça upload de novas fotos de resultados para exibir no site.</p>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="adicionarFotoPortfolio()" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold px-4 py-3 rounded-xl text-xs uppercase tracking-wider transition flex items-center gap-2">
+            <i class="fas fa-plus"></i> Adicionar Foto
+          </button>
+          <button onclick="salvarPortfolio()" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white font-bold px-5 py-3 rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
+            <i class="fas fa-save"></i> Salvar Galeria
+          </button>
+        </div>
+      </div>
+
+      <div id="portfolio-admin-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+
+    <!-- SEÇÃO 4: BLOQUEAR HORÁRIO DE AGENDA -->
     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
       <div>
         <h2 class="text-2xl font-title font-bold text-[#2C2A29]">Bloquear Horário de Agenda</h2>
-        <p class="text-sm text-gray-500 mt-1">Bloqueie slots individuais a cada 15 minutos ou defina o horário de saída e o horário de volta no mesmo dia.</p>
+        <p class="text-sm text-gray-500 mt-1">Bloqueie slots individuais a cada 15 minutos ou escolha o horário de saída e volta no mesmo dia.</p>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- SELEÇÃO DE DATA E INTERVALO RÁPIDO DE VOLTA -->
         <div class="space-y-6 bg-[#FAF8F5] p-5 rounded-xl border border-gray-200/60">
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-2">1. Selecione o Dia:</label>
@@ -48,15 +124,11 @@
             <div class="grid grid-cols-2 gap-3">
               <div>
                 <label class="block text-[11px] font-semibold text-gray-600 mb-1">Horário Saída</label>
-                <select id="range-start" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]">
-                  <!-- Povoado via JS -->
-                </select>
+                <select id="range-start" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]"></select>
               </div>
               <div>
                 <label class="block text-[11px] font-semibold text-gray-600 mb-1">Horário Volta</label>
-                <select id="range-end" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]">
-                  <!-- Povoado via JS -->
-                </select>
+                <select id="range-end" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]"></select>
               </div>
             </div>
 
@@ -69,37 +141,70 @@
           </div>
         </div>
 
-        <!-- GRADE DE HORÁRIOS A CADA 15 MINUTOS -->
         <div class="lg:col-span-2 space-y-3">
           <label class="block text-xs font-bold text-gray-500 uppercase">2. Selecione o Horário (15 em 15 min) para Bloquear / Desbloquear:</label>
           <div id="slots-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[400px] overflow-y-auto p-1 border border-gray-100 rounded-xl">
-            <!-- Injetado dinamicamente via JS -->
+            <!-- Injetado via JS -->
           </div>
         </div>
       </div>
     </div>
 
-    <!-- SEÇÃO 2: AVALIAÇÕES E COMENTÁRIOS (5 CLIENTES) -->
+    <!-- SEÇÃO 5: AVALIAÇÕES E COMENTÁRIOS (5 CLIENTES) -->
     <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
       <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 class="text-2xl font-title font-bold text-[#2C2A29]">Avaliações e Comentários (5 Clientes)</h2>
-          <p class="text-sm text-gray-500 mt-1">Customize o texto de elogio, quantidade de estrelas e nome de suas clientes queridas.</p>
+          <p class="text-sm text-gray-500 mt-1">Customize o texto de elogio, quantidade de estrelas e nome de suas clientes.</p>
         </div>
         <button onclick="salvarDepoimentos()" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
-          <i class="fas fa-check"></i> Salvar Comentários de Clientes
+          <i class="fas fa-check"></i> Salvar Comentários
         </button>
       </div>
 
       <div id="depoimentos-admin-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-        <!-- 5 Cards gerados dinamicamente no JS -->
+        <!-- 5 Cards gerados via JS -->
       </div>
     </div>
 
   </div>
 
   <script>
-    // Gerador de Horários de 15 em 15 minutos (08:00 até 19:00)
+    // Função Utilitária: Converte foto do dispositivo direto para Base64/Site
+    function uploadArquivoDireto(fileInput, targetInputId, previewImgId) {
+      const file = fileInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const resultBase64 = e.target.result;
+          if (targetInputId) {
+            document.getElementById(targetInputId).value = resultBase64;
+          }
+          if (previewImgId) {
+            document.getElementById(previewImgId).src = resultBase64;
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    const SERVICOS_PADRAO_ADMIN = [
+      { nome: "Design Simples", preco: "R$ 35,00", desc: "Higienização, alinhamento simétrico e remoção de fios com pinça.", foto: "assets/images/galeria-1.png" },
+      { nome: "Design com Henna", preco: "R$ 50,00", desc: "Design personalizado com aplicação de henna de alta fixação.", foto: "assets/images/galeria-2.png" },
+      { nome: "Volume Brasileiro", preco: "R$ 130,00", desc: "Fios em formato Y para leveza, retenção e preenchimento marcante.", foto: "assets/images/galeria-3.png" },
+      { nome: "Efeito Fox Eyes / Sirena", preco: "R$ 140,00", desc: "Cílios com mapeamento alongado no canto externo para olhar sensual.", foto: "assets/images/galeria-4.png" },
+      { nome: "Volume Egípcio", preco: "R$ 140,00", desc: "Fios em formato W que oferecem textura incrível e efeito volumoso.", foto: "assets/images/galeria-5.png" },
+      { nome: "Lash Lifting", preco: "R$ 100,00", desc: "Curvatura e tintura dos cílios naturais, promovendo efeito curvex duradouro.", foto: "assets/images/galeria-6.png" }
+    ];
+
+    const DEPOIMENTOS_PADRAO_5 = [
+      { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável. Minhas sobrancelhas nunca ficaram tão harmônicas e naturais. Recomendo de olhos fechados!"' },
+      { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"A extensão de cílios é super confortável, não sinto nenhum peso e dura muito tempo. O efeito Sirena ficou maravilhoso e combinou muito comigo."' },
+      { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista, cuidadosa e atenciosa. O espaço é muito aconchegante, limpo e luxuoso. Nota mil para a Virgínia!"' },
+      { nome: 'Daniela Lima', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Fiz o Lash Lifting e fiquei apaixonada pelo resultado. Olhar marcante todos os dias sem precisar de rímel. Maravilhoso!"' },
+      { nome: 'Eduarda Santos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"O design com henna ficou perfeito na minha pele, cor super natural e durabilidade excelente. Já virei cliente fiel!"' }
+    ];
+
     function gerarHorarios15min() {
       const lista = [];
       for (let h = 8; h <= 19; h++) {
@@ -116,10 +221,14 @@
     const TODOS_HORARIOS = gerarHorarios15min();
 
     document.addEventListener("DOMContentLoaded", () => {
-      const inputData = document.getElementById('block-date');
-      const hojestr = new Date().toISOString().split('T')[0];
-      inputData.value = hojestr;
+      document.getElementById('input-hero-bg').value = localStorage.getItem('cms_hero_bg') || '';
+      document.getElementById('input-foto-sobre').value = localStorage.getItem('cms_foto_sobre') || '';
 
+      const inputData = document.getElementById('block-date');
+      inputData.value = new Date().toISOString().split('T')[0];
+
+      carregarServicosAdmin();
+      carregarPortfolioAdmin();
       povoarSelectsIntervalo();
       renderizarGradeHorarios();
       carregarDepoimentosAdmin();
@@ -127,10 +236,134 @@
       inputData.addEventListener('change', renderizarGradeHorarios);
     });
 
+    // 1. HERO E SOBRE
+    function salvarHeroSobre() {
+      const heroBg = document.getElementById('input-hero-bg').value.trim();
+      const fotoSobre = document.getElementById('input-foto-sobre').value.trim();
+
+      if (heroBg) localStorage.setItem('cms_hero_bg', heroBg);
+      if (fotoSobre) localStorage.setItem('cms_foto_sobre', fotoSobre);
+
+      alert("🎉 Imagens do Hero e Apresentação salvas com sucesso!");
+    }
+
+    // 2. SERVIÇOS
+    function carregarServicosAdmin() {
+      const servicos = JSON.parse(localStorage.getItem('cms_servicos')) || SERVICOS_PADRAO_ADMIN;
+      const container = document.getElementById('servicos-admin-container');
+
+      container.innerHTML = servicos.map((s, index) => `
+        <div class="bg-[#FAF8F5] p-4 rounded-xl border border-gray-200/80 space-y-3 relative">
+          <button onclick="removerServico(${index})" class="absolute top-3 right-3 text-red-500 hover:text-red-700 text-xs font-bold" title="Remover">
+            <i class="fas fa-trash"></i>
+          </button>
+          
+          <div>
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">Nome do Serviço</label>
+            <input type="text" id="srv-nome-${index}" value="${s.nome}" class="w-full border border-gray-300 rounded-lg p-2 text-xs font-bold bg-white focus:ring-1 focus:ring-[#b5945b]">
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-600 mb-1">Preço</label>
+            <input type="text" id="srv-preco-${index}" value="${s.preco}" class="w-full border border-gray-300 rounded-lg p-2 text-xs font-bold text-[#b5945b] bg-white focus:ring-1 focus:ring-[#b5945b]">
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-600 mb-1">Foto do Serviço (Upload ou Link)</label>
+            <input type="file" accept="image/*" onchange="uploadArquivoDireto(this, 'srv-foto-${index}')" class="text-[10px] text-gray-500 mb-1 block w-full file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-[#b5945b] file:text-white cursor-pointer">
+            <input type="text" id="srv-foto-${index}" value="${s.foto || ''}" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]">
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-500 mb-1">Descrição Curta</label>
+            <textarea id="srv-desc-${index}" rows="2" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-[#b5945b] resize-none">${s.desc || s.descricao || ''}</textarea>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function adicionarServico() {
+      const servicos = JSON.parse(localStorage.getItem('cms_servicos')) || SERVICOS_PADRAO_ADMIN;
+      servicos.push({ nome: "Novo Serviço", preco: "R$ 0,00", desc: "Descrição do procedimento...", foto: "" });
+      localStorage.setItem('cms_servicos', JSON.stringify(servicos));
+      carregarServicosAdmin();
+    }
+
+    function removerServico(index) {
+      const servicos = JSON.parse(localStorage.getItem('cms_servicos')) || SERVICOS_PADRAO_ADMIN;
+      if (confirm(`Deseja remover o serviço "${servicos[index].nome}"?`)) {
+        servicos.splice(index, 1);
+        localStorage.setItem('cms_servicos', JSON.stringify(servicos));
+        carregarServicosAdmin();
+      }
+    }
+
+    function salvarServicos() {
+      const servicosAtuais = JSON.parse(localStorage.getItem('cms_servicos')) || SERVICOS_PADRAO_ADMIN;
+      const novosServicos = servicosAtuais.map((_, index) => {
+        return {
+          nome: document.getElementById(`srv-nome-${index}`).value.trim(),
+          preco: document.getElementById(`srv-preco-${index}`).value.trim(),
+          desc: document.getElementById(`srv-desc-${index}`).value.trim(),
+          foto: document.getElementById(`srv-foto-${index}`).value.trim()
+        };
+      });
+
+      localStorage.setItem('cms_servicos', JSON.stringify(novosServicos));
+      alert("✨ Lista de Serviços e Preços salva com sucesso!");
+    }
+
+    // 3. PORTFÓLIO
+    function carregarPortfolioAdmin() {
+      const portfolioPadrao = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
+      const fotos = JSON.parse(localStorage.getItem('cms_portfolio')) || portfolioPadrao;
+      const container = document.getElementById('portfolio-admin-container');
+
+      container.innerHTML = fotos.map((url, index) => `
+        <div class="bg-[#FAF8F5] p-3 rounded-xl border border-gray-200/80 space-y-2 relative flex flex-col justify-between">
+          <button onclick="removerFotoPortfolio(${index})" class="absolute top-2 right-2 text-red-500 hover:text-red-700 text-xs font-bold bg-white px-2 py-1 rounded-full shadow" title="Remover">
+            <i class="fas fa-trash"></i>
+          </button>
+          
+          <div class="h-32 bg-gray-100 rounded-lg overflow-hidden border border-gray-200">
+            <img id="prev-port-${index}" src="${url}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/300x300/e8e2d5/5c5043?text=Foto'">
+          </div>
+
+          <div>
+            <label class="block text-[10px] font-bold text-gray-500 mb-1">Subir Foto do Aparelho</label>
+            <input type="file" accept="image/*" onchange="uploadArquivoDireto(this, 'port-foto-${index}', 'prev-port-${index}')" class="text-[10px] text-gray-500 mb-1 block w-full file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-[#b5945b] file:text-white cursor-pointer">
+            <input type="text" id="port-foto-${index}" value="${url}" class="w-full border border-gray-300 rounded-lg p-1.5 text-[11px] bg-white">
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function adicionarFotoPortfolio() {
+      const fotos = JSON.parse(localStorage.getItem('cms_portfolio')) || ['assets/images/galeria-1.png'];
+      fotos.push('https://placehold.co/500x500/e8e2d5/5c5043?text=Nova+Foto');
+      localStorage.setItem('cms_portfolio', JSON.stringify(fotos));
+      carregarPortfolioAdmin();
+    }
+
+    function removerFotoPortfolio(index) {
+      const fotos = JSON.parse(localStorage.getItem('cms_portfolio')) || [];
+      fotos.splice(index, 1);
+      localStorage.setItem('cms_portfolio', JSON.stringify(fotos));
+      carregarPortfolioAdmin();
+    }
+
+    function salvarPortfolio() {
+      const fotosAtuais = JSON.parse(localStorage.getItem('cms_portfolio')) || [];
+      const novasFotos = fotosAtuais.map((_, index) => document.getElementById(`port-foto-${index}`).value.trim());
+
+      localStorage.setItem('cms_portfolio', JSON.stringify(novasFotos));
+      alert("🖼️ Galeria de Portfólio atualizada com sucesso!");
+    }
+
+    // 4. HORÁRIOS & BLOQUEIOS
     function povoarSelectsIntervalo() {
       const selectStart = document.getElementById('range-start');
       const selectEnd = document.getElementById('range-end');
-      
       selectStart.innerHTML = '';
       selectEnd.innerHTML = '';
 
@@ -204,12 +437,9 @@
       }
 
       let bloqueados = getBloqueiosData(data);
-      
       TODOS_HORARIOS.forEach(h => {
         if (h >= inicio && h < fim) {
-          if (!bloqueados.includes(h)) {
-            bloqueados.push(h);
-          }
+          if (!bloqueados.includes(h)) bloqueados.push(h);
         }
       });
 
@@ -226,15 +456,7 @@
       }
     }
 
-    // --- LÓGICA DOS 5 DEPOIMENTOS DE CLIENTES ---
-    const DEPOIMENTOS_PADRAO_5 = [
-      { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável. Minhas sobrancelhas nunca ficaram tão harmônicas e naturais. Recomendo de olhos fechados!"' },
-      { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"A extensão de cílios é super confortável, não sinto nenhum peso e dura muito tempo. O efeito Sirena ficou maravilhoso e combinou muito comigo."' },
-      { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista, cuidadosa e atenciosa. O espaço é muito aconchegante, limpo e luxuoso. Nota mil para a Virgínia!"' },
-      { nome: 'Daniela Lima', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Fiz o Lash Lifting e fiquei apaixonada pelo resultado. Olhar marcante todos os dias sem precisar de rímel. Maravilhoso!"' },
-      { nome: 'Eduarda Santos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"O design com henna ficou perfeito na minha pele, cor super natural e durabilidade excelente. Já virei cliente fiel!"' }
-    ];
-
+    // 5. DEPOIMENTOS
     function carregarDepoimentosAdmin() {
       const salvos = JSON.parse(localStorage.getItem('cms_depoimentos')) || DEPOIMENTOS_PADRAO_5;
       
@@ -249,17 +471,17 @@
           
           <div>
             <label class="block text-[11px] font-bold text-gray-700 mb-1">Nome da Cliente</label>
-            <input type="text" id="dep-nome-${index}" value="${dep.nome}" class="w-full border border-gray-300 rounded-lg p-2 text-xs font-bold bg-white focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
+            <input type="text" id="dep-nome-${index}" value="${dep.nome}" class="w-full border border-gray-300 rounded-lg p-2 text-xs font-bold bg-white focus:ring-1 focus:ring-[#b5945b]">
           </div>
 
           <div>
             <label class="block text-[11px] font-semibold text-gray-500 mb-1">Cidade / Localização</label>
-            <input type="text" id="dep-cidade-${index}" value="${dep.cidade}" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white uppercase text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
+            <input type="text" id="dep-cidade-${index}" value="${dep.cidade}" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white uppercase text-gray-600 focus:ring-1 focus:ring-[#b5945b]">
           </div>
 
           <div>
             <label class="block text-[11px] font-semibold text-gray-500 mb-1">Avaliação (Estrelas)</label>
-            <select id="dep-estrelas-${index}" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
+            <select id="dep-estrelas-${index}" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]">
               <option value="5" ${dep.estrelas == 5 ? 'selected' : ''}>⭐⭐⭐⭐⭐ (5 Estrelas)</option>
               <option value="4" ${dep.estrelas == 4 ? 'selected' : ''}>⭐⭐⭐⭐ (4 Estrelas)</option>
               <option value="3" ${dep.estrelas == 3 ? 'selected' : ''}>⭐⭐⭐ (3 Estrelas)</option>
@@ -268,7 +490,7 @@
 
           <div>
             <label class="block text-[11px] font-semibold text-gray-500 mb-1">Elogio / Texto</label>
-            <textarea id="dep-texto-${index}" rows="4" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-[#b5945b] resize-none">${dep.texto}</textarea>
+            <textarea id="dep-texto-${index}" rows="4" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white focus:ring-1 focus:ring-[#b5945b] resize-none">${dep.texto}</textarea>
           </div>
         </div>
       `).join('');
