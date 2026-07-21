@@ -206,10 +206,10 @@
                     <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
                 </div>
 
-                <!-- SUB-ABA 1: PROCEDIMENTOS -->
+                <!-- SUB-ABA 1: PROCEDIMENTOS (Com upload direto do dispositivo) -->
                 <div id="subsec-procedimentos" class="subtab-content">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
+                        <h3 class="text-lg font-bold">Procedimentos Cadastrados (Upload do Celular/PC/Tablet)</h3>
                         <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO PROCEDIMENTO</button>
                     </div>
                     <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
@@ -229,10 +229,6 @@
                                 <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
-                        <div class="p-4 bg-amber-50 rounded border border-amber-200 space-y-2">
-                            <h4 class="font-bold text-xs uppercase text-amber-800">Bloqueio Rápido de Dias/Horários</h4>
-                            <p class="text-xs text-amber-700">Para bloquear horários específicos ou dias inteiros, utilize também a aba dedicada <b>"BLOQUEIOS MANUAIS"</b> no topo do painel[cite: 3].</p>
-                        </div>
                         <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
                     </form>
                 </div>
@@ -250,23 +246,15 @@
                                 <label class="block text-xs font-bold uppercase">Descrição da Capa</label>
                                 <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</textarea>
                             </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Frase do Rodapé</label>
-                                <input type="text" id="cms-frase-rodape" value="Realçando sua beleza através do olhar." class="w-full border p-2 rounded mt-1">
-                            </div>
                         </div>
                         <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Título Seção Sobre</label>
-                                <input type="text" id="cms-titulo-sobre" value="Seu olhar merece cuidado" class="w-full border p-2 rounded mt-1">
-                            </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase">Localização / Endereço do Salão</label>
                                 <input type="text" id="cms-localizacao" value="Bela Vista, Cabo de Santo Agostinho – PE" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase">Link do Instagram</label>
-                                <input type="text" id="cms-instagram" value="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" class="w-full border p-2 rounded mt-1">
+                                <input type="text" id="cms-instagram" value="https://www.instagram.com/bvirginiadesign" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
@@ -274,7 +262,7 @@
                             </div>
                         </div>
                         <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS, LOCALIZAÇÃO E INSTAGRAM NO SITE</button>
+                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS NO SITE</button>
                         </div>
                     </form>
                 </div>
@@ -288,10 +276,10 @@
                     <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 5: GALERIA -->
+                <!-- SUB-ABA 5: GALERIA (Com upload direto do dispositivo) -->
                 <div id="subsec-galeria" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site</h3>
+                        <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
                         <button onclick="adicionarNovaFotoGaleria()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ ADICIONAR FOTO</button>
                     </div>
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -317,13 +305,13 @@
         const SENHA_ADMIN = 'virginia123';
 
         let procedimentos = [
-            { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 30, foto_url: "assets/images/galeria-1.png" },
-            { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-            { id: 3, nome: "Design com colorimetria", preco: 55.00, duracao_min: 45, foto_url: "assets/images/galeria-3.png" },
-            { id: 4, nome: "Brow lamination", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
-            { id: 5, nome: "Lash lifting", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-5.png" },
-            { id: 6, nome: "Depilação do buço", preco: 15.00, duracao_min: 30, foto_url: "assets/images/galeria-6.png" },
-            { id: 7, nome: "Combo brow + lash", preco: 160.00, duracao_min: 90, foto_url: "assets/images/galeria-1.png" }
+            { id: 1, nome: "Design Simples", preco: 45.00, duracao_min: 30, foto_url: "" },
+            { id: 2, nome: "Design com Henna", preco: 45.00, duracao_min: 30, foto_url: "" },
+            { id: 3, nome: "Design com Colorimetria", preco: 50.00, duracao_min: 45, foto_url: "" },
+            { id: 4, nome: "Brow Lamination", preco: 90.00, duracao_min: 60, foto_url: "" },
+            { id: 5, nome: "Lash Lifting", preco: 90.00, duracao_min: 60, foto_url: "" },
+            { id: 6, nome: "Epilação do Buço", preco: 15.00, duracao_min: 15, foto_url: "" },
+            { id: 7, nome: "Combo Brow + Lash", preco: 160.00, duracao_min: 90, foto_url: "" }
         ];
 
         let avaliacoes = [
@@ -332,8 +320,12 @@
         ];
 
         let fotosSite = [
-            { id: 'capa', posicao: 'Foto de Capa (Hero Section)', url: 'assets/images/foto-perfil.jpg.jpg' },
-            { id: 'sobre', posicao: 'Foto "Sobre Mim"', url: 'assets/images/hero-bg.png' }
+            { id: 'capa', posicao: 'Fondo da Capa (Hero Section)', url: '' },
+            { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: '' },
+            { id: 'card-1', posicao: 'Card de Serviço - Design de Sobrancelha', url: '' },
+            { id: 'card-2', posicao: 'Card de Serviço - Lash Lifting / Cílios', url: '' },
+            { id: 'galeria-1', posicao: 'Galeria - Foto 1 (Resultado Sobrancelhas)', url: '' },
+            { id: 'galeria-2', posicao: 'Galeria - Foto 2 (Estúdio / Ambiente)', url: '' }
         ];
 
         let bloqueios = [];
@@ -398,7 +390,7 @@
                     });
                 }
             } catch (err) {
-                console.log('Usando dados padrão.');
+                console.log('Erro ao carregar dados do Supabase.');
             }
         }
 
@@ -419,40 +411,52 @@
                     .order('horario', { ascending: true });
 
                 if (error) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-500">Erro ao carregar dados do Supabase.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-500">Erro ao carregar agendamentos do Supabase.</td></tr>`;
                     return;
                 }
 
                 if (!ags || ags.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Nenhum agendamento encontrado.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Nenhum agendamento encontrado no sistema.</td></tr>`;
                     document.getElementById('extrato-financeiro').innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>`;
+                    document.getElementById('fin-faturamento').innerText = 'R$ 0,00';
+                    document.getElementById('fin-qtd-agendamentos').innerText = '0';
+                    document.getElementById('fin-ticket-medio').innerText = 'R$ 0,00';
                     return;
                 }
 
-                tbody.innerHTML = ags.map(item => `
-                    <tr>
-                        <td class="p-3 font-medium">${item.nome_cliente || item.cliente || item.nome || 'Cliente'}</td>
-                        <td class="p-3">${item.telefone || '-'}</td>
-                        <td class="p-3">${item.servico}</td>
-                        <td class="p-3">${item.data ? item.data.split('-').reverse().join('/') : '-'}</td>
-                        <td class="p-3 font-semibold text-gray-900">${item.horario}</td>
-                        <td class="p-3">
-                            <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.status === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
-                                ${item.status || 'Pendente'}
-                            </span>
-                        </td>
-                        <td class="p-3 text-center space-x-2">
-                            <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 font-medium">Aceitar</button>
-                            <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 font-medium">Excluir</button>
-                        </td>
-                    </tr>
-                `).join('');
+                tbody.innerHTML = ags.map(item => {
+                    const nomeCli = item.nome_cliente || item.cliente || item.nome || 'Cliente';
+                    const telCli = item.telefone || item.whatsapp || '-';
+                    const servCli = item.servico || item.procedimento || 'Serviço';
+                    const dataCli = item.data ? item.data.split('-').reverse().join('/') : '-';
+                    const horaCli = item.horario || '-';
+                    const statusCli = item.status || 'Pendente';
+
+                    return `
+                        <tr>
+                            <td class="p-3 font-medium">${nomeCli}</td>
+                            <td class="p-3">${telCli}</td>
+                            <td class="p-3">${servCli}</td>
+                            <td class="p-3">${dataCli}</td>
+                            <td class="p-3 font-semibold text-gray-900">${horaCli}</td>
+                            <td class="p-3">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${statusCli === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                    ${statusCli}
+                                </span>
+                            </td>
+                            <td class="p-3 text-center space-x-2">
+                                <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 font-medium">Aceitar</button>
+                                <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 font-medium">Excluir</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
 
                 document.getElementById('extrato-financeiro').innerHTML = ags.map(a => `
                     <tr class="border-b">
                         <td class="p-2">${a.data ? a.data.split('-').reverse().join('/') : ''} - ${a.horario}</td>
                         <td class="p-2">${a.nome_cliente || a.cliente || a.nome || 'Cliente'}</td>
-                        <td class="p-2">${a.servico}</td>
+                        <td class="p-2">${a.servico || a.procedimento || ''}</td>
                         <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2).replace('.', ',')}</td>
                     </tr>
                 `).join('');
@@ -462,20 +466,9 @@
                 document.getElementById('fin-qtd-agendamentos').innerText = ags.length;
                 document.getElementById('fin-ticket-medio').innerText = `R$ ${(fat / ags.length).toFixed(2).replace('.', ',')}`;
 
-                // Clientes CRM
-                const { data: cls } = await _supabase.from('clientes').select('*');
-                const tabelaClientes = document.getElementById('tabela-clientes');
-                if (cls && cls.length > 0) {
-                    tabelaClientes.innerHTML = cls.map(c => `
-                        <tr class="border-b">
-                            <td class="p-3 font-semibold">${c.nome}</td>
-                            <td class="p-3">${c.telefone}</td>
-                            <td class="p-3">${c.ultimo_servico || '-'}</td>
-                            <td class="p-3">${c.total_agendamentos || 1}</td>
-                        </tr>
-                    `).join('');
-                }
-            } catch (e) { console.log("Erro ao carregar agenda/financeiro."); }
+            } catch (e) {
+                console.log("Erro ao carregar dados financeiros e agendamentos:", e);
+            }
         }
 
         async function atualizarStatus(id, novoStatus) {
@@ -492,19 +485,53 @@
             }
         }
 
+        // PROCEDIMENTOS COM UPLOAD DIRETO DO DISPOSITIVO
         function renderizarProcedimentos() {
             const container = document.getElementById('grid-procedimentos');
+            if (procedimentos.length === 0) {
+                container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum procedimento cadastrado.</p>`;
+                return;
+            }
             container.innerHTML = procedimentos.map(p => `
                 <div class="bg-white p-5 rounded shadow border space-y-3">
                     <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold">
                     <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="proc-tempo-${p.id}" value="${p.duracao_min || 30}" class="w-full border p-2 rounded text-sm">
-                        <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700">
+                        <div>
+                            <label class="block text-[10px] text-gray-500 uppercase font-bold">Tempo (min)</label>
+                            <input type="text" id="proc-tempo-${p.id}" value="${p.duracao_min || 30}" class="w-full border p-2 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-500 uppercase font-bold">Preço (R$)</label>
+                            <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700">
+                        </div>
                     </div>
-                    <input type="text" id="proc-foto-${p.id}" value="${p.foto_url || ''}" class="w-full border p-2 text-xs rounded" placeholder="URL da foto">
-                    <button onclick="salvarProcedimento(${p.id})" class="w-full bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
+                    
+                    <!-- Pré-visualização da imagem atual -->
+                    <div class="mt-2">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Foto do Serviço:</label>
+                        ${p.foto_url ? `<div class="mb-2"><img src="${p.foto_url}" class="h-20 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Nenhuma foto carregada</div>'}
+                        <input type="file" id="proc-file-${p.id}" accept="image/*" class="w-full text-xs border p-1 rounded bg-gray-50 mb-1" onchange="converterArquivoParaBase64Procedimento(${p.id})">
+                        <input type="hidden" id="proc-foto-${p.id}" value="${p.foto_url || ''}">
+                    </div>
+
+                    <div class="flex space-x-2 pt-2">
+                        <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
+                        <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">EXCLUIR</button>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        function converterArquivoParaBase64Procedimento(id) {
+            const input = document.getElementById(`proc-file-${id}`);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(`proc-foto-${id}`).value = e.target.result;
+                    alert('✨ Foto carregada do dispositivo! Clique em SALVAR para confirmar.');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
         async function salvarProcedimento(id) {
@@ -515,7 +542,16 @@
                 procedimentos[idx].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
                 procedimentos[idx].foto_url = document.getElementById(`proc-foto-${id}`).value;
                 await salvarNoBanco('procedimentos', procedimentos);
-                alert('✨ Procedimento salvo!');
+                alert('✨ Procedimento salvo com sucesso!');
+                renderizarProcedimentos();
+            }
+        }
+
+        async function excluirProcedimento(id) {
+            if (confirm('Deseja excluir este procedimento?')) {
+                procedimentos = procedimentos.filter(p => p.id !== id);
+                await salvarNoBanco('procedimentos', procedimentos);
+                renderizarProcedimentos();
             }
         }
 
@@ -550,15 +586,36 @@
             renderizarAvaliacoes();
         }
 
+        // GALERIA E FOTOS DO SITE (Com upload direto do dispositivo)
         function renderizarFotos() {
             const container = document.getElementById('grid-fotos-site');
             container.innerHTML = fotosSite.map(f => `
                 <div class="bg-white p-4 rounded shadow border space-y-3">
                     <h4 class="font-bold text-sm text-amber-700">${f.posicao}</h4>
-                    <input type="text" id="foto-url-${f.id}" value="${f.url}" class="w-full border p-2 text-xs rounded" placeholder="URL da foto">
-                    <button onclick="salvarFotoUnica('${f.id}')" class="w-full bg-gold text-white font-bold text-xs py-2 rounded">💾 SALVAR</button>
+                    
+                    ${f.url ? `<div class="mb-2"><img src="${f.url}" class="h-24 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Nenhuma foto carregada</div>'}
+                    
+                    <input type="file" id="foto-file-${f.id}" accept="image/*" class="w-full text-xs border p-1 rounded bg-gray-50" onchange="converterArquivoParaBase64Foto('${f.id}')">
+                    <input type="hidden" id="foto-url-${f.id}" value="${f.url || ''}">
+
+                    <div class="flex space-x-2 pt-2">
+                        <button onclick="salvarFotoUnica('${f.id}')" class="flex-1 bg-gold text-white font-bold text-xs py-2 rounded">💾 SALVAR FOTO</button>
+                        <button onclick="excluirFotoSite('${f.id}')" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">REMOVER</button>
+                    </div>
                 </div>
             `).join('');
+        }
+
+        function converterArquivoParaBase64Foto(id) {
+            const input = document.getElementById(`foto-file-${id}`);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(`foto-url-${id}`).value = e.target.result;
+                    alert('✨ Foto carregada do dispositivo! Clique em SALVAR FOTO para confirmar.');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
         }
 
         async function salvarFotoUnica(id) {
@@ -566,12 +623,22 @@
             if (idx !== -1) {
                 fotosSite[idx].url = document.getElementById(`foto-url-${id}`).value;
                 await salvarNoBanco('fotos_site', fotosSite);
-                alert('✨ Foto salva!');
+                alert('✨ Foto salva com sucesso!');
+                renderizarFotos();
+            }
+        }
+
+        async function excluirFotoSite(id) {
+            if (confirm('Deseja remover esta foto?')) {
+                fotosSite = fotosSite.filter(f => f.id !== id);
+                await salvarNoBanco('fotos_site', fotosSite);
+                renderizarFotos();
             }
         }
 
         function adicionarNovaFotoGaleria() {
-            fotosSite.push({ id: 'galeria-' + Date.now(), posicao: 'Nova Foto', url: '' });
+            const novoId = 'galeria-' + Date.now();
+            fotosSite.push({ id: novoId, posicao: 'Nova Foto da Galeria', url: '' });
             renderizarFotos();
         }
 
