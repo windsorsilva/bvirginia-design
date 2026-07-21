@@ -119,13 +119,16 @@
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
-              <input type="date" id="form-date" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
+              <input type="date" id="form-date" onchange="verificarDisponibilidadeData()" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário</label>
-              <input type="time" id="form-time" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
+              <select id="form-time" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
+                <option value="" disabled selected>Primeiro escolha a data</option>
+              </select>
             </div>
           </div>
+          <p id="aviso-bloqueio-dia" class="text-xs text-red-500 font-bold hidden">⚠️ Este dia possui bloqueio total ou parcial configurado pela administração.</p>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações</label>
             <textarea id="form-notes" rows="2" placeholder="Observação..." class="w-full border border-gray-200 rounded-lg p-3 text-sm"></textarea>
@@ -189,6 +192,8 @@
     ];
 
     let servicosCarregados = SERVICOS_PADRAO;
+    let bloqueiosGlobais = [];
+    let agendamentosGlobais = [];
 
     function renderizarServicos(servs) {
       servicosCarregados = servs;
@@ -241,9 +246,15 @@
       renderizarDepoimentos(DEPOIMENTOS_PADRAO);
 
       try {
+        const { data: ags } = await _supabase.from('agendamentos').select('*');
+        agendamentosGlobais = ags || [];
+
         const { data: configs } = await _supabase.from('configuracoes_site').select('*');
         if (configs && configs.length > 0) {
           configs.forEach(c => {
+            if (c.chave === 'bloqueios') {
+              bloqueiosGlobais = JSON.parse(c.valor) || [];
+            }
             if (c.chave === 'fotos_site') {
               const fotos = JSON.parse(c.valor);
               fotos.forEach(f => {
@@ -287,6 +298,57 @@
           });
         }
       } catch (err) { console.log("Usando dados padrão."); }
+    }
+
+    function verificarDisponibilidadeData() {
+      const dataSelecionada = document.getElementById('form-date').value;
+      const selectTempo = document.getElementById('form-time');
+      const aviso = document.getElementById('aviso-bloqueio-dia');
+      aviso.classList.add('hidden');
+
+      if (!dataSelecionada) {
+        selectTempo.innerHTML = '<option value="" disabled selected>Primeiro escolha a data</option>';
+        return;
+      }
+
+      // Horários padrão de atendimento (10:00 às 18:00 de hora em hora)
+      let horariosPossiveis = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
+
+      // Verificar bloqueios cadastrados para esta data
+      const bloqueiosDoDia = bloqueiosGlobais.filter(b => b.data === dataSelecionada);
+      let diaTotalmenteBloqueado = false;
+      let horariosBloqueados = [];
+
+      bloqueiosDoDia.forEach(b => {
+        if (b.inicio <= "00:00" && b.fim >= "23:59") {
+          diaTotalmenteBloqueado = true;
+        } else {
+          horariosPossiveis.forEach(h => {
+            if (h >= b.inicio && h <= b.fim) {
+              horariosBloqueados.push(h);
+            }
+          });
+        }
+      });
+
+      // Verificar agendamentos já existentes nesta data
+      const agendamentosDoDia = agendamentosGlobais.filter(a => a.data === dataSelecionada).map(a => a.horario);
+
+      if (diaTotalmenteBloqueado) {
+        aviso.classList.remove('hidden');
+        selectTempo.innerHTML = '<option value="" disabled selected>Dia Indisponível (Bloqueado)</option>';
+        return;
+      }
+
+      // Filtrar horários livres
+      horariosPossiveis = horariosPossiveis.filter(h => !horariosBloqueados.includes(h) && !agendamentosDoDia.includes(h));
+
+      if (horariosPossiveis.length === 0) {
+        selectTempo.innerHTML = '<option value="" disabled selected>Nenhum horário livre nesta data</option>';
+      } else {
+        selectTempo.innerHTML = '<option value="" disabled selected>Selecione um horário</option>' + 
+          horariosPossiveis.map(h => `<option value="${h}">${h}</option>`).join('');
+      }
     }
 
     function preencherServico(nome) {

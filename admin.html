@@ -72,9 +72,16 @@
 
         <main class="max-w-7xl mx-auto p-6">
 
-            <!-- TAB 1: AGENDA -->
+            <!-- TAB 1: AGENDA (COM FILTRO POR CALENDÁRIO / DATA) -->
             <section id="sec-agenda" class="tab-content">
-                <h2 class="text-xl font-bold mb-4">Agenda Diária de Atendimentos</h2>
+                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
+                    <h2 class="text-xl font-bold">Agenda de Atendimentos</h2>
+                    <div class="flex items-center gap-2 bg-white p-2 rounded shadow border">
+                        <label class="text-xs font-bold uppercase text-gray-600">Filtrar por Data:</label>
+                        <input type="date" id="filtro-data-agenda" onchange="filtrarAgendaPorData()" class="border p-1 text-sm rounded">
+                        <button onclick="limparFiltroAgenda()" class="bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded font-bold hover:bg-gray-300">VER TODOS</button>
+                    </div>
+                </div>
                 <div class="bg-white p-6 rounded shadow border">
                     <div id="lista-agendamentos-hoje" class="space-y-4">
                         <p class="text-gray-500 text-sm">Carregando agendamentos...</p>
@@ -188,10 +195,10 @@
                     <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
                 </div>
 
-                <!-- SUB-ABA 1: PROCEDIMENTOS (COM UPLOAD DE ARQUIVO E URL) -->
+                <!-- SUB-ABA 1: PROCEDIMENTOS -->
                 <div id="subsec-procedimentos" class="subtab-content">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Procedimentos Cadastrados (Upload Celular/PC & URL)</h3>
+                        <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
                         <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">
                             + NOVO PROCEDIMENTO
                         </button>
@@ -274,7 +281,7 @@
                     <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 5: GALERIA & TODAS AS FOTOS SOLICITADAS -->
+                <!-- SUB-ABA 5: GALERIA -->
                 <div id="subsec-galeria" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
@@ -334,6 +341,7 @@
         ];
 
         let bloqueios = [];
+        let listaGlobalAgendamentos = [];
 
         function verificarSenha(e) {
             e.preventDefault();
@@ -409,38 +417,10 @@
 
         async function carregarFinanceiroEAgendamentos() {
             try {
-                const { data: ags } = await _supabase.from('agendamentos').select('*');
-                const container = document.getElementById('lista-agendamentos-hoje');
-                const extrato = document.getElementById('extrato-financeiro');
-
-                if (ags && ags.length > 0) {
-                    container.innerHTML = ags.map(a => `
-                        <div class="border p-4 rounded bg-gray-50 flex justify-between items-center">
-                            <div>
-                                <h4 class="font-bold text-sm">${a.nome} (${a.telefone})</h4>
-                                <p class="text-xs text-gray-600">Serviço: <b>${a.servico}</b> | Data: <b>${a.data}</b> às <b>${a.horario}</b></p>
-                            </div>
-                            <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded">R$ ${Number(a.valor || 0).toFixed(2)}</span>
-                        </div>
-                    `).join('');
-
-                    extrato.innerHTML = ags.map(a => `
-                        <tr class="border-b">
-                            <td class="p-2">${a.data} - ${a.horario}</td>
-                            <td class="p-2">${a.nome}</td>
-                            <td class="p-2">${a.servico}</td>
-                            <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2)}</td>
-                        </tr>
-                    `).join('');
-
-                    let fat = ags.reduce((acc, curr) => acc + Number(curr.valor || 0), 0);
-                    document.getElementById('fin-faturamento').innerText = `R$ ${fat.toFixed(2).replace('.', ',')}`;
-                    document.getElementById('fin-qtd-agendamentos').innerText = ags.length;
-                    document.getElementById('fin-ticket-medio').innerText = `R$ ${(fat / ags.length).toFixed(2).replace('.', ',')}`;
-                } else {
-                    container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum agendamento encontrado.</p>`;
-                    extrato.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>`;
-                }
+                const { data: ags } = await _supabase.from('agendamentos').select('*').order('data', { ascending: true });
+                listaGlobalAgendamentos = ags || [];
+                renderizarListaAgendamentos(listaGlobalAgendamentos);
+                renderizarExtratoE Financeiro(listaGlobalAgendamentos);
 
                 // Clientes CRM
                 const { data: cls } = await _supabase.from('clientes').select('*');
@@ -458,7 +438,60 @@
             } catch (e) { console.log("Erro ao carregar agenda/financeiro."); }
         }
 
-        // --- PROCEDIMENTOS COM SUPORTE A ARQUIVO E URL ---
+        function renderizarListaAgendamentos(ags) {
+            const container = document.getElementById('lista-agendamentos-hoje');
+            if (ags && ags.length > 0) {
+                container.innerHTML = ags.map(a => `
+                    <div class="border p-4 rounded bg-gray-50 flex justify-between items-center">
+                        <div>
+                            <h4 class="font-bold text-sm">${a.nome} (${a.telefone})</h4>
+                            <p class="text-xs text-gray-600">Serviço: <b>${a.servico}</b> | Data: <b>${a.data.split('-').reverse().join('/')}</b> às <b>${a.horario}</b></p>
+                        </div>
+                        <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded">R$ ${Number(a.valor || 0).toFixed(2)}</span>
+                    </div>
+                `).join('');
+            } else {
+                container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum agendamento encontrado para este filtro.</p>`;
+            }
+        }
+
+        function renderizarExtratoE Financeiro(ags) {
+            const extrato = document.getElementById('extrato-financeiro');
+            if(ags.length > 0) {
+                extrato.innerHTML = ags.map(a => `
+                    <tr class="border-b">
+                        <td class="p-2">${a.data.split('-').reverse().join('/')} - ${a.horario}</td>
+                        <td class="p-2">${a.nome}</td>
+                        <td class="p-2">${a.servico}</td>
+                        <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2)}</td>
+                    </tr>
+                `).join('');
+
+                let fat = ags.reduce((acc, curr) => acc + Number(curr.valor || 0), 0);
+                document.getElementById('fin-faturamento').innerText = `R$ ${fat.toFixed(2).replace('.', ',')}`;
+                document.getElementById('fin-qtd-agendamentos').innerText = ags.length;
+                document.getElementById('fin-ticket-medio').innerText = `R$ ${(fat / ags.length).toFixed(2).replace('.', ',')}`;
+            } else {
+                extrato.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>`;
+                document.getElementById('fin-faturamento').innerText = `R$ 0,00`;
+                document.getElementById('fin-qtd-agendamentos').innerText = 0;
+                document.getElementById('fin-ticket-medio').innerText = `R$ 0,00`;
+            }
+        }
+
+        function filtrarAgendaPorData() {
+            const dataFiltro = document.getElementById('filtro-data-agenda').value;
+            if(!dataFiltro) return;
+            const filtrados = listaGlobalAgendamentos.filter(a => a.data === dataFiltro);
+            renderizarListaAgendamentos(filtrados);
+        }
+
+        function limparFiltroAgenda() {
+            document.getElementById('filtro-data-agenda').value = '';
+            renderizarListaAgendamentos(listaGlobalAgendamentos);
+        }
+
+        // --- PROCEDIMENTOS ---
         function renderizarProcedimentos() {
             const container = document.getElementById('grid-procedimentos');
             container.innerHTML = procedimentos.map(p => `
@@ -564,7 +597,7 @@
             renderizarAvaliacoes();
         }
 
-        // --- FOTOS COM SUPORTE A ARQUIVO (CELULAR/PC) E URL ---
+        // --- FOTOS COM SUPORTE A ARQUIVO E URL ---
         function renderizarFotos() {
             const container = document.getElementById('grid-fotos-site');
             container.innerHTML = fotosSite.map((f, index) => `
