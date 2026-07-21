@@ -3,699 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo - B Virginia Design ✨</title>
-    <!-- Tailwind CSS -->
+    <title>Painel Administrativo - Gerenciamento de Agendamentos</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        :root {
-            --primary-gold: #c5a059;
-            --primary-dark: #1a1a1a;
-        }
+        :root { --primary-gold: #c5a059; --primary-dark: #1a1a1a; }
         .bg-gold { background-color: var(--primary-gold); }
         .text-gold { color: var(--primary-gold); }
         .border-gold { border-color: var(--primary-gold); }
-        .active-tab { border-bottom: 3px solid var(--primary-gold); font-weight: bold; color: #000; }
-        .active-subtab { background-color: #f3f4f6; border-bottom: 2px solid var(--primary-gold); font-weight: bold; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
-
-    <!-- 1. MODAL DE LOGIN / SENHA -->
-    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full border-t-4 border-gold text-center">
-            <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">B Virginia Design ✨</h2>
-            <p class="text-sm text-gray-600 mb-6">Acesso exclusivo ao gerenciamento do site</p>
-            
-            <form onsubmit="verificarSenha(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1 text-left">Senha do Administrador</label>
-                    <input type="password" id="input-senha" placeholder="••••••••" required 
-                           class="w-full border rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
-                </div>
-                <p id="login-error" class="text-red-500 text-xs font-semibold hidden">Senha incorreta! Tente novamente.</p>
-                <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow hover:opacity-90 transition">
-                    ENTRAR NO PAINEL
-                </button>
-            </form>
-            <div class="mt-6 border-t pt-4">
-                <a href="index.html" class="text-xs text-gray-500 hover:underline">← Voltar ao site principal</a>
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen p-6">
+    <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
+        <header class="flex justify-between items-center mb-6 border-b pb-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800">Painel Administrativo</h1>
+                <p class="text-sm text-gray-500">Gerencie, aceite ou exclua os agendamentos dos clientes</p>
             </div>
+            <button onclick="carregarAgendamentos()" class="bg-gold text-white px-4 py-2 rounded hover:opacity-90 font-medium text-sm">Atualizar Lista</button>
+        </header>
+
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
+                        <th class="p-3">Cliente</th>
+                        <th class="p-3">Telefone</th>
+                        <th class="p-3">Serviço</th>
+                        <th class="p-3">Data</th>
+                        <th class="p-3">Horário</th>
+                        <th class="p-3">Status</th>
+                        <th class="p-3 text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-agendamentos" class="divide-y divide-gray-200 text-sm">
+                    <tr>
+                        <td colspan="7" class="p-6 text-center text-gray-500">Carregando agendamentos...</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <!-- 2. PAINEL PRINCIPAL -->
-    <div id="admin-content" class="hidden">
-        <!-- CABEÇALHO -->
-        <header class="bg-white border-b px-6 py-4 flex flex-wrap justify-between items-center shadow-sm">
-            <div>
-                <h1 class="text-2xl font-serif font-bold">Painel da Agenda ✨</h1>
-                <p class="text-xs text-gray-500">Gestão B Virginia Design</p>
-            </div>
-            <button onclick="logout()" class="bg-black text-white px-4 py-2 rounded text-xs font-semibold hover:bg-red-600 transition">
-                SAIR DO PAINEL 🚪
-            </button>
-        </header>
-
-        <!-- ABAS PRINCIPAIS -->
-        <nav class="bg-white border-b overflow-x-auto">
-            <div class="flex space-x-6 px-6 text-sm font-medium text-gray-600 min-w-max">
-                <button onclick="switchTab('agenda')" id="tab-agenda" class="py-3 px-2 active-tab">AGENDA 📅</button>
-                <button onclick="switchTab('clientes')" id="tab-clientes" class="py-3 px-2">CLIENTES (CRM) 👥</button>
-                <button onclick="switchTab('financeiro')" id="tab-financeiro" class="py-3 px-2">FINANCEIRO 💰</button>
-                <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="py-3 px-2">BLOQUEIOS MANUAIS 🚫</button>
-                <button onclick="switchTab('cms')" id="tab-cms" class="py-3 px-2">CONFIGURAÇÕES & CMS ⚙️</button>
-                <button onclick="switchTab('backup')" id="tab-backup" class="py-3 px-2">BACKUP & RESTAURAÇÃO 💾</button>
-            </div>
-        </nav>
-
-        <main class="max-w-7xl mx-auto p-6">
-
-            <!-- TAB 1: AGENDA -->
-            <section id="sec-agenda" class="tab-content">
-                <div class="flex flex-wrap justify-between items-center mb-6 gap-4">
-                    <h2 class="text-xl font-bold">Agenda de Atendimentos</h2>
-                    <div class="flex items-center gap-2 bg-white p-2 rounded shadow border">
-                        <label class="text-xs font-bold uppercase text-gray-600">Filtrar por Data:</label>
-                        <input type="date" id="filtro-data-agenda" onchange="filtrarAgendaPorData()" class="border p-1 text-sm rounded">
-                        <button onclick="limparFiltroAgenda()" class="bg-gray-200 text-gray-700 text-xs px-3 py-1.5 rounded font-bold hover:bg-gray-300">VER TODOS</button>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded shadow border">
-                    <div id="lista-agendamentos-hoje" class="space-y-4">
-                        <p class="text-gray-500 text-sm">Carregando agendamentos...</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 2: CLIENTES -->
-            <section id="sec-clientes" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Base de Clientes Cadastrados</h2>
-                <div class="bg-white p-6 rounded shadow border overflow-x-auto">
-                    <table class="w-full text-left text-sm">
-                        <thead>
-                            <tr class="border-b bg-gray-50">
-                                <th class="p-3">NOME</th>
-                                <th class="p-3">TELEFONE / WHATSAPP</th>
-                                <th class="p-3">ÚLTIMO SERVIÇO</th>
-                                <th class="p-3">TOTAL AGENDADO</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-clientes">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado ainda.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-
-            <!-- TAB 3: FINANCEIRO -->
-            <section id="sec-financeiro" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Relatório Financeiro Automático</h2>
-                
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-amber-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Faturamento Previsto (Mês)</p>
-                        <h3 id="fin-faturamento" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-blue-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Agendamentos Realizados</p>
-                        <h3 id="fin-qtd-agendamentos" class="text-2xl font-bold text-gray-800 mt-2">0</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-green-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Ticket Médio por Cliente</p>
-                        <h3 id="fin-ticket-medio" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
-                    </div>
-                </div>
-
-                <div class="bg-white p-6 rounded shadow border">
-                    <h3 class="font-bold text-lg mb-4 border-b pb-2">Extrato de Serviços Agendados</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead>
-                                <tr class="border-b bg-gray-50">
-                                    <th class="p-2">DATA/HORA</th>
-                                    <th class="p-2">CLIENTE</th>
-                                    <th class="p-2">PROCEDIMENTO</th>
-                                    <th class="p-2">VALOR</th>
-                                </tr>
-                            </thead>
-                            <tbody id="extrato-financeiro">
-                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 4: BLOQUEIOS MANUAIS -->
-            <section id="sec-bloqueios" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário / Dias Inteiros</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
-                        <form onsubmit="salvarBloqueio(event)" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Data</label>
-                                <input type="date" id="bloq-data" required class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Hora Início</label>
-                                    <input type="time" id="bloq-inicio" value="00:00" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Hora Fim</label>
-                                    <input type="time" id="bloq-fim" value="23:59" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Motivo</label>
-                                <input type="text" id="bloq-motivo" placeholder="Ex: Folga, Feriado" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded">CADASTRAR BLOQUEIO</button>
-                        </form>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários e Dias Bloqueados</h3>
-                        <div id="lista-bloqueios-cadastrados" class="space-y-2 text-sm">
-                            <p class="text-gray-500">Nenhum bloqueio cadastrado.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- TAB 5: CONFIGURAÇÕES & CMS -->
-            <section id="sec-cms" class="tab-content hidden">
-                <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
-                    <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
-                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE & BLOQUEIOS</button>
-                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS & INSTAGRAM (CMS)</button>
-                    <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
-                </div>
-
-                <div id="subsec-procedimentos" class="subtab-content">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
-                        <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO PROCEDIMENTO</button>
-                    </div>
-                    <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </div>
-
-                <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda e Bloqueios</h3>
-                    <form onsubmit="salvarRegras(event)" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Início do Expediente</label>
-                                <input type="time" id="cfg-inicio" value="10:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Fechamento do Estúdio</label>
-                                <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-                        <div class="p-4 bg-amber-50 rounded border border-amber-200 space-y-2">
-                            <h4 class="font-bold text-xs uppercase text-amber-800">Bloqueio Rápido de Dias/Horários</h4>
-                            <p class="text-xs text-amber-700">Para bloquear horários específicos ou dias inteiros, utilize a aba dedicada <b>"BLOQUEIOS MANUAIS"</b> no topo do painel.</p>
-                        </div>
-                        <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
-                    </form>
-                </div>
-
-                <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos, Localização e Instagram Exibidos no Site</h3>
-                    <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Título Principal (Capa)</label>
-                                <input type="text" id="cms-titulo-capa" value="Beleza através do olhar ✨" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Descrição da Capa</label>
-                                <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Frase do Rodapé</label>
-                                <input type="text" id="cms-frase-rodape" value="Realçando sua beleza através do olhar." class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Título Seção Sobre</label>
-                                <input type="text" id="cms-titulo-sobre" value="Seu olhar merece cuidado" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Localização / Endereço do Salão</label>
-                                <input type="text" id="cms-localizacao" value="Bela Vista, Cabo de Santo Agostinho – PE" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Link do Instagram</label>
-                                <input type="text" id="cms-instagram" value="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
-                                <input type="text" id="cms-whatsapp" value="5581989002496" class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-                        <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS, LOCALIZAÇÃO E INSTAGRAM NO SITE</button>
-                        </div>
-                    </form>
-                </div>
-
-                <div id="subsec-avaliacoes" class="subtab-content hidden">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Depoimentos & Avaliações dos Clientes</h3>
-                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO DEPOIMENTO</button>
-                    </div>
-                    <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </div>
-
-                <div id="subsec-galeria" class="subtab-content hidden">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
-                        <button onclick="adicionarNovaFotoGaleria()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ ADICIONAR FOTO NA GALERIA</button>
-                    </div>
-                    <p class="text-xs text-gray-500 mb-6">Altere fotos de capa, sobre, cards ou adicione novas fotos na galeria e clique em **SALVAR**.</p>
-                    <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </div>
-            </section>
-
-            <!-- TAB 6: BACKUP -->
-            <section id="sec-backup" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Backup e Segurança</h2>
-                <div class="bg-white p-6 rounded shadow border text-center">
-                    <button onclick="exportarBackup()" class="bg-black text-white px-6 py-2 rounded font-bold">EXPORTAR BACKUP DADOS</button>
-                </div>
-            </section>
-
-        </main>
-    </div>
-
-    <!-- SCRIPT DO ADMIN -->
     <script>
         const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        const SENHA_ADMIN = 'virginia123';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-        let procedimentos = [
-            { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
-            { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-            { id: 3, nome: "Design com colorimetria", preco: 55.00, duracao_min: 45, foto_url: "assets/images/galeria-3.png" },
-            { id: 4, nome: "Brow lamination", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
-            { id: 5, nome: "Lash lifting", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-5.png" },
-            { id: 6, nome: "Depilação do buço", preco: 15.00, duracao_min: 15, foto_url: "assets/images/galeria-6.png" },
-            { id: 7, nome: "Combo brow + lash", preco: 160.00, duracao_min: 90, foto_url: "assets/images/galeria-1.png" }
-        ];
+        async function carregarAgendamentos() {
+            const tbody = document.getElementById('lista-agendamentos');
+            tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Carregando agendamentos...</td></tr>`;
 
-        let avaliacoes = [
-            { id: 1, nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: 'Atendimento incrível e impecável.' },
-            { id: 2, nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: 'Extensão super confortável.' }
-        ];
+            const { data, error } = await supabaseClient
+                .from('agendamentos')
+                .select('*')
+                .order('data', { ascending: true })
+                .order('horario', { ascending: true });
 
-        let fotosSite = [
-            { id: 'capa', posicao: 'Foto de Capa (Hero Section)', url: 'assets/images/foto-perfil.jpg.jpg' },
-            { id: 'sobre', posicao: 'Foto "Sobre Mim"', url: 'assets/images/hero-bg.png' },
-            { id: 'galeria-1', posicao: 'Portfólio / Resultado 1', url: 'assets/images/galeria-1.png' },
-            { id: 'galeria-2', posicao: 'Portfólio / Resultado 2', url: 'assets/images/galeria-2.png' },
-            { id: 'galeria-3', posicao: 'Portfólio / Resultado 3', url: 'assets/images/galeria-3.png' }
-        ];
-
-        let bloqueios = [];
-        let listaGlobalAgendamentos = [];
-
-        function verificarSenha(e) {
-            e.preventDefault();
-            const senhaDigitada = document.getElementById('input-senha').value.trim();
-            if (senhaDigitada === SENHA_ADMIN) {
-                sessionStorage.setItem('admin_autenticado', 'true');
-                liberarPainel();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
-        }
-
-        async function liberarPainel() {
-            document.getElementById('login-modal').classList.add('hidden');
-            document.getElementById('admin-content').classList.remove('hidden');
-            await carregarDadosDoBanco();
-            renderizarProcedimentos();
-            renderizarAvaliacoes();
-            renderizarFotos();
-            carregarFinanceiroEAgendamentos();
-            renderizarBloqueios();
-        }
-
-        function logout() {
-            sessionStorage.removeItem('admin_autenticado');
-            window.location.reload();
-        }
-
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-tab'));
-            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
-        }
-
-        function switchSubTab(subTabId) {
-            document.querySelectorAll('.subtab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('#sec-cms button').forEach(el => el.classList.remove('active-subtab'));
-            document.getElementById(`subsec-${subTabId}`).classList.remove('hidden');
-            document.getElementById(`subtab-${subTabId}`).classList.add('active-subtab');
-        }
-
-        async function carregarDadosDoBanco() {
-            try {
-                const { data } = await _supabase.from('configuracoes_site').select('*');
-                if (data && data.length > 0) {
-                    data.forEach(item => {
-                        if (item.chave === 'fotos_site') fotosSite = JSON.parse(item.valor);
-                        if (item.chave === 'procedimentos') procedimentos = JSON.parse(item.valor);
-                        if (item.chave === 'avaliacoes') avaliacoes = JSON.parse(item.valor);
-                        if (item.chave === 'bloqueios') bloqueios = JSON.parse(item.valor);
-                        if (item.chave === 'textos_cms') {
-                            const txts = JSON.parse(item.valor);
-                            if(txts.localizacao) document.getElementById('cms-localizacao').value = txts.localizacao;
-                            if(txts.titulo_capa) document.getElementById('cms-titulo-capa').value = txts.titulo_capa;
-                            if(txts.desc_capa) document.getElementById('cms-desc-capa').value = txts.desc_capa;
-                            if(txts.instagram) document.getElementById('cms-instagram').value = txts.instagram;
-                            if(txts.whatsapp) document.getElementById('cms-whatsapp').value = txts.whatsapp;
-                        }
-                    });
-                }
-            } catch (err) {
-                console.log('Usando dados padrão.');
-            }
-        }
-
-        async function salvarNoBanco(chave, objetoDado) {
-            const valorString = JSON.stringify(objetoDado);
-            await _supabase.from('configuracoes_site').upsert({ chave: chave, valor: valorString }, { onConflict: 'chave' });
-        }
-
-        async function carregarFinanceiroEAgendamentos() {
-            try {
-                const { data: ags } = await _supabase.from('agendamentos').select('*').order('data', { ascending: true });
-                listaGlobalAgendamentos = ags || [];
-                renderizarListaAgendamentos(listaGlobalAgendamentos);
-                renderizarExtratoFinanceiro(listaGlobalAgendamentos);
-
-                const { data: cls } = await _supabase.from('clientes').select('*');
-                const tabelaClientes = document.getElementById('tabela-clientes');
-                if (cls && cls.length > 0) {
-                    tabelaClientes.innerHTML = cls.map(c => `
-                        <tr class="border-b">
-                            <td class="p-3 font-semibold">${c.nome}</td>
-                            <td class="p-3">${c.telefone}</td>
-                            <td class="p-3">${c.ultimo_servico || '-'}</td>
-                            <td class="p-3">${c.total_agendamentos || 1}</td>
-                        </tr>
-                    `).join('');
-                }
-            } catch (e) { console.log("Erro ao carregar agenda/financeiro."); }
-        }
-
-        function renderizarListaAgendamentos(ags) {
-            const container = document.getElementById('lista-agendamentos-hoje');
-            if (ags && ags.length > 0) {
-                container.innerHTML = ags.map(a => `
-                    <div class="border p-4 rounded bg-gray-50 flex justify-between items-center">
-                        <div>
-                            <h4 class="font-bold text-sm">${a.nome} (${a.telefone})</h4>
-                            <p class="text-xs text-gray-600">Serviço: <b>${a.servico}</b> | Data: <b>${a.data.split('-').reverse().join('/')}</b> às <b>${a.horario}</b></p>
-                        </div>
-                        <span class="bg-green-100 text-green-800 text-xs font-bold px-3 py-1 rounded">R$ ${Number(a.valor || 0).toFixed(2)}</span>
-                    </div>
-                `).join('');
-            } else {
-                container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum agendamento encontrado.</p>`;
-            }
-        }
-
-        function renderizarExtratoFinanceiro(ags) {
-            const extrato = document.getElementById('extrato-financeiro');
-            if(ags.length > 0) {
-                extrato.innerHTML = ags.map(a => `
-                    <tr class="border-b">
-                        <td class="p-2">${a.data.split('-').reverse().join('/')} - ${a.horario}</td>
-                        <td class="p-2">${a.nome}</td>
-                        <td class="p-2">${a.servico}</td>
-                        <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2)}</td>
-                    </tr>
-                `).join('');
-
-                let fat = ags.reduce((acc, curr) => acc + Number(curr.valor || 0), 0);
-                document.getElementById('fin-faturamento').innerText = `R$ ${fat.toFixed(2).replace('.', ',')}`;
-                document.getElementById('fin-qtd-agendamentos').innerText = ags.length;
-                document.getElementById('fin-ticket-medio').innerText = `R$ ${(fat / ags.length).toFixed(2).replace('.', ',')}`;
-            } else {
-                extrato.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>`;
-                document.getElementById('fin-faturamento').innerText = `R$ 0,00`;
-                document.getElementById('fin-qtd-agendamentos').innerText = 0;
-                document.getElementById('fin-ticket-medio').innerText = `R$ 0,00`;
-            }
-        }
-
-        function filtrarAgendaPorData() {
-            const dataFiltro = document.getElementById('filtro-data-agenda').value;
-            if(!dataFiltro) return;
-            const filtrados = listaGlobalAgendamentos.filter(a => a.data === dataFiltro);
-            renderizarListaAgendamentos(filtrados);
-        }
-
-        function limparFiltroAgenda() {
-            document.getElementById('filtro-data-agenda').value = '';
-            renderizarListaAgendamentos(listaGlobalAgendamentos);
-        }
-
-        function renderizarProcedimentos() {
-            const container = document.getElementById('grid-procedimentos');
-            container.innerHTML = procedimentos.map(p => `
-                <div class="bg-white p-5 rounded shadow border space-y-3">
-                    <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold">
-                    <div class="grid grid-cols-2 gap-3">
-                        <input type="text" id="proc-tempo-${p.id}" value="${p.duracao_min || p.duracao || '30 min'}" class="w-full border p-2 rounded text-sm">
-                        <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700">
-                    </div>
-                    <div class="h-28 bg-gray-100 rounded overflow-hidden border flex items-center justify-center">
-                        <img id="preview-proc-${p.id}" src="${p.foto_url || ''}" class="h-full w-full object-cover" onerror="this.src='https://via.placeholder.com/300?text=Foto+Serviço'">
-                    </div>
-                    <input type="text" id="proc-foto-${p.id}" value="${p.foto_url || ''}" oninput="document.getElementById('preview-proc-${p.id}').src=this.value" class="w-full border p-2 text-xs rounded" placeholder="URL da foto">
-                    <input type="file" accept="image/*" onchange="converterArquivoParaBase64Proc(event, ${p.id})" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-amber-50 file:text-amber-700">
-                    <div class="flex space-x-2 pt-2">
-                        <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
-                        <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
-                    </div>
-                </div>
-            `).join('') + `
-            <div class="md:col-span-2 mt-4">
-                <button onclick="salvarTodosProcedimentos()" class="w-full bg-black text-white font-bold py-3 rounded shadow">💾 SALVAR TODOS OS PROCEDIMENTOS</button>
-            </div>`;
-        }
-
-        function converterArquivoParaBase64Proc(event, procId) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById(`proc-foto-${procId}`).value = e.target.result;
-                    document.getElementById(`preview-proc-${procId}`).src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        async function salvarProcedimento(id) {
-            const idx = procedimentos.findIndex(p => p.id === id);
-            if (idx !== -1) {
-                procedimentos[idx].nome = document.getElementById(`proc-nome-${id}`).value;
-                procedimentos[idx].duracao_min = document.getElementById(`proc-tempo-${id}`).value;
-                procedimentos[idx].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
-                procedimentos[idx].foto_url = document.getElementById(`proc-foto-${id}`).value;
-                await salvarNoBanco('procedimentos', procedimentos);
-                alert('✨ Procedimento salvo!');
-            }
-        }
-
-        async function salvarTodosProcedimentos() {
-            procedimentos.forEach(p => {
-                const n = document.getElementById(`proc-nome-${p.id}`);
-                const t = document.getElementById(`proc-tempo-${p.id}`);
-                const pr = document.getElementById(`proc-preco-${p.id}`);
-                const f = document.getElementById(`proc-foto-${p.id}`);
-                if (n) p.nome = n.value;
-                if (t) p.duracao_min = t.value;
-                if (pr) p.preco = parseFloat(pr.value);
-                if (f) p.foto_url = f.value;
-            });
-            await salvarNoBanco('procedimentos', procedimentos);
-            alert('✨ Todos os procedimentos salvos!');
-        }
-
-        function adicionarNovoProcedimento() {
-            procedimentos.push({ id: Date.now(), nome: "Novo Serviço", preco: 50.00, duracao_min: "30 min", foto_url: "" });
-            renderizarProcedimentos();
-        }
-
-        async function excluirProcedimento(id) {
-            if (confirm('Deseja excluir?')) {
-                procedimentos = procedimentos.filter(p => p.id !== id);
-                await salvarNoBanco('procedimentos', procedimentos);
-                renderizarProcedimentos();
-            }
-        }
-
-        function renderizarAvaliacoes() {
-            const container = document.getElementById('grid-avaliacoes');
-            container.innerHTML = avaliacoes.map(a => `
-                <div class="bg-white p-5 rounded shadow border space-y-3">
-                    <input type="text" id="aval-nome-${a.id}" value="${a.nome}" class="w-full border p-2 rounded text-sm font-bold">
-                    <textarea id="aval-texto-${a.id}" rows="2" class="w-full border p-2 rounded text-sm">${a.texto}</textarea>
-                    <button onclick="salvarAvaliacao(${a.id})" class="bg-gold text-white text-xs font-bold py-2 px-4 rounded">💾 SALVAR</button>
-                </div>
-            `).join('');
-        }
-
-        async function salvarAvaliacao(id) {
-            const idx = avaliacoes.findIndex(a => a.id === id);
-            if (idx !== -1) {
-                avaliacoes[idx].nome = document.getElementById(`aval-nome-${id}`).value;
-                avaliacoes[idx].texto = document.getElementById(`aval-texto-${id}`).value;
-                await salvarNoBanco('avaliacoes', avaliacoes);
-                alert('✨ Avaliação salva!');
-            }
-        }
-
-        function adicionarNovoComentario() {
-            avaliacoes.push({ id: Date.now(), nome: "Cliente", estrelas: 5, texto: "Excelente!" });
-            renderizarAvaliacoes();
-        }
-
-        function renderizarFotos() {
-            const container = document.getElementById('grid-fotos-site');
-            container.innerHTML = fotosSite.map((f, index) => `
-                <div class="bg-white p-4 rounded shadow border space-y-3">
-                    <div class="flex justify-between items-center">
-                        <h4 class="font-bold text-sm text-amber-700">${f.posicao}</h4>
-                        ${f.id.startsWith('galeria-') ? `<button onclick="excluirFotoGaleria(${index})" class="text-red-500 text-xs font-bold hover:underline">Remover</button>` : ''}
-                    </div>
-                    <div class="h-32 bg-gray-100 rounded overflow-hidden border flex items-center justify-center">
-                        <img id="preview-${f.id}" src="${f.url}" class="h-full w-full object-cover" onerror="this.src='https://via.placeholder.com/300?text=Foto'">
-                    </div>
-                    <input type="text" id="foto-url-${f.id}" value="${f.url}" oninput="document.getElementById('preview-${f.id}').src=this.value" class="w-full border p-2 text-xs rounded" placeholder="URL da foto">
-                    <input type="file" accept="image/*" onchange="converterArquivoParaBase64(event, '${f.id}')" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-amber-50 file:text-amber-700">
-                    <button onclick="salvarFotoUnica('${f.id}')" class="w-full bg-gold text-white font-bold text-xs py-2 rounded">💾 SALVAR ESTA FOTO</button>
-                </div>
-            `).join('');
-        }
-
-        function converterArquivoParaBase64(event, fotoId) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById(`foto-url-${fotoId}`).value = e.target.result;
-                    document.getElementById(`preview-${fotoId}`).src = e.target.result;
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function adicionarNovaFotoGaleria() {
-            const novoId = 'galeria-' + Date.now();
-            fotosSite.push({ id: novoId, posicao: 'Nova Foto da Galeria', url: 'https://via.placeholder.com/500?text=Nova+Foto' });
-            renderizarFotos();
-        }
-
-        async function excluirFotoGaleria(index) {
-            if (confirm('Deseja remover esta foto?')) {
-                fotosSite.splice(index, 1);
-                await salvarNoBanco('fotos_site', fotosSite);
-                renderizarFotos();
-            }
-        }
-
-        async function salvarFotoUnica(id) {
-            const idx = fotosSite.findIndex(f => f.id === id);
-            if (idx !== -1) {
-                fotosSite[idx].url = document.getElementById(`foto-url-${id}`).value;
-                await salvarNoBanco('fotos_site', fotosSite);
-                alert('✨ Foto salva!');
-            }
-        }
-
-        async function salvarTextosCMS(e) { 
-            e.preventDefault(); 
-            const textos = {
-                titulo_capa: document.getElementById('cms-titulo-capa').value,
-                desc_capa: document.getElementById('cms-desc-capa').value,
-                localizacao: document.getElementById('cms-localizacao').value,
-                instagram: document.getElementById('cms-instagram').value,
-                whatsapp: document.getElementById('cms-whatsapp').value
-            };
-            await salvarNoBanco('textos_cms', textos);
-            alert('✨ Textos, localização e Instagram salvos!'); 
-        }
-
-        async function salvarRegras(e) { e.preventDefault(); alert('Regras salvas!'); }
-        
-        async function salvarBloqueio(e) {
-            e.preventDefault();
-            const novoBloqueio = {
-                id: Date.now(),
-                data: document.getElementById('bloq-data').value,
-                inicio: document.getElementById('bloq-inicio').value,
-                fim: document.getElementById('bloq-fim').value,
-                motivo: document.getElementById('bloq-motivo').value
-            };
-            bloqueios.push(novoBloqueio);
-            await salvarNoBanco('bloqueios', bloqueios);
-            renderizarBloqueios();
-            alert('✨ Bloqueio cadastrado com sucesso!');
-        }
-
-        function renderizarBloqueios() {
-            const container = document.getElementById('lista-bloqueios-cadastrados');
-            if (bloqueios.length === 0) {
-                container.innerHTML = `<p class="text-gray-500">Nenhum bloqueio cadastrado.</p>`;
+            if (error) {
+                console.error('Erro ao buscar agendamentos:', error);
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-500">Erro ao carregar dados. Verifique a conexão com o Supabase.</td></tr>`;
                 return;
             }
-            container.innerHTML = bloqueios.map(b => `
-                <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
-                    <div>
-                        <p>📅 Data: <b>${b.data}</b> (${b.inicio} às ${b.fim})</p>
-                        <p class="text-gray-500">Motivo: ${b.motivo || 'Não informado'}</p>
-                    </div>
-                    <button onclick="excluirBloqueio(${b.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
-                </div>
-            `).join('');
+
+            if (!data || data.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Nenhum agendamento encontrado.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="p-3 font-medium">${item.nome_cliente || item.cliente || 'Cliente'}</td>
+                    <td class="p-3">${item.telefone || '-'}</td>
+                    <td class="p-3">${item.servico}</td>
+                    <td class="p-3">${item.data.split('-').reverse().join('/')}</td>
+                    <td class="p-3 font-semibold text-gray-900">${item.horario}</td>
+                    <td class="p-3">
+                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.status === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                            ${item.status || 'Pendente'}
+                        </span>
+                    </td>
+                    <td class="p-3 text-center space-x-2">
+                        <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 font-medium">Aceitar</button>
+                        <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 font-medium">Excluir</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
         }
 
-        async function excluirBloqueio(id) {
-            bloqueios = bloqueios.filter(b => b.id !== id);
-            await salvarNoBanco('bloqueios', bloqueios);
-            renderizarBloqueios();
-        }
+        async function atualizarStatus(id, novoStatus) {
+            const { error } = await supabaseClient
+                .from('agendamentos')
+                .update({ status: novoStatus })
+                .eq('id', id);
 
-        function exportarBackup() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({procedimentos, avaliacoes, fotosSite, bloqueios}, null, 2));
-            const a = document.createElement('a');
-            a.setAttribute("href", dataStr);
-            a.setAttribute("download", "backup_b_virginia.json");
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        }
-
-        window.onload = function() {
-            if (sessionStorage.getItem('admin_autenticado') === 'true') {
-                liberarPainel();
+            if (error) {
+                alert('Erro ao atualizar status: ' + error.message);
+            } else {
+                carregarAgendamentos();
             }
         }
+
+        async function excluirAgendamento(id) {
+            if (confirm('Tem certeza que deseja excluir este agendamento?')) {
+                const { error } = await supabaseClient
+                    .from('agendamentos')
+                    .delete()
+                    .eq('id', id);
+
+                if (error) {
+                    alert('Erro ao excluir: ' + error.message);
+                } else {
+                    carregarAgendamentos();
+                }
+            }
+        }
+
+        carregarAgendamentos();
     </script>
 </body>
 </html>

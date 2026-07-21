@@ -1,391 +1,193 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>B Virgínia Design | Sobrancelhas e Cílios em Cabo de Santo Agostinho - PE</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
-    .font-title { font-family: 'Playfair Display', serif; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B Virginia Design ✨ - Agendamentos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root { --primary-gold: #c5a059; --primary-dark: #1a1a1a; }
+        .bg-gold { background-color: var(--primary-gold); }
+        .text-gold { color: var(--primary-gold); }
+        .border-gold { border-color: var(--primary-gold); }
+    </style>
 </head>
-<body class="bg-[#FAF8F5] text-[#2C2A29]">
+<body class="bg-gray-50 font-sans text-gray-800 min-h-screen flex flex-col justify-between">
 
-  <!-- CABEÇALHO / NAVBAR COM INSTAGRAM -->
-  <header class="absolute top-0 left-0 right-0 z-20 flex justify-between items-center px-6 md:px-16 py-6 text-white">
-    <div class="font-title text-xl font-bold tracking-wider">B Virgínia Design ✨</div>
-    <div class="flex items-center space-x-6 text-sm font-medium">
-      <a href="#servicos" class="hover:text-[#D4AF37] transition">Serviços</a>
-      <a href="#agendamento" class="hover:text-[#D4AF37] transition">Contato</a>
-      <a id="nav-instagram-link" href="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" target="_blank" class="bg-white/10 hover:bg-white/20 border border-white/30 px-4 py-2 rounded-full transition flex items-center gap-2">
-        <i class="fab fa-instagram text-[#D4AF37]"></i> Instagram
-      </a>
-    </div>
-  </header>
+    <header class="bg-white shadow-sm py-4 px-6 text-center">
+        <h1 class="text-2xl font-bold tracking-wide text-gray-900">B Virginia Design ✨</h1>
+        <p class="text-sm text-gray-500">Agende seu horário com facilidade</p>
+    </header>
 
-  <!-- HERO BANNER -->
-  <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500 pt-28" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
-    <div class="max-w-xl text-white space-y-6 z-10">
-      <span class="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">B Virgínia Design</span>
-      <h1 id="site-titulo-capa" class="text-4xl md:text-5xl font-title font-bold leading-tight">Beleza através do olhar ✨</h1>
-      <p id="site-desc-capa" class="text-lg text-gray-200">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</p>
-      <div class="flex flex-col sm:flex-row gap-4 pt-4">
-        <a id="btn-hero-wsp" href="https://wa.me/5581989002496" target="_blank" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-medium px-8 py-4 rounded-lg transition text-center shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
-          <i class="fab fa-whatsapp"></i> AGENDAR PELO WHATSAPP
-        </a>
-        <a href="#servicos" class="border border-white hover:bg-white hover:text-black text-white font-medium px-8 py-4 rounded-lg transition text-center">
-          CONHECER SERVIÇOS
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- SEÇÃO SOBRE -->
-  <section class="py-16 px-6 md:px-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-    <div class="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
-      <img id="foto-sobre-element" src="assets/images/hero-bg.png" alt="B Virgínia Design" class="w-full h-full object-cover transition duration-500" onerror="this.src='https://placehold.co/600x800/e8e2d5/5c5043?text=B+Virginia'">
-    </div>
-    <div class="space-y-6">
-      <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Exclusividade e Arte</span>
-      <h2 id="site-titulo-sobre" class="text-3xl md:text-4xl font-title font-semibold">Seu olhar merece cuidado</h2>
-      <p class="text-gray-600 leading-relaxed">Na B Virgínia Design, cada atendimento é pensado para realçar sua beleza de forma única, delicada e sofisticada.</p>
-      <p class="text-gray-600 leading-relaxed">Localizado em <strong><a id="site-localizacao-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b]"><span id="site-localizacao-txt">Bela Vista, Cabo de Santo Agostinho – PE</span> 📍</a></strong></p>
-    </div>
-  </section>
-
-  <!-- SERVIÇOS -->
-  <section id="servicos" class="py-20 bg-[#F4EFEA] px-6 md:px-16">
-    <div class="max-w-7xl mx-auto text-center mb-16 space-y-3">
-      <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Nossos Procedimentos</span>
-      <h2 class="text-3xl md:text-4xl font-title font-semibold">Serviços Personalizados</h2>
-    </div>
-    <div id="dynamic-services" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto"></div>
-  </section>
-
-  <!-- PORTFÓLIO -->
-  <section class="py-20 px-6 md:px-16 max-w-7xl mx-auto">
-    <div class="text-center mb-16 space-y-3">
-      <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Portfólio</span>
-      <h2 class="text-3xl md:text-4xl font-title font-semibold">Resultados que encantam</h2>
-    </div>
-    <div id="portfolio-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
-  </section>
-
-  <!-- DEPOIMENTOS -->
-  <section class="py-20 bg-[#F4EFEA] px-6 md:px-16">
-    <div class="max-w-7xl mx-auto">
-      <div class="text-center mb-16 space-y-3">
-        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Avaliações</span>
-        <h2 class="text-3xl md:text-4xl font-title font-semibold">O que nossas clientes dizem</h2>
-      </div>
-      <div id="depoimentos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto"></div>
-    </div>
-  </section>
-
-  <!-- FORMULÁRIO DE AGENDAMENTO -->
-  <section id="agendamento" class="py-20 px-6 md:px-16">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
-      <div class="space-y-6">
-        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
-        <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
-        <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00.</p>
-        <div class="space-y-3 text-sm text-gray-600 pt-2">
-          <p>📍 <a id="form-local-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b] font-medium"><span id="form-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></a></p>
-          <p>💬 <span id="form-wsp-info">+55 81 98900-2496</span></p>
-          <p>📸 <a id="form-instagram-link" href="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" target="_blank" class="hover:underline text-[#b5945b] font-medium">@bvirginiadesign</a></p>
-        </div>
-      </div>
-      
-      <div class="bg-white rounded-2xl shadow-md p-8 space-y-5">
-        <form id="booking-form" class="space-y-5" onsubmit="enviarAgendamento(event)">
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome Completo</label>
-            <input type="text" id="form-name" placeholder="Digite seu nome completo" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">WhatsApp</label>
-            <input type="tel" id="form-phone" placeholder="(81) 99999-9999" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
-          </div>
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Serviço Desejado</label>
-            <select id="form-service" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
-              <option value="" disabled selected>Selecione um serviço</option>
-            </select>
-          </div>
-          <div class="grid grid-cols-2 gap-4">
+    <main class="max-w-xl mx-auto p-6 bg-white shadow-md rounded-lg my-8 w-full">
+        <h2 class="text-xl font-semibold mb-4 text-center text-gray-800 border-b pb-2">Novo Agendamento</h2>
+        
+        <form id="form-agendamento" class="space-y-4">
             <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
-              <input type="date" id="form-date" onchange="verificarDisponibilidadeData()" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
+                <label class="block text-sm font-medium text-gray-700">Seu Nome</label>
+                <input type="text" id="nome" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-gold focus:border-gold">
             </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário</label>
-              <select id="form-time" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
-                <option value="" disabled selected>Primeiro escolha a data</option>
-              </select>
-            </div>
-          </div>
-          <p id="aviso-bloqueio-dia" class="text-xs text-red-500 font-bold hidden">⚠️ Este dia possui bloqueio total ou parcial configurado pela administração.</p>
-          <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações</label>
-            <textarea id="form-notes" rows="2" placeholder="Observação..." class="w-full border border-gray-200 rounded-lg p-3 text-sm"></textarea>
-          </div>
 
-          <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition text-sm uppercase flex items-center justify-center gap-2">
-            <i class="fab fa-whatsapp text-lg"></i> SOLICITAR AGENDAMENTO
-          </button>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Seu Telefone / WhatsApp</label>
+                <input type="tel" id="telefone" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-gold focus:border-gold">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Serviço e Duração</label>
+                <select id="servico" required onchange="carregarHorariosDisponiveis()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-gold focus:border-gold">
+                    <option value="" data-duracao="30">Selecione um serviço...</option>
+                    <option value="Design Simples" data-duracao="30">Design Simples (30 min)</option>
+                    <option value="Design Completo" data-duracao="60">Design Completo (1 hora)</option>
+                    <option value="Procedimento Premium" data-duracao="120">Procedimento Premium (2 horas)</option>
+                </select>
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Data do Agendamento</label>
+                <input type="date" id="data" required onchange="carregarHorariosDisponiveis()" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border focus:ring-gold focus:border-gold">
+            </div>
+
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Horários Disponíveis (Intervalos de 30 em 30 min)</label>
+                <div id="grid-horarios" class="grid grid-cols-3 gap-2 max-h-48 overflow-y-auto p-2 border rounded-md bg-gray-50">
+                    <span class="text-sm text-gray-400 col-span-3 text-center py-4">Selecione o serviço e a data primeiro.</span>
+                </div>
+                <input type="hidden" id="horario-selecionado" required>
+            </div>
+
+            <button type="submit" class="w-full bg-gold text-white font-bold py-2 px-4 rounded-md hover:opacity-90 transition">
+                Confirmar Agendamento
+            </button>
         </form>
-      </div>
-    </div>
-  </section>
+    </main>
 
-  <!-- RODAPÉ -->
-  <footer class="bg-[#2C2A29] text-gray-400 py-16 px-6 md:px-16 border-t border-amber-900/20">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
-      <div class="space-y-4">
-        <h3 class="font-title text-white text-2xl font-semibold">B Virgínia Design</h3>
-        <p id="footer-frase-rodape" class="text-sm italic text-gray-400">"Realçando sua beleza através do olhar."</p>
-      </div>
-      <div class="space-y-3">
-        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Navegação Rápida</h4>
-        <ul class="space-y-2 text-sm">
-          <li><a href="#" class="hover:text-[#b5945b] transition">Início</a></li>
-          <li><a href="#servicos" class="hover:text-[#b5945b] transition">Procedimentos & Valores</a></li>
-          <li><a id="footer-instagram-link" href="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" target="_blank" class="hover:text-[#b5945b] transition">Instagram Oficial 📸</a></li>
-          <li><a href="admin.html" class="text-[#b5945b] font-bold hover:underline">Painel Admin ⚙️</a></li>
-        </ul>
-      </div>
-      <div class="space-y-3">
-        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Contato & Localização</h4>
-        <div id="footer-localizacao-bloco" class="text-sm space-y-2">
-          <p>📍 <a id="footer-local-map-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-gray-300">Bela Vista, Cabo de Santo Agostinho – PE</a></p>
-          <p>💬 <span id="footer-wsp-info">+55 81 98900-2496</span></p>
-          <p>📸 <a id="footer-insta-text-link" href="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" target="_blank" class="hover:underline text-[#b5945b]">@bvirginiadesign</a></p>
-        </div>
-      </div>
-    </div>
-  </footer>
+    <footer class="text-center py-4 text-xs text-gray-400">
+        &copy; 2026 B Virginia Design. Todos os direitos reservados.
+    </footer>
 
-  <!-- SCRIPT DO SITE DO CLIENTE -->
-  <script>
-    const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    <script>
+        const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
+        const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    const SERVICOS_PADRAO = [
-      { nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
-      { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-      { nome: "Design com colorimetria", preco: 55.00, duracao_min: 45, foto_url: "assets/images/galeria-3.png" },
-      { nome: "Brow lamination", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
-      { nome: "Lash lifting", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-5.png" },
-      { nome: "Depilação do buço", preco: 15.00, duracao_min: 15, foto_url: "assets/images/galeria-6.png" },
-      { nome: "Combo brow + lash", preco: 160.00, duracao_min: 90, foto_url: "assets/images/galeria-1.png" }
-    ];
+        document.getElementById('data').min = new Date().toISOString().split('T')[0];
 
-    const PORTFOLIO_PADRAO = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
-    const DEPOIMENTOS_PADRAO = [
-      { nome: 'Amanda Silva', estrelas: 5, texto: 'Atendimento incrível e impecável.' },
-      { nome: 'Beatriz Costa', estrelas: 5, texto: 'Extensão super confortável.' }
-    ];
+        let horarioEscolhido = '';
 
-    let servicosCarregados = SERVICOS_PADRAO;
-    let bloqueiosGlobais = [];
-    let agendamentosGlobais = [];
-
-    function renderizarServicos(servs) {
-      servicosCarregados = servs;
-      document.getElementById('dynamic-services').innerHTML = servs.map(s => `
-        <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
-          <div>
-            <img src="${s.foto_url || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'" class="w-full h-48 object-cover">
-            <div class="p-6 space-y-2">
-              <h3 class="font-title text-xl font-semibold">${s.nome}</h3>
-              <p class="text-xs text-gray-500">⏱️ Duração: ${s.duracao_min || s.duracao || '30 min'}</p>
-            </div>
-          </div>
-          <div class="p-6 pt-0 flex justify-between items-center border-t border-gray-50 mt-4">
-            <span class="text-[#b5945b] font-bold text-lg">R$ ${Number(s.preco).toFixed(2).replace('.', ',')}</span>
-            <a href="#agendamento" onclick="preencherServico('${s.nome}')" class="bg-[#2C2A29] text-white text-xs px-4 py-2 rounded-lg font-semibold uppercase">Agendar</a>
-          </div>
-        </div>
-      `).join('');
-
-      const select = document.getElementById('form-service');
-      select.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>' + 
-        servs.map(s => `<option value="${s.nome}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
-    }
-
-    function renderizarPortfolio(port) {
-      document.getElementById('portfolio-container').innerHTML = port.map(imgUrl => `
-        <div class="rounded-2xl overflow-hidden shadow-lg aspect-square bg-[#E8E2D5]">
-          <img src="${imgUrl}" onerror="this.src='https://placehold.co/500x500/e8e2d5/5c5043?text=B+Virginia'" class="w-full h-full object-cover">
-        </div>
-      `).join('');
-    }
-
-    function renderizarDepoimentos(avals) {
-      document.getElementById('depoimentos-container').innerHTML = avals.map(dep => `
-        <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
-          <div class="space-y-3">
-            <div class="flex text-[#D4AF37] gap-1">${Array.from({length: dep.estrelas || 5}).map(()=>'<i class="fas fa-star text-xs"></i>').join('')}</div>
-            <p class="text-[#2C2A29] italic leading-relaxed text-xs font-medium">"${dep.texto}"</p>
-          </div>
-          <div class="border-t border-gray-100 pt-3">
-            <h4 class="font-title font-semibold text-sm text-[#2C2A29]">${dep.nome}</h4>
-          </div>
-        </div>
-      `).join('');
-    }
-
-    async function carregarDadosSite() {
-      renderizarServicos(SERVICOS_PADRAO);
-      renderizarPortfolio(PORTFOLIO_PADRAO);
-      renderizarDepoimentos(DEPOIMENTOS_PADRAO);
-
-      try {
-        const { data: ags } = await _supabase.from('agendamentos').select('*');
-        agendamentosGlobais = ags || [];
-
-        const { data: configs } = await _supabase.from('configuracoes_site').select('*');
-        if (configs && configs.length > 0) {
-          configs.forEach(c => {
-            if (c.chave === 'bloqueios') {
-              bloqueiosGlobais = JSON.parse(c.valor) || [];
+        async function carregarHorariosDisponiveis() {
+            const dataInput = document.getElementById('data').value;
+            const selectServico = document.getElementById('servico');
+            const grid = document.getElementById('grid-horarios');
+            
+            if (!dataInput || !selectServico.value) {
+                grid.innerHTML = `<span class="text-sm text-gray-400 col-span-3 text-center py-4">Selecione o serviço e a data primeiro.</span>`;
+                return;
             }
-            if (c.chave === 'fotos_site') {
-              const fotos = JSON.parse(c.valor);
-              fotos.forEach(f => {
-                if (f.id === 'capa' && f.url) document.getElementById('hero-section').style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${f.url}')`;
-                if (f.id === 'sobre' && f.url) document.getElementById('foto-sobre-element').src = f.url;
-              });
-              const portImgs = fotos.filter(f => f.id.startsWith('galeria-') || f.id.startsWith('galeria')).map(f => f.url);
-              if (portImgs.length > 0) renderizarPortfolio(portImgs);
+
+            const selectedOption = selectServico.options[selectServico.selectedIndex];
+            const duracaoServicoMinutos = parseInt(selectedOption.getAttribute('data-duracao')) || 30;
+
+            grid.innerHTML = `<span class="text-sm text-gray-500 col-span-3 text-center py-4">Carregando horários...</span>`;
+
+            const { data: agendamentosExistentes, error } = await supabaseClient
+                .from('agendamentos')
+                .select('horario, servico')
+                .eq('data', dataInput);
+
+            if (error) {
+                console.error('Erro ao buscar horários ocupados:', error);
+                grid.innerHTML = `<span class="text-sm text-red-500 col-span-3 text-center py-4">Erro ao carregar horários.</span>`;
+                return;
             }
-            if (c.chave === 'procedimentos') {
-              const procs = JSON.parse(c.valor);
-              if (procs && procs.length > 0) renderizarServicos(procs);
+
+            let slotsOcupados = new Set();
+            if (agendamentosExistentes) {
+                agendamentosExistentes.forEach(item => {
+                    let [h, m] = item.horario.split(':').map(Number);
+                    let inicioMinutosOcupados = h * 60 + m;
+                    
+                    let duracaoOcupada = 30;
+                    if (item.servico && item.servico.includes('Completo')) duracaoOcupada = 60;
+                    if (item.servico && item.servico.includes('Premium')) duracaoOcupada = 120;
+
+                    for (let mOffset = 0; mOffset < duracaoOcupada; mOffset += 30) {
+                        let totalMin = inicioMinutosOcupados + mOffset;
+                        let hStr = Math.floor(totalMin / 60).toString().padStart(2, '0');
+                        let mStr = (totalMin % 60).toString().padStart(2, '0');
+                        slotsOcupados.add(`${hStr}:${mStr}`);
+                    }
+                });
             }
-            if (c.chave === 'avaliacoes') {
-              const avals = JSON.parse(c.valor);
-              if (avals && avals.length > 0) renderizarDepoimentos(avals);
+
+            let inicioExpediente = 9 * 60;
+            let fimExpediente = 18 * 60;
+            let html = '';
+
+            for (let t = inicioExpediente; t < fimExpediente; t += 30) {
+                let hStr = Math.floor(t / 60).toString().padStart(2, '0');
+                let mStr = (t % 60).toString().padStart(2, '0');
+                let horarioAtual = `${hStr}:${mStr}`;
+
+                let slotInvalido = false;
+                for (let checkOffset = 0; checkOffset < duracaoServicoMinutos; checkOffset += 30) {
+                    let checkTimeMin = t + checkOffset;
+                    let chStr = Math.floor(checkTimeMin / 60).toString().padStart(2, '0');
+                    let cmStr = (checkTimeMin % 60).toString().padStart(2, '0');
+                    let checkSlotStr = `${chStr}:${cmStr}`;
+
+                    if (checkTimeMin > fimExpediente || slotsOcupados.has(checkSlotStr)) {
+                        slotInvalido = true;
+                        break;
+                    }
+                }
+
+                if (slotInvalido) {
+                    html += `<button type="button" disabled class="bg-gray-200 text-gray-400 py-2 rounded text-sm cursor-not-allowed line-through">${horarioAtual}</button>`;
+                } else {
+                    let isSelected = horarioEscolhido === horarioAtual ? 'bg-gold text-white font-bold' : 'bg-white border border-gray-300 hover:bg-gray-100 text-gray-700';
+                    html += `<button type="button" onclick="selecionarHorario('${horarioAtual}')" class="${isSelected} py-2 rounded text-sm transition">${horarioAtual}</button>`;
+                }
             }
-            if (c.chave === 'textos_cms') {
-              const txts = JSON.parse(c.valor);
-              if(txts.titulo_capa) document.getElementById('site-titulo-capa').innerText = txts.titulo_capa;
-              if(txts.desc_capa) document.getElementById('site-desc-capa').innerText = txts.desc_capa;
-              if(txts.localizacao) {
-                document.getElementById('site-localizacao-txt').innerText = txts.localizacao;
-                document.getElementById('form-local-info').innerText = txts.localizacao;
-                const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(txts.localizacao)}`;
-                document.getElementById('site-localizacao-link').href = mapsUrl;
-                document.getElementById('form-local-link').href = mapsUrl;
-                document.getElementById('footer-local-map-link').href = mapsUrl;
-              }
-              if(txts.instagram) {
-                document.getElementById('nav-instagram-link').href = txts.instagram;
-                document.getElementById('form-instagram-link').href = txts.instagram;
-                document.getElementById('footer-instagram-link').href = txts.instagram;
-                document.getElementById('footer-insta-text-link').href = txts.instagram;
-              }
-              if(txts.whatsapp) {
-                document.getElementById('form-wsp-info').innerText = `+${txts.whatsapp}`;
-                document.getElementById('footer-wsp-info').innerText = `+${txts.whatsapp}`;
-              }
-            }
-          });
+
+            grid.innerHTML = html || `<span class="text-sm text-gray-500 col-span-3 text-center py-4">Nenhum horário disponível para esta data.</span>`;
         }
-      } catch (err) { console.log("Usando dados padrão."); }
-    }
 
-    function verificarDisponibilidadeData() {
-      const dataSelecionada = document.getElementById('form-date').value;
-      const selectTempo = document.getElementById('form-time');
-      const aviso = document.getElementById('aviso-bloqueio-dia');
-      aviso.classList.add('hidden');
+        function selecionarHorario(horario) {
+            horarioEscolhido = horario;
+            document.getElementById('horario-selecionado').value = horario;
+            carregarHorariosDisponiveis();
+        }
 
-      if (!dataSelecionada) {
-        selectTempo.innerHTML = '<option value="" disabled selected>Primeiro escolha a data</option>';
-        return;
-      }
+        document.getElementById('form-agendamento').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-      let horariosPossiveis = ["10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00"];
-      const bloqueiosDoDia = bloqueiosGlobais.filter(b => b.data === dataSelecionada);
-      let diaTotalmenteBloqueado = false;
-      let horariosBloqueados = [];
+            const nome = document.getElementById('nome').value;
+            const telefone = document.getElementById('telefone').value;
+            const servico = document.getElementById('servico').value;
+            const data = document.getElementById('data').value;
+            const horario = document.getElementById('horario-selecionado').value;
 
-      bloqueiosDoDia.forEach(b => {
-        if (b.inicio <= "00:00" && b.fim >= "23:59") {
-          diaTotalmenteBloqueado = true;
-        } else {
-          horariosPossiveis.forEach(h => {
-            if (h >= b.inicio && h <= b.fim) {
-              horariosBloqueados.push(h);
+            if (!horario) {
+                alert('Por favor, selecione um horário disponível.');
+                return;
             }
-          });
-        }
-      });
 
-      const agendamentosDoDia = agendamentosGlobais.filter(a => a.data === dataSelecionada).map(a => a.horario);
+            const { error } = await supabaseClient
+                .from('agendamentos')
+                .insert([{ nome_cliente: nome, telefone, servico, data, horario, status: 'Pendente' }]);
 
-      if (diaTotalmenteBloqueado) {
-        aviso.classList.remove('hidden');
-        selectTempo.innerHTML = '<option value="" disabled selected>Dia Indisponível (Bloqueado)</option>';
-        return;
-      }
-
-      horariosPossiveis = horariosPossiveis.filter(h => !horariosBloqueados.includes(h) && !agendamentosDoDia.includes(h));
-
-      if (horariosPossiveis.length === 0) {
-        selectTempo.innerHTML = '<option value="" disabled selected>Nenhum horário livre nesta data</option>';
-      } else {
-        selectTempo.innerHTML = '<option value="" disabled selected>Selecione um horário</option>' + 
-          horariosPossiveis.map(h => `<option value="${h}">${h}</option>`).join('');
-      }
-    }
-
-    function preencherServico(nome) {
-      document.getElementById('form-service').value = nome;
-    }
-
-    async function enviarAgendamento(event) {
-      event.preventDefault();
-      const nome = document.getElementById('form-name').value.trim();
-      const telefone = document.getElementById('form-phone').value.trim();
-      const servico = document.getElementById('form-service').value;
-      const data = document.getElementById('form-date').value;
-      const horario = document.getElementById('form-time').value;
-      const obs = document.getElementById('form-notes').value.trim();
-
-      const sObj = servicosCarregados.find(s => s.nome === servico);
-      const valor = sObj ? sObj.preco : 0;
-
-      try {
-        await _supabase.from('agendamentos').insert([{ nome, telefone, servico, data, horario, valor, status: 'Confirmado' }]);
-        const { data: cliExistente } = await _supabase.from('clientes').select('*').eq('telefone', telefone);
-        if (cliExistente && cliExistente.length > 0) {
-          await _supabase.from('clientes').update({
-            nome,
-            ultimo_servico: servico,
-            total_agendamentos: (cliExistente[0].total_agendamentos || 1) + 1
-          }).eq('telefone', telefone);
-        } else {
-          await _supabase.from('clientes').insert([{ nome, telefone, ultimo_servico: servico, total_agendamentos: 1 }]);
-        }
-      } catch (e) { console.log("Erro ao salvar no banco."); }
-
-      const dataFmt = data.split('-').reverse().join('/');
-      let msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n👤 *Nome*: ${nome}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}`;
-      if (obs) msg += `\n📝 *Obs*: ${obs}`;
-      window.open(`https://wa.me/5581989002496?text=${encodeURIComponent(msg)}`, '_blank');
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById('form-date').min = new Date().toISOString().split('T')[0];
-      carregarDadosSite();
-    });
-  </script>
+            if (error) {
+                alert('Erro ao realizar agendamento: ' + error.message);
+            } else {
+                alert('Agendamento realizado com sucesso!');
+                document.getElementById('form-agendamento').reset();
+                horarioEscolhido = '';
+                document.getElementById('horario-selecionado').value = '';
+                document.getElementById('grid-horarios').innerHTML = `<span class="text-sm text-gray-400 col-span-3 text-center py-4">Selecione o serviço e a data primeiro.</span>`;
+            }
+        });
+    </script>
 </body>
 </html>
