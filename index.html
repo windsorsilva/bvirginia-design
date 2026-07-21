@@ -277,13 +277,22 @@
 
       Object.entries(imagensDinamicas).forEach(([id, arquivo]) => carregarFotoSupabase(id, arquivo));
 
-      // Garantir renderização dos Serviços (Fallback após 300ms se dynamic-services estiver vazio)
+      // Garantir renderização dos Serviços e do Selecionador do Formulário
       setTimeout(() => {
+        let listaServicos = SERVICOS_PADRAO;
+
+        try {
+          const servicosSalvos = JSON.parse(localStorage.getItem('cms_servicos'));
+          if (servicosSalvos && Array.isArray(servicosSalvos) && servicosSalvos.length > 0) {
+            listaServicos = servicosSalvos;
+          }
+        } catch (e) {
+          console.warn("Utilizando SERVICOS_PADRAO para renderização...", e);
+        }
+
+        // 1. Povoar os Cards de Serviços na tela
         const containerServicos = document.getElementById('dynamic-services');
         if (containerServicos && containerServicos.children.length === 0) {
-          const servicosSalvos = JSON.parse(localStorage.getItem('cms_servicos'));
-          const listaServicos = (servicosSalvos && servicosSalvos.length > 0) ? servicosSalvos : SERVICOS_PADRAO;
-
           containerServicos.innerHTML = listaServicos.map(s => `
             <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition duration-300 flex flex-col justify-between border border-gray-100">
               <div>
@@ -307,15 +316,28 @@
           `).join('');
         }
 
-        // Re-varrer imagens dinâmicas vindas do Supabase
+        // 2. Povoar o campo <select> do Formulário de Agendamento
+        const selectServico = document.getElementById('form-service');
+        if (selectServico && selectServico.children.length <= 1) {
+          selectServico.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>';
+          listaServicos.forEach(s => {
+            const option = document.createElement('option');
+            option.value = s.nome;
+            option.textContent = `${s.nome} (${s.preco})`;
+            selectServico.appendChild(option);
+          });
+        }
+
+        // 3. Re-varrer imagens dinâmicas vindas do Supabase
         document.querySelectorAll('[data-supabase-id]').forEach(img => {
           const chave = img.getAttribute('data-supabase-id');
-          const arquivo = imagensDinamicas[chave];
-          if (!arquivo) return;
-          const urlNuvem = `${BUCKET_URL}${arquivo}?v=${versaoCache}`;
-          const teste = new Image();
-          teste.onload = () => { img.src = urlNuvem; };
-          teste.src = urlNuvem;
+          if (typeof imagensDinamicas !== 'undefined' && imagensDinamicas[chave]) {
+            const arquivo = imagensDinamicas[chave];
+            const urlNuvem = `${BUCKET_URL}${arquivo}?v=${versaoCache}`;
+            const teste = new Image();
+            teste.onload = () => { img.src = urlNuvem; };
+            teste.src = urlNuvem;
+          }
         });
       }, 400);
 
