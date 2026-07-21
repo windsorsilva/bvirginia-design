@@ -229,6 +229,10 @@
                                 <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
+                        <div class="p-4 bg-amber-50 rounded border border-amber-200 space-y-2">
+                            <h4 class="font-bold text-xs uppercase text-amber-800">Bloqueio Rápido de Dias/Horários</h4>
+                            <p class="text-xs text-amber-700">Para bloquear horários específicos ou dias inteiros, utilize também a aba dedicada <b>"BLOQUEIOS MANUAIS"</b> no topo do painel[cite: 3].</p>
+                        </div>
                         <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
                     </form>
                 </div>
@@ -427,7 +431,7 @@
 
                 tbody.innerHTML = ags.map(item => `
                     <tr>
-                        <td class="p-3 font-medium">${item.nome || 'Cliente'}</td>
+                        <td class="p-3 font-medium">${item.nome_cliente || item.cliente || item.nome || 'Cliente'}</td>
                         <td class="p-3">${item.telefone || '-'}</td>
                         <td class="p-3">${item.servico}</td>
                         <td class="p-3">${item.data ? item.data.split('-').reverse().join('/') : '-'}</td>
@@ -447,7 +451,7 @@
                 document.getElementById('extrato-financeiro').innerHTML = ags.map(a => `
                     <tr class="border-b">
                         <td class="p-2">${a.data ? a.data.split('-').reverse().join('/') : ''} - ${a.horario}</td>
-                        <td class="p-2">${a.nome}</td>
+                        <td class="p-2">${a.nome_cliente || a.cliente || a.nome || 'Cliente'}</td>
                         <td class="p-2">${a.servico}</td>
                         <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2).replace('.', ',')}</td>
                     </tr>
@@ -597,7 +601,7 @@
             });
             await salvarNoBanco('bloqueios', bloqueios);
             renderizarBloqueios();
-            alert('✨ Bloqueio cadastrado!');
+            alert('✨ Bloqueio cadastrado e sincronizado com o site!');
         }
 
         function renderizarBloqueios() {
