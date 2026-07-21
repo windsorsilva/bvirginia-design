@@ -75,10 +75,10 @@
             data.forEach(item => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td class="p-3 font-medium">${item.nome_cliente || item.cliente || 'Cliente'}</td>
+                    <td class="p-3 font-medium">${item.nome_cliente || item.cliente || item.nome || 'Cliente'}</td>
                     <td class="p-3">${item.telefone || '-'}</td>
                     <td class="p-3">${item.servico}</td>
-                    <td class="p-3">${item.data.split('-').reverse().join('/')}</td>
+                    <td class="p-3">${item.data ? item.data.split('-').reverse().join('/') : '-'}</td>
                     <td class="p-3 font-semibold text-gray-900">${item.horario}</td>
                     <td class="p-3">
                         <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${item.status === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
