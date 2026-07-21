@@ -42,9 +42,6 @@
       <h2 class="text-3xl md:text-4xl font-title font-semibold">Seu olhar merece cuidado</h2>
       <p class="text-gray-600 leading-relaxed">Na B Virgínia Design, cada atendimento é pensado para realçar sua beleza de forma única, delicada e sofisticada.</p>
       <p class="text-gray-600 leading-relaxed">Localizado em <strong>Bela Vista, Cabo de Santo Agostinho – PE</strong>.</p>
-      <div class="pt-4">
-        <span class="font-title italic text-2xl text-[#b5945b]">B Virgínia</span>
-      </div>
     </div>
   </section>
 
@@ -63,7 +60,7 @@
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Portfólio</span>
       <h2 class="text-3xl md:text-4xl font-title font-semibold">Resultados que encantam</h2>
     </div>
-    <div id="portfolio-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+    <div id="portfolio-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
   </section>
 
   <!-- DEPOIMENTOS -->
@@ -83,45 +80,41 @@
       <div class="space-y-6">
         <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
-        <p class="text-gray-600 leading-relaxed">Agende seu horário diretamente por aqui e confirme via WhatsApp com facilidade.</p>
-        <div class="space-y-3 text-sm text-gray-600 pt-2">
-          <p>📍 <span>Bela Vista, Cabo de Santo Agostinho – PE</span></p>
-          <p>💬 <span>+55 81 98900-2496</span></p>
-        </div>
+        <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00.</p>
       </div>
       
       <div class="bg-white rounded-2xl shadow-md p-8 space-y-5">
         <form id="booking-form" class="space-y-5" onsubmit="enviarAgendamento(event)">
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Nome Completo</label>
-            <input type="text" id="form-name" placeholder="Digite seu nome completo" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b]">
+            <input type="text" id="form-name" placeholder="Digite seu nome completo" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">WhatsApp</label>
-            <input type="tel" id="form-phone" placeholder="(81) 99999-9999" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b]">
+            <input type="tel" id="form-phone" placeholder="(81) 99999-9999" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Serviço Desejado</label>
-            <select id="form-service" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b] bg-white">
+            <select id="form-service" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
               <option value="" disabled selected>Selecione um serviço</option>
             </select>
           </div>
           <div class="grid grid-cols-2 gap-4">
             <div>
               <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
-              <input type="date" id="form-date" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b]">
+              <input type="date" id="form-date" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
             </div>
             <div>
               <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário</label>
-              <input type="time" id="form-time" required class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b]">
+              <input type="time" id="form-time" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
             </div>
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações</label>
-            <textarea id="form-notes" rows="2" placeholder="Sua preferência ou dúvida..." class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b] resize-none"></textarea>
+            <textarea id="form-notes" rows="2" placeholder="Observação..." class="w-full border border-gray-200 rounded-lg p-3 text-sm"></textarea>
           </div>
 
-          <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition shadow-md text-sm uppercase tracking-wider flex items-center justify-center gap-2">
+          <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition text-sm uppercase flex items-center justify-center gap-2">
             <i class="fab fa-whatsapp text-lg"></i> SOLICITAR AGENDAMENTO
           </button>
         </form>
@@ -141,65 +134,49 @@
         <ul class="space-y-2 text-sm">
           <li><a href="#" class="hover:text-[#b5945b] transition">Início</a></li>
           <li><a href="#servicos" class="hover:text-[#b5945b] transition">Procedimentos & Valores</a></li>
-          <li><a href="admin.html" class="text-[#b5945b] font-bold hover:underline inline-flex items-center gap-1">Painel Admin ⚙️</a></li>
+          <li><a href="admin.html" class="text-[#b5945b] font-bold hover:underline">Painel Admin ⚙️</a></li>
         </ul>
       </div>
       <div class="space-y-3">
-        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Localização & Contato</h4>
+        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Contato</h4>
         <div class="text-sm space-y-2">
-          <p class="flex items-center gap-2">📍 Bela Vista, Cabo de Santo Agostinho – PE</p>
-          <p class="flex items-center gap-2">💬 +55 81 98900-2496</p>
+          <p>📍 Bela Vista, Cabo de Santo Agostinho – PE</p>
+          <p>💬 +55 81 98900-2496</p>
         </div>
       </div>
     </div>
   </footer>
 
-  <!-- SCRIPT DE INTEGRAÇÃO COM SUPABASE -->
+  <!-- SCRIPT COMPLETO DO SITE DO CLIENTE -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let servicosCarregados = [];
+    const SERVICOS_PADRAO = [
+      { nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
+      { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
+      { nome: "Sirena", preco: 140.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
+      { nome: "Brasileiro", preco: 130.00, duracao_min: 120, foto_url: "assets/images/galeria-3.png" }
+    ];
 
-    async function carregarDadosSite() {
-      try {
-        const { data: configs } = await _supabase.from('configuracoes_site').select('*');
-        if (configs && configs.length > 0) {
-          configs.forEach(c => {
-            // Carregar Procedimentos salvos no Admin
-            if (c.chave === 'procedimentos') {
-              const procs = JSON.parse(c.valor);
-              servicosCarregados = procs;
-              renderizarServicos(procs);
-            }
-            // Carregar Fotos (Capa e Sobre)
-            if (c.chave === 'fotos_site') {
-              const fotos = JSON.parse(c.valor);
-              fotos.forEach(f => {
-                if (f.id === 'capa' && f.url) document.getElementById('hero-section').style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${f.url}')`;
-                if (f.id === 'sobre' && f.url) document.getElementById('foto-sobre-element').src = f.url;
-              });
-            }
-            // Carregar Avaliações cadastradas no Admin
-            if (c.chave === 'avaliacoes') {
-              const avals = JSON.parse(c.valor);
-              renderizarDepoimentos(avals);
-            }
-          });
-        }
-      } catch (err) {
-        console.log("Erro ao carregar do Supabase.");
-      }
-    }
+    const PORTFOLIO_PADRAO = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
+    const DEPOIMENTOS_PADRAO = [
+      { nome: 'Amanda Silva', estrelas: 5, texto: 'Atendimento incrível e impecável.' },
+      { nome: 'Beatriz Costa', estrelas: 5, texto: 'Extensão super confortável.' }
+    ];
+
+    let servicosCarregados = SERVICOS_PADRAO;
 
     function renderizarServicos(servs) {
+      servicosCarregados = servs;
       document.getElementById('dynamic-services').innerHTML = servs.map(s => `
         <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
           <div>
+            <img src="${s.foto_url || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'" class="w-full h-48 object-cover">
             <div class="p-6 space-y-2">
               <h3 class="font-title text-xl font-semibold">${s.nome}</h3>
-              <p class="text-xs text-gray-500">⏱️ Duração: ${s.duracao}</p>
+              <p class="text-xs text-gray-500">⏱️ Duração: ${s.duracao_min || s.duracao || '30 min'}</p>
             </div>
           </div>
           <div class="p-6 pt-0 flex justify-between items-center border-t border-gray-50 mt-4">
@@ -214,6 +191,14 @@
         servs.map(s => `<option value="${s.nome}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
     }
 
+    function renderizarPortfolio(port) {
+      document.getElementById('portfolio-container').innerHTML = port.map(imgUrl => `
+        <div class="rounded-2xl overflow-hidden shadow-lg aspect-square bg-[#E8E2D5]">
+          <img src="${imgUrl}" onerror="this.src='https://placehold.co/500x500/e8e2d5/5c5043?text=B+Virginia'" class="w-full h-full object-cover">
+        </div>
+      `).join('');
+    }
+
     function renderizarDepoimentos(avals) {
       document.getElementById('depoimentos-container').innerHTML = avals.map(dep => `
         <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
@@ -226,6 +211,37 @@
           </div>
         </div>
       `).join('');
+    }
+
+    async function carregarDadosSite() {
+      renderizarServicos(SERVICOS_PADRAO);
+      renderizarPortfolio(PORTFOLIO_PADRAO);
+      renderizarDepoimentos(DEPOIMENTOS_PADRAO);
+
+      try {
+        const { data: configs } = await _supabase.from('configuracoes_site').select('*');
+        if (configs && configs.length > 0) {
+          configs.forEach(c => {
+            if (c.chave === 'fotos_site') {
+              const fotos = JSON.parse(c.valor);
+              fotos.forEach(f => {
+                if (f.id === 'capa' && f.url) document.getElementById('hero-section').style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${f.url}')`;
+                if (f.id === 'sobre' && f.url) document.getElementById('foto-sobre-element').src = f.url;
+              });
+              const portImgs = fotos.filter(f => f.id.startsWith('galeria-')).map(f => f.url);
+              if (portImgs.length > 0) renderizarPortfolio(portImgs);
+            }
+            if (c.chave === 'procedimentos') {
+              const procs = JSON.parse(c.valor);
+              if (procs && procs.length > 0) renderizarServicos(procs);
+            }
+            if (c.chave === 'avaliacoes') {
+              const avals = JSON.parse(c.valor);
+              if (avals && avals.length > 0) renderizarDepoimentos(avals);
+            }
+          });
+        }
+      } catch (err) { console.log("Usando dados padrão."); }
     }
 
     function preencherServico(nome) {
@@ -244,19 +260,8 @@
       const sObj = servicosCarregados.find(s => s.nome === servico);
       const valor = sObj ? sObj.preco : 0;
 
-      // Salva direto na tabela 'agendamentos' do seu Supabase para aparecer no seu Painel Admin!
       try {
-        await _supabase.from('agendamentos').insert([{ 
-          nome, 
-          telefone, 
-          servico, 
-          data, 
-          horario, 
-          valor, 
-          status: 'Confirmado' 
-        }]);
-
-        // Atualiza ou cadastra o cliente no CRM automaticamente
+        await _supabase.from('agendamentos').insert([{ nome, telefone, servico, data, horario, valor, status: 'Confirmado' }]);
         const { data: cliExistente } = await _supabase.from('clientes').select('*').eq('telefone', telefone);
         if (cliExistente && cliExistente.length > 0) {
           await _supabase.from('clientes').update({
@@ -265,21 +270,13 @@
             total_agendamentos: (cliExistente[0].total_agendamentos || 1) + 1
           }).eq('telefone', telefone);
         } else {
-          await _supabase.from('clientes').insert([{ 
-            nome, 
-            telefone, 
-            ultimo_servico: servico, 
-            total_agendamentos: 1 
-          }]);
+          await _supabase.from('clientes').insert([{ nome, telefone, ultimo_servico: servico, total_agendamentos: 1 }]);
         }
-      } catch (e) {
-        console.log("Erro ao salvar no banco, mas enviando via WhatsApp.");
-      }
+      } catch (e) { console.log("Erro ao salvar no banco."); }
 
       const dataFmt = data.split('-').reverse().join('/');
       let msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n👤 *Nome*: ${nome}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}`;
       if (obs) msg += `\n📝 *Obs*: ${obs}`;
-      
       window.open(`https://wa.me/5581989002496?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
