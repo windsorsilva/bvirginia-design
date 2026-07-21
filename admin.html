@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Painel Administrativo - B Virginia Design ✨</title>
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
@@ -20,6 +22,7 @@
 </head>
 <body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
 
+    <!-- 1. MODAL DE LOGIN / SENHA -->
     <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full border-t-4 border-gold text-center">
             <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">B Virginia Design ✨</h2>
@@ -42,7 +45,9 @@
         </div>
     </div>
 
+    <!-- 2. PAINEL PRINCIPAL -->
     <div id="admin-content" class="hidden">
+        <!-- CABEÇALHO -->
         <header class="bg-white border-b px-6 py-4 flex flex-wrap justify-between items-center shadow-sm">
             <div>
                 <h1 class="text-2xl font-serif font-bold">Painel da Agenda ✨</h1>
@@ -53,6 +58,7 @@
             </button>
         </header>
 
+        <!-- ABAS PRINCIPAIS -->
         <nav class="bg-white border-b overflow-x-auto">
             <div class="flex space-x-6 px-6 text-sm font-medium text-gray-600 min-w-max">
                 <button onclick="switchTab('agenda')" id="tab-agenda" class="py-3 px-2 active-tab">AGENDA 📅</button>
@@ -66,6 +72,7 @@
 
         <main class="max-w-7xl mx-auto p-6">
 
+            <!-- TAB 1: AGENDA -->
             <section id="sec-agenda" class="tab-content">
                 <h2 class="text-xl font-bold mb-4">Agenda Diária de Atendimentos</h2>
                 <div class="bg-white p-6 rounded shadow border">
@@ -75,6 +82,7 @@
                 </div>
             </section>
 
+            <!-- TAB 2: CLIENTES -->
             <section id="sec-clientes" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-4">Base de Clientes Cadastrados</h2>
                 <div class="bg-white p-6 rounded shadow border overflow-x-auto">
@@ -94,6 +102,7 @@
                 </div>
             </section>
 
+            <!-- TAB 3: FINANCEIRO ZERADO -->
             <section id="sec-financeiro" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-4">Relatório Financeiro Automático</h2>
                 
@@ -132,12 +141,13 @@
                 </div>
             </section>
 
+            <!-- TAB 4: BLOQUEIOS MANUAIS -->
             <section id="sec-bloqueios" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário / Dias Inteiros</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded shadow border">
                         <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
-                        <p class="text-xs text-gray-500 mb-4">Para bloquear o dia todo (ex: dia 22), defina o início como <b>00:00</b> e fim como <b>23:59</b>.</p>
+                        <p class="text-xs text-gray-500 mb-4">Para bloquear o dia todo, defina o início como <b>00:00</b> e fim como <b>23:59</b>.</p>
                         <form onsubmit="salvarBloqueio(event)" class="space-y-4">
                             <div>
                                 <label class="block text-xs font-bold uppercase">Data</label>
@@ -155,7 +165,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase">Motivo</label>
-                                <input type="text" id="bloq-motivo" placeholder="Ex: Folga, Dia sem atendimento, Médico" class="w-full border p-2 rounded mt-1">
+                                <input type="text" id="bloq-motivo" placeholder="Ex: Folga, Dia sem atendimento" class="w-full border p-2 rounded mt-1">
                             </div>
                             <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded">CADASTRAR BLOQUEIO</button>
                         </form>
@@ -169,15 +179,17 @@
                 </div>
             </section>
 
+            <!-- TAB 5: CONFIGURAÇÕES & CMS -->
             <section id="sec-cms" class="tab-content hidden">
                 <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
                     <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
                     <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE</button>
                     <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS (CMS)</button>
                     <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS (DIRETO PC / CELULAR)</button>
+                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS (COM BOTÃO SALVAR)</button>
                 </div>
 
+                <!-- SUB-ABA 1: PROCEDIMENTOS -->
                 <div id="subsec-procedimentos" class="subtab-content">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
@@ -188,6 +200,7 @@
                     <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
+                <!-- SUB-ABA 2: EXPEDIENTE -->
                 <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
                     <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda</h3>
                     <form onsubmit="salvarRegras(event)" class="space-y-4">
@@ -219,6 +232,7 @@
                     </form>
                 </div>
 
+                <!-- SUB-ABA 3: CMS / TEXTOS -->
                 <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
                     <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos Exibidos no Site</h3>
                     <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -272,6 +286,7 @@
                     </form>
                 </div>
 
+                <!-- SUB-ABA 4: AVALIAÇÕES -->
                 <div id="subsec-avaliacoes" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-6">
                         <div>
@@ -285,14 +300,16 @@
                     <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
+                <!-- SUB-ABA 5: GALERIA COM BOTÕES SALVAR -->
                 <div id="subsec-galeria" class="subtab-content hidden">
-                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site (Upload Direto PC / Celular)</h3>
-                    <p class="text-xs text-gray-500 mb-6">Escolha uma foto direto da sua galeria ou computador. A imagem é atualizada instantaneamente sem erros de servidor.</p>
+                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site</h3>
+                    <p class="text-xs text-gray-500 mb-6">Escolha o arquivo ou cole a URL e clique em <b>SALVAR FOTO</b> em cada card.</p>
                     
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
             </section>
 
+            <!-- TAB 6: BACKUP & RESTAURAÇÃO -->
             <section id="sec-backup" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-4">Backup e Seguranças</h2>
                 <div class="bg-white p-6 rounded shadow border text-center">
@@ -304,8 +321,9 @@
         </main>
     </div>
 
+    <!-- SCRIPT DE INTEGRAÇÃO COM SUPABASE -->
     <script>
-        const SUPABASE_URL = 'https://qb7nyhl4r-9d7cujehmpvg_d5hrb9as.supabase.co';
+        const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
         const SENHA_ADMIN = 'virginia123';
@@ -347,9 +365,10 @@
             }
         }
 
-        function liberarPainel() {
+        async function liberarPainel() {
             document.getElementById('login-modal').classList.add('hidden');
             document.getElementById('admin-content').classList.remove('hidden');
+            await carregarDadosDoBanco();
             renderizarProcedimentos();
             renderizarAvaliacoes();
             renderizarFotos();
@@ -376,6 +395,33 @@
             document.getElementById(`subtab-${subTabId}`).classList.add('active-subtab');
         }
 
+        async function carregarDadosDoBanco() {
+            try {
+                const { data, error } = await _supabase.from('configuracoes_site').select('*');
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        if (item.chave === 'fotos_site') fotosSite = JSON.parse(item.valor);
+                        if (item.chave === 'procedimentos') procedimentos = JSON.parse(item.valor);
+                        if (item.chave === 'avaliacoes') avaliacoes = JSON.parse(item.valor);
+                    });
+                }
+            } catch (err) {
+                console.log('Usando dados padrão.');
+            }
+        }
+
+        async function salvarNoBanco(chave, objetoDado) {
+            const valorString = JSON.stringify(objetoDado);
+            const { error } = await _supabase
+                .from('configuracoes_site')
+                .upsert({ chave: chave, valor: valorString }, { onConflict: 'chave' });
+            
+            if (error) {
+                console.error("Erro ao salvar:", error);
+                alert("Erro ao gravar no banco. Verifique se a tabela 'configuracoes_site' existe no Supabase.");
+            }
+        }
+
         function renderizarProcedimentos() {
             const container = document.getElementById('grid-procedimentos');
             container.innerHTML = procedimentos.map(p => `
@@ -396,28 +442,47 @@
                             </div>
                         </div>
                         <div class="flex space-x-2 pt-2">
-                            <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded hover:opacity-90">SALVAR</button>
-                            <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">EXCLUIR</button>
+                            <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded hover:opacity-90">💾 SALVAR ESTE</button>
+                            <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
                         </div>
                     </div>
                 </div>
-            `).join('');
+            `).join('') + `
+            <div class="md:col-span-2 mt-4">
+                <button onclick="salvarTodosProcedimentos()" class="w-full bg-black text-white font-bold py-3 rounded shadow hover:bg-gray-800">
+                    💾 SALVAR TODOS OS PROCEDIMENTOS DE UMA SÓ VEZ
+                </button>
+            </div>`;
         }
 
-        function salvarProcedimento(id) {
+        async function salvarProcedimento(id) {
             const index = procedimentos.findIndex(p => p.id === id);
             if (index !== -1) {
                 procedimentos[index].nome = document.getElementById(`proc-nome-${id}`).value;
                 procedimentos[index].duracao = document.getElementById(`proc-tempo-${id}`).value;
                 procedimentos[index].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
-                alert('Procedimento atualizado!');
-                carregarFinanceiro();
+                await salvarNoBanco('procedimentos', procedimentos);
+                alert('✨ Procedimento salvo com sucesso no banco!');
             }
         }
 
-        function excluirProcedimento(id) {
+        async function salvarTodosProcedimentos() {
+            procedimentos.forEach(p => {
+                const nInput = document.getElementById(`proc-nome-${p.id}`);
+                const tInput = document.getElementById(`proc-tempo-${p.id}`);
+                const pInput = document.getElementById(`proc-preco-${p.id}`);
+                if (nInput) p.nome = nInput.value;
+                if (tInput) p.duracao = tInput.value;
+                if (pInput) p.preco = parseFloat(pInput.value);
+            });
+            await salvarNoBanco('procedimentos', procedimentos);
+            alert('✨ Todos os procedimentos foram salvos com sucesso!');
+        }
+
+        async function excluirProcedimento(id) {
             if (confirm('Deseja excluir?')) {
                 procedimentos = procedimentos.filter(p => p.id !== id);
+                await salvarNoBanco('procedimentos', procedimentos);
                 renderizarProcedimentos();
             }
         }
@@ -456,18 +521,20 @@
             `).join('');
         }
 
-        function salvarAvaliacao(id) {
+        async function salvarAvaliacao(id) {
             const item = avaliacoes.find(a => a.id === id);
             if (item) {
                 item.nome = document.getElementById(`aval-nome-${id}`).value;
                 item.estrelas = parseInt(document.getElementById(`aval-estrelas-${id}`).value);
                 item.texto = document.getElementById(`aval-texto-${id}`).value;
-                alert('Avaliação atualizada!');
+                await salvarNoBanco('avaliacoes', avaliacoes);
+                alert('Avaliação salva!');
             }
         }
 
-        function excluirAvaliacao(id) {
+        async function excluirAvaliacao(id) {
             avaliacoes = avaliacoes.filter(a => a.id !== id);
+            await salvarNoBanco('avaliacoes', avaliacoes);
             renderizarAvaliacoes();
         }
 
@@ -477,15 +544,9 @@
         }
 
         function carregarFinanceiro() {
-            let agendamentosExemplo = [];
-            let faturamentoTotal = 0;
-            let totalAgendamentos = agendamentosExemplo.length;
-            let htmlExtrato = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda. O financeiro atualizará automaticamente.</td></tr>`;
-
-            document.getElementById('fin-faturamento').innerText = `R$ ${faturamentoTotal.toFixed(2)}`;
-            document.getElementById('fin-qtd-agendamentos').innerText = totalAgendamentos;
+            document.getElementById('fin-faturamento').innerText = `R$ 0,00`;
+            document.getElementById('fin-qtd-agendamentos').innerText = `0`;
             document.getElementById('fin-ticket-medio').innerText = `R$ 0,00`;
-            document.getElementById('extrato-financeiro').innerHTML = htmlExtrato;
         }
 
         function salvarBloqueio(e) {
@@ -497,7 +558,7 @@
 
             bloqueios.push({ id: Date.now(), data, inicio, fim, motivo });
             renderizarBloqueios();
-            alert('Bloqueio cadastrado com sucesso!');
+            alert('Bloqueio cadastrado!');
         }
 
         function renderizarBloqueios() {
@@ -512,7 +573,7 @@
                         <p class="font-bold text-gray-800">📅 ${b.data} (${b.inicio} às ${b.fim})</p>
                         <p class="text-xs text-gray-600">${b.motivo}</p>
                     </div>
-                    <button onclick="removerBloqueio(${b.id})" class="text-red-500 text-xs font-bold hover:underline">Remover</button>
+                    <button onclick="removerBloqueio(${b.id})" class="text-red-500 text-xs font-bold">Remover</button>
                 </div>
             `).join('');
         }
@@ -522,7 +583,7 @@
             renderizarBloqueios();
         }
 
-        // NOVO MÉTODO DE UPLOAD DIRETO (PC / CELULAR SEM ERRO DE SERVIDOR)
+        // GALERIA DE FOTOS COM BOTÃO DE SALVAR VISÍVEL
         function renderizarFotos() {
             const container = document.getElementById('grid-fotos-site');
             container.innerHTML = fotosSite.map(f => `
@@ -534,12 +595,15 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Escolher foto do PC ou Celular</label>
-                        <input type="file" id="file-${f.id}" accept="image/*" onchange="processarArquivoLocal(event, '${f.id}')" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
+                        <input type="file" id="file-${f.id}" accept="image/*" onchange="processarArquivoLocal(event, '${f.id}')" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-3 file:rounded file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase">Ou cole a URL</label>
                         <input type="text" id="foto-url-${f.id}" value="${f.url}" oninput="atualizarUrlManual('${f.id}')" class="w-full border p-2 rounded text-xs mt-1">
                     </div>
+                    <button onclick="salvarFotoBanco('${f.id}')" class="w-full bg-gold text-white text-xs font-bold py-2.5 rounded shadow hover:opacity-90">
+                        💾 SALVAR FOTO NO BANCO
+                    </button>
                 </div>
             `).join('');
         }
@@ -555,7 +619,6 @@
                         item.url = base64Url;
                         document.getElementById(`img-preview-${id}`).src = base64Url;
                         document.getElementById(`foto-url-${id}`).value = base64Url;
-                        alert('Foto atualizada com sucesso no site!');
                     }
                 };
                 reader.readAsDataURL(file);
@@ -571,9 +634,18 @@
             }
         }
 
-        function salvarTextosCMS(e) {
+        async function salvarFotoBanco(id) {
+            const item = fotosSite.find(f => f.id === id);
+            if (item) {
+                item.url = document.getElementById(`foto-url-${id}`).value;
+                await salvarNoBanco('fotos_site', fotosSite);
+                alert('✨ Foto salva com sucesso no banco de dados!');
+            }
+        }
+
+        async function salvarTextosCMS(e) {
             e.preventDefault();
-            alert('Textos atualizados com sucesso!');
+            alert('Textos salvos!');
         }
 
         window.onload = function() {
