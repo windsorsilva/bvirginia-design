@@ -66,6 +66,17 @@
     <div id="portfolio-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"></div>
   </section>
 
+  <!-- DEPOIMENTOS DE CLIENTES -->
+  <section class="py-20 bg-[#F4EFEA] px-6 md:px-16">
+    <div class="max-w-7xl mx-auto">
+      <div class="text-center mb-16 space-y-3">
+        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Avaliações</span>
+        <h2 class="text-3xl md:text-4xl font-title font-semibold">O que nossas clientes dizem</h2>
+      </div>
+      <div id="depoimentos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto"></div>
+    </div>
+  </section>
+
   <!-- FORMULÁRIO DE AGENDAMENTO -->
   <section id="agendamento" class="py-20 px-6 md:px-16">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
@@ -73,6 +84,11 @@
         <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
         <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00 (Almoço: 12:00 às 14:00).</p>
+        <div class="space-y-3 text-sm text-gray-600 pt-2">
+          <p>📍 <span>Bela Vista, Cabo de Santo Agostinho – PE</span></p>
+          <p>💬 <span>+55 81 98900-2496</span></p>
+          <p>🕒 10:00 às 19:00 (Almoço: 12h às 14h)</p>
+        </div>
       </div>
       
       <div class="bg-white rounded-2xl shadow-md p-8 space-y-5">
@@ -107,20 +123,64 @@
             <div id="slots-container" class="flex flex-wrap gap-2 max-h-48 overflow-y-auto p-1 border border-gray-100 rounded-xl"></div>
           </div>
 
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações</label>
+            <textarea id="form-notes" rows="2" placeholder="Sua preferência ou dúvida..." class="w-full border border-gray-200 rounded-lg p-3 text-sm focus:ring-2 focus:ring-[#b5945b] resize-none"></textarea>
+          </div>
+
           <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition shadow-md text-sm uppercase tracking-wider flex items-center justify-center gap-2">
-            <i class="fab fa-whatsapp text-lg"></i> Solicitar Agendamento
+            <i class="fab fa-whatsapp text-lg"></i> SOLICITAR AGENDAMENTO
           </button>
         </form>
       </div>
     </div>
   </section>
 
+  <!-- RODAPÉ (FOOTER COMPLETO) -->
+  <footer class="bg-[#2C2A29] text-gray-400 py-16 px-6 md:px-16 border-t border-amber-900/20">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div class="space-y-4">
+        <h3 class="font-title text-white text-2xl font-semibold">B Virgínia Design</h3>
+        <p class="text-sm italic text-gray-400">"Realçando sua beleza através do olhar."</p>
+        <div class="pt-2">
+          <a href="https://instagram.com" target="_blank" class="inline-flex items-center gap-2 text-white hover:text-[#b5945b] transition text-sm">
+            <i class="fab fa-instagram text-lg text-[#b5945b]"></i> Siga no Instagram
+          </a>
+        </div>
+      </div>
+      <div class="space-y-3">
+        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Navegação Rápida</h4>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-[#b5945b] transition">Início</a></li>
+          <li><a href="#servicos" class="hover:text-[#b5945b] transition">Procedimentos & Valores</a></li>
+          <li><a href="#agendamento" class="hover:text-[#b5945b] transition">Agendar Horário</a></li>
+          <li><a href="admin.html" class="text-[#b5945b] font-bold hover:underline inline-flex items-center gap-1">Painel Admin ⚙️</a></li>
+        </ul>
+      </div>
+      <div class="space-y-3">
+        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Localização & Contato</h4>
+        <div class="text-sm space-y-2">
+          <p class="flex items-center gap-2">📍 Bela Vista, Cabo de Santo Agostinho – PE</p>
+          <p class="flex items-center gap-2">💬 +55 81 98900-2496</p>
+        </div>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto border-t border-gray-800 mt-12 pt-8 text-center text-xs text-gray-500">
+      <p>© 2026 B Virgínia Design. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- BOTÃO FLUTUANTE DO WHATSAPP -->
+  <a href="https://wa.me/5581989002496" target="_blank" class="fixed bottom-6 right-6 bg-[#25D366] hover:bg-[#20ba5a] text-white p-4 rounded-full shadow-2xl transition duration-300 z-50 flex items-center justify-center hover:scale-110">
+    <i class="fab fa-whatsapp text-3xl"></i>
+  </a>
+
+  <!-- SCRIPT COMPLETO INTEGRADO AO SUPABASE -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // DADOS PADRÃO PARA O SITE NUNCA FICAR EM BRANCO
     const SERVICOS_PADRAO = [
       { nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
       { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
@@ -137,6 +197,14 @@
       'assets/images/galeria-2.png', 
       'assets/images/galeria-3.png', 
       'assets/images/galeria-4.png'
+    ];
+
+    const DEPOIMENTOS_PADRAO = [
+      { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável."' },
+      { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Extensão super confortável."' },
+      { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista."' },
+      { nome: 'Daniela Lima', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Lash Lifting maravilhoso."' },
+      { nome: 'Eduarda Santos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Henna com cor super natural."' }
     ];
 
     let agendamentosExistentes = [];
@@ -176,13 +244,27 @@
       `).join('');
     }
 
+    function renderizarDepoimentos(cmsDep) {
+      document.getElementById('depoimentos-container').innerHTML = cmsDep.slice(0, 5).map(dep => `
+        <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between space-y-4">
+          <div class="space-y-3">
+            <div class="flex text-[#D4AF37] gap-1">${Array.from({length: dep.estrelas || 5}).map(()=>'<i class="fas fa-star text-xs"></i>').join('')}</div>
+            <p class="text-[#2C2A29] italic leading-relaxed text-xs font-medium">${dep.texto || dep.depoimento}</p>
+          </div>
+          <div class="border-t border-gray-100 pt-3">
+            <h4 class="font-title font-semibold text-sm text-[#2C2A29]">${dep.nome}</h4>
+            <span class="text-[9px] text-gray-400 font-bold uppercase">${dep.cidade || 'CABO DE SANTO AGOSTINHO'}</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
     async function carregarDadosSite() {
-      // 1. Renderização Inicial Segura (Garante que nunca fique em branco)
       renderizarServicos(SERVICOS_PADRAO);
       renderizarPortfolio(PORTFOLIO_PADRAO);
+      renderizarDepoimentos(DEPOIMENTOS_PADRAO);
 
       try {
-        // 2. Tenta carregar Fotos e Galeria do Supabase
         const { data: configs } = await _supabase.from('configuracoes_site').select('*');
         if (configs && configs.length > 0) {
           configs.forEach(c => {
@@ -197,21 +279,23 @@
               const port = JSON.parse(c.valor);
               if (port && port.length > 0) renderizarPortfolio(port);
             }
+            if (c.chave === 'avaliacoes') {
+              const avals = JSON.parse(c.valor);
+              if (avals && avals.length > 0) renderizarDepoimentos(avals);
+            }
           });
         }
 
-        // 3. Tenta carregar Serviços da tabela do Supabase
         const { data: servs } = await _supabase.from('servicos').select('*');
         if (servs && servs.length > 0) {
           renderizarServicos(servs);
         }
 
-        // 4. Busca Agendamentos para controlar disponibilidade
         const { data: ags } = await _supabase.from('agendamentos').select('*');
         if (ags) agendamentosExistentes = ags;
 
       } catch (err) {
-        console.log("Servidor em sincronização, exibindo dados padrão.");
+        console.log("Exibindo dados padrão.");
       }
     }
 
@@ -290,6 +374,7 @@
       const servico = document.getElementById('form-service').value;
       const data = document.getElementById('form-date').value;
       const horario = document.getElementById('form-time').value;
+      const obs = document.getElementById('form-notes').value.trim();
 
       if (!horario) { alert("Por favor, escolha um horário vago."); return; }
 
@@ -313,7 +398,8 @@
       }
 
       const dataFmt = data.split('-').reverse().join('/');
-      const msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n👤 *Nome*: ${nome}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}`;
+      let msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n👤 *Nome*: ${nome}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}`;
+      if (obs) msg += `\n📝 *Obs*: ${obs}`;
       window.open(`https://wa.me/5581989002496?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
