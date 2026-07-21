@@ -182,10 +182,10 @@
             <section id="sec-cms" class="tab-content hidden">
                 <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
                     <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
-                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE</button>
+                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE & BLOQUEIOS</button>
                     <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS (CMS)</button>
                     <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS (COM BOTÃO SALVAR)</button>
+                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
                 </div>
 
                 <!-- SUB-ABA 1: PROCEDIMENTOS -->
@@ -199,9 +199,9 @@
                     <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 2: EXPEDIENTE -->
+                <!-- SUB-ABA 2: EXPEDIENTE & BLOQUEIOS -->
                 <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda</h3>
+                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda e Bloqueios</h3>
                     <form onsubmit="salvarRegras(event)" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -213,13 +213,17 @@
                                 <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
+                        <div class="p-4 bg-amber-50 rounded border border-amber-200 space-y-2">
+                            <h4 class="font-bold text-xs uppercase text-amber-800">Bloqueio Rápido de Dias/Horários</h4>
+                            <p class="text-xs text-amber-700">Para bloquear horários específicos ou dias inteiros, utilize também a aba dedicada <b>"BLOQUEIOS MANUAIS"</b> no topo do painel.</p>
+                        </div>
                         <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
                     </form>
                 </div>
 
-                <!-- SUB-ABA 3: TEXTOS CMS -->
+                <!-- SUB-ABA 3: TEXTOS CMS (COM LOCALIZAÇÃO) -->
                 <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos Exibidos no Site</h3>
+                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos e Localização Exibidos no Site</h3>
                     <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div>
@@ -230,6 +234,10 @@
                                 <label class="block text-xs font-bold uppercase">Descrição da Capa</label>
                                 <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</textarea>
                             </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Frase do Rodapé</label>
+                                <input type="text" id="cms-frase-rodape" value="Realçando sua beleza através do olhar." class="w-full border p-2 rounded mt-1">
+                            </div>
                         </div>
                         <div class="space-y-4">
                             <div>
@@ -237,12 +245,16 @@
                                 <input type="text" id="cms-titulo-sobre" value="Seu olhar merece cuidado" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
+                                <label class="block text-xs font-bold uppercase">Localização / Endereço do Salão</label>
+                                <input type="text" id="cms-localizacao" value="Bela Vista, Cabo de Santo Agostinho – PE" class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <div>
                                 <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
                                 <input type="text" id="cms-whatsapp" value="5581989002496" class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
                         <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS NO SITE</button>
+                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS E LOCALIZAÇÃO NO SITE</button>
                         </div>
                     </form>
                 </div>
@@ -258,10 +270,10 @@
                     <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 5: GALERIA DE FOTOS COM UPLOAD COMPLETO -->
+                <!-- SUB-ABA 5: GALERIA & TODAS AS FOTOS SOLICITADAS -->
                 <div id="subsec-galeria" class="subtab-content hidden">
-                    <h3 class="text-lg font-bold mb-2">Galeria e Fotos do Site (Upload por Celular/PC)</h3>
-                    <p class="text-xs text-gray-500 mb-6">Selecione o arquivo da sua galeria ou cole o link, depois clique em <b>SALVAR ESTA FOTO</b>.</p>
+                    <h3 class="text-lg font-bold mb-2">Gerenciamento Completo de Todas as Fotos do Site</h3>
+                    <p class="text-xs text-gray-500 mb-6">Altere fotos de capa, sobre, e de cada card de procedimento específico (celular ou PC) e clique em **SALVAR ESTA FOTO**.</p>
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
             </section>
@@ -285,9 +297,13 @@
         const SENHA_ADMIN = 'virginia123';
 
         let procedimentos = [
-            { id: 1, nome: "Design simples", preco: 35.00, duracao: "25 min", foto_url: "assets/images/galeria-1.png" },
+            { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
             { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-            { id: 3, nome: "Sirena", preco: 140.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" }
+            { id: 3, nome: "Design com colorimetria", preco: 55.00, duracao_min: 45, foto_url: "assets/images/galeria-3.png" },
+            { id: 4, nome: "Brow lamination", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
+            { id: 5, nome: "Lash lifting", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-5.png" },
+            { id: 6, nome: "Depilação do buço", preco: 15.00, duracao_min: 15, foto_url: "assets/images/galeria-6.png" },
+            { id: 7, nome: "Combo brow + lash", preco: 160.00, duracao_min: 90, foto_url: "assets/images/galeria-1.png" }
         ];
 
         let avaliacoes = [
@@ -296,12 +312,18 @@
         ];
 
         let fotosSite = [
-            { id: 'capa', posicao: 'Fundo da Capa (Hero Section)', url: 'assets/images/foto-perfil.jpg.jpg' },
-            { id: 'sobre', posicao: 'Foto Principal da Seção Sobre', url: 'assets/images/hero-bg.png' },
+            { id: 'capa', posicao: 'Foto de Capa (Hero Section)', url: 'assets/images/foto-perfil.jpg.jpg' },
+            { id: 'sobre', posicao: 'Foto "Sobre Mim"', url: 'assets/images/hero-bg.png' },
+            { id: 'card-design-simples', posicao: 'Card - Design Simples', url: 'assets/images/galeria-1.png' },
+            { id: 'card-design-henna', posicao: 'Card - Design com Henna', url: 'assets/images/galeria-2.png' },
+            { id: 'card-design-colorimetria', posicao: 'Card - Design com Colorimetria', url: 'assets/images/galeria-3.png' },
+            { id: 'card-brow-lamination', posicao: 'Card - Brow Lamination', url: 'assets/images/galeria-4.png' },
+            { id: 'card-lash-lifting', posicao: 'Card - Lash Lifting', url: 'assets/images/galeria-5.png' },
+            { id: 'card-depilacao-buco', posicao: 'Card - Depilação do Buço', url: 'assets/images/galeria-6.png' },
+            { id: 'card-combo-brow-lash', posicao: 'Card - Combo Brow + Lash', url: 'assets/images/galeria-1.png' },
             { id: 'galeria-1', posicao: 'Portfólio / Resultado 1', url: 'assets/images/galeria-1.png' },
             { id: 'galeria-2', posicao: 'Portfólio / Resultado 2', url: 'assets/images/galeria-2.png' },
-            { id: 'galeria-3', posicao: 'Portfólio / Resultado 3', url: 'assets/images/galeria-3.png' },
-            { id: 'galeria-4', posicao: 'Portfólio / Resultado 4', url: 'assets/images/galeria-4.png' }
+            { id: 'galeria-3', posicao: 'Portfólio / Resultado 3', url: 'assets/images/galeria-3.png' }
         ];
 
         let bloqueios = [];
@@ -355,6 +377,12 @@
                         if (item.chave === 'procedimentos') procedimentos = JSON.parse(item.valor);
                         if (item.chave === 'avaliacoes') avaliacoes = JSON.parse(item.valor);
                         if (item.chave === 'bloqueios') bloqueios = JSON.parse(item.valor);
+                        if (item.chave === 'textos_cms') {
+                            const txts = JSON.parse(item.valor);
+                            if(txts.localizacao) document.getElementById('cms-localizacao').value = txts.localizacao;
+                            if(txts.titulo_capa) document.getElementById('cms-titulo-capa').value = txts.titulo_capa;
+                            if(txts.desc_capa) document.getElementById('cms-desc-capa').value = txts.desc_capa;
+                        }
                     });
                 }
             } catch (err) {
@@ -546,18 +574,64 @@
             if (idx !== -1) {
                 fotosSite[idx].url = document.getElementById(`foto-url-${id}`).value;
                 await salvarNoBanco('fotos_site', fotosSite);
-                await salvarNoBanco('portfolio', fotosSite.filter(f => f.id.startsWith('galeria-')).map(f => f.url));
                 alert('✨ Foto salva com sucesso!');
             }
         }
 
-        async function salvarTextosCMS(e) { e.preventDefault(); alert('Textos salvos!'); }
+        async function salvarTextosCMS(e) { 
+            e.preventDefault(); 
+            const textos = {
+                titulo_capa: document.getElementById('cms-titulo-capa').value,
+                desc_capa: document.getElementById('cms-desc-capa').value,
+                localizacao: document.getElementById('cms-localizacao').value,
+                whatsapp: document.getElementById('cms-whatsapp').value
+            };
+            await salvarNoBanco('textos_cms', textos);
+            alert('✨ Textos e localização salvos com sucesso!'); 
+        }
+
         async function salvarRegras(e) { e.preventDefault(); alert('Regras salvas!'); }
-        async function salvarBloqueio(e) { e.preventDefault(); alert('Bloqueio salvo!'); }
-        function renderizarBloqueios() {}
+        
+        async function salvarBloqueio(e) {
+            e.preventDefault();
+            const novoBloqueio = {
+                id: Date.now(),
+                data: document.getElementById('bloq-data').value,
+                inicio: document.getElementById('bloq-inicio').value,
+                fim: document.getElementById('bloq-fim').value,
+                motivo: document.getElementById('bloq-motivo').value
+            };
+            bloqueios.push(novoBloqueio);
+            await salvarNoBanco('bloqueios', bloqueios);
+            renderizarBloqueios();
+            alert('✨ Bloqueio cadastrado com sucesso!');
+        }
+
+        function renderizarBloqueios() {
+            const container = document.getElementById('lista-bloqueios-cadastrados');
+            if (bloqueios.length === 0) {
+                container.innerHTML = `<p class="text-gray-500">Nenhum bloqueio cadastrado.</p>`;
+                return;
+            }
+            container.innerHTML = bloqueios.map(b => `
+                <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
+                    <div>
+                        <p>📅 Data: <b>${b.data}</b> (${b.inicio} às ${b.fim})</p>
+                        <p class="text-gray-500">Motivo: ${b.motivo || 'Não informado'}</p>
+                    </div>
+                    <button onclick="excluirBloqueio(${b.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
+                </div>
+            `).join('');
+        }
+
+        async function excluirBloqueio(id) {
+            bloqueios = bloqueios.filter(b => b.id !== id);
+            await salvarNoBanco('bloqueios', bloqueios);
+            renderizarBloqueios();
+        }
 
         function exportarBackup() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({procedimentos, avaliacoes, fotosSite}, null, 2));
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({procedimentos, avaliacoes, fotosSite, bloqueios}, null, 2));
             const a = document.createElement('a');
             a.setAttribute("href", dataStr);
             a.setAttribute("download", "backup_b_virginia.json");

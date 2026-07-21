@@ -19,8 +19,8 @@
   <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
     <div class="max-w-xl text-white space-y-6 z-10">
       <span class="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">B Virgínia Design</span>
-      <h1 class="text-4xl md:text-5xl font-title font-bold leading-tight">Beleza através do olhar ✨</h1>
-      <p class="text-lg text-gray-200">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</p>
+      <h1 id="site-titulo-capa" class="text-4xl md:text-5xl font-title font-bold leading-tight">Beleza através do olhar ✨</h1>
+      <p id="site-desc-capa" class="text-lg text-gray-200">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</p>
       <div class="flex flex-col sm:flex-row gap-4 pt-4">
         <a id="btn-hero-wsp" href="https://wa.me/5581989002496" target="_blank" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-medium px-8 py-4 rounded-lg transition text-center shadow-lg hover:shadow-xl flex items-center justify-center gap-2">
           <i class="fab fa-whatsapp"></i> AGENDAR PELO WHATSAPP
@@ -39,9 +39,9 @@
     </div>
     <div class="space-y-6">
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Exclusividade e Arte</span>
-      <h2 class="text-3xl md:text-4xl font-title font-semibold">Seu olhar merece cuidado</h2>
+      <h2 id="site-titulo-sobre" class="text-3xl md:text-4xl font-title font-semibold">Seu olhar merece cuidado</h2>
       <p class="text-gray-600 leading-relaxed">Na B Virgínia Design, cada atendimento é pensado para realçar sua beleza de forma única, delicada e sofisticada.</p>
-      <p class="text-gray-600 leading-relaxed">Localizado em <strong>Bela Vista, Cabo de Santo Agostinho – PE</strong>.</p>
+      <p class="text-gray-600 leading-relaxed">Localizado em <strong id="site-localizacao-txt">Bela Vista, Cabo de Santo Agostinho – PE</strong>.</p>
     </div>
   </section>
 
@@ -81,6 +81,10 @@
         <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
         <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00.</p>
+        <div class="space-y-3 text-sm text-gray-600 pt-2">
+          <p>📍 <span id="footer-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></p>
+          <p>💬 <span id="footer-wsp-info">+55 81 98900-2496</span></p>
+        </div>
       </div>
       
       <div class="bg-white rounded-2xl shadow-md p-8 space-y-5">
@@ -127,7 +131,7 @@
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
       <div class="space-y-4">
         <h3 class="font-title text-white text-2xl font-semibold">B Virgínia Design</h3>
-        <p class="text-sm italic text-gray-400">"Realçando sua beleza através do olhar."</p>
+        <p id="footer-frase-rodape" class="text-sm italic text-gray-400">"Realçando sua beleza através do olhar."</p>
       </div>
       <div class="space-y-3">
         <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Navegação Rápida</h4>
@@ -138,8 +142,8 @@
         </ul>
       </div>
       <div class="space-y-3">
-        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Contato</h4>
-        <div class="text-sm space-y-2">
+        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Contato & Localização</h4>
+        <div id="footer-localizacao-bloco" class="text-sm space-y-2">
           <p>📍 Bela Vista, Cabo de Santo Agostinho – PE</p>
           <p>💬 +55 81 98900-2496</p>
         </div>
@@ -156,8 +160,11 @@
     const SERVICOS_PADRAO = [
       { nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
       { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-      { nome: "Sirena", preco: 140.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
-      { nome: "Brasileiro", preco: 130.00, duracao_min: 120, foto_url: "assets/images/galeria-3.png" }
+      { nome: "Design com colorimetria", preco: 55.00, duracao_min: 45, foto_url: "assets/images/galeria-3.png" },
+      { nome: "Brow lamination", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
+      { nome: "Lash lifting", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-5.png" },
+      { nome: "Depilação do buço", preco: 15.00, duracao_min: 15, foto_url: "assets/images/galeria-6.png" },
+      { nome: "Combo brow + lash", preco: 160.00, duracao_min: 90, foto_url: "assets/images/galeria-1.png" }
     ];
 
     const PORTFOLIO_PADRAO = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
@@ -238,6 +245,18 @@
             if (c.chave === 'avaliacoes') {
               const avals = JSON.parse(c.valor);
               if (avals && avals.length > 0) renderizarDepoimentos(avals);
+            }
+            if (c.chave === 'textos_cms') {
+              const txts = JSON.parse(c.valor);
+              if(txts.titulo_capa) document.getElementById('site-titulo-capa').innerText = txts.titulo_capa;
+              if(txts.desc_capa) document.getElementById('site-desc-capa').innerText = txts.desc_capa;
+              if(txts.localizacao) {
+                document.getElementById('site-localizacao-txt').innerText = txts.localizacao;
+                document.getElementById('footer-local-info').innerText = txts.localizacao;
+              }
+              if(txts.whatsapp) {
+                document.getElementById('footer-wsp-info').innerText = `+${txts.whatsapp}`;
+              }
             }
           });
         }
