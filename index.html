@@ -15,8 +15,20 @@
 </head>
 <body class="bg-[#FAF8F5] text-[#2C2A29]">
 
+  <!-- CABEÇALHO / NAVBAR COM INSTAGRAM -->
+  <header class="absolute top-0 left-0 right-0 z-20 flex justify-between items-center px-6 md:px-16 py-6 text-white">
+    <div class="font-title text-xl font-bold tracking-wider">B Virgínia Design ✨</div>
+    <div class="flex items-center space-x-6 text-sm font-medium">
+      <a href="#servicos" class="hover:text-[#D4AF37] transition">Serviços</a>
+      <a href="#agendamento" class="hover:text-[#D4AF37] transition">Contato</a>
+      <a id="nav-instagram-link" href="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" target="_blank" class="bg-white/10 hover:bg-white/20 border border-white/30 px-4 py-2 rounded-full transition flex items-center gap-2">
+        <i class="fab fa-instagram text-[#D4AF37]"></i> Instagram
+      </a>
+    </div>
+  </header>
+
   <!-- HERO BANNER -->
-  <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
+  <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500 pt-28" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
     <div class="max-w-xl text-white space-y-6 z-10">
       <span class="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">B Virgínia Design</span>
       <h1 id="site-titulo-capa" class="text-4xl md:text-5xl font-title font-bold leading-tight">Beleza através do olhar ✨</h1>
@@ -82,8 +94,9 @@
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
         <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00.</p>
         <div class="space-y-3 text-sm text-gray-600 pt-2">
-          <p>📍 <a id="footer-local-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b]"><span id="footer-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></a></p>
-          <p>💬 <span id="footer-wsp-info">+55 81 98900-2496</span></p>
+          <p>📍 <a id="form-local-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b] font-medium"><span id="form-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></a></p>
+          <p>💬 <span id="form-wsp-info">+55 81 98900-2496</span></p>
+          <p>📸 <a id="form-instagram-link" href="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" target="_blank" class="hover:underline text-[#b5945b] font-medium">@bvirginiadesign</a></p>
         </div>
       </div>
       
@@ -254,17 +267,20 @@
               if(txts.desc_capa) document.getElementById('site-desc-capa').innerText = txts.desc_capa;
               if(txts.localizacao) {
                 document.getElementById('site-localizacao-txt').innerText = txts.localizacao;
-                document.getElementById('footer-local-info').innerText = txts.localizacao;
+                document.getElementById('form-local-info').innerText = txts.localizacao;
                 const mapsUrl = `https://maps.google.com/?q=${encodeURIComponent(txts.localizacao)}`;
                 document.getElementById('site-localizacao-link').href = mapsUrl;
-                document.getElementById('footer-local-link').href = mapsUrl;
+                document.getElementById('form-local-link').href = mapsUrl;
                 document.getElementById('footer-local-map-link').href = mapsUrl;
               }
               if(txts.instagram) {
+                document.getElementById('nav-instagram-link').href = txts.instagram;
+                document.getElementById('form-instagram-link').href = txts.instagram;
                 document.getElementById('footer-instagram-link').href = txts.instagram;
                 document.getElementById('footer-insta-text-link').href = txts.instagram;
               }
               if(txts.whatsapp) {
+                document.getElementById('form-wsp-info').innerText = `+${txts.whatsapp}`;
                 document.getElementById('footer-wsp-info').innerText = `+${txts.whatsapp}`;
               }
             }
