@@ -183,15 +183,15 @@
                 <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
                     <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
                     <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE & BLOQUEIOS</button>
-                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS (CMS)</button>
+                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS & INSTAGRAM (CMS)</button>
                     <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
                     <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
                 </div>
 
-                <!-- SUB-ABA 1: PROCEDIMENTOS -->
+                <!-- SUB-ABA 1: PROCEDIMENTOS (COM UPLOAD DE ARQUIVO E URL) -->
                 <div id="subsec-procedimentos" class="subtab-content">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
+                        <h3 class="text-lg font-bold">Procedimentos Cadastrados (Upload Celular/PC & URL)</h3>
                         <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">
                             + NOVO PROCEDIMENTO
                         </button>
@@ -221,9 +221,9 @@
                     </form>
                 </div>
 
-                <!-- SUB-ABA 3: TEXTOS CMS (COM LOCALIZAÇÃO) -->
+                <!-- SUB-ABA 3: TEXTOS & INSTAGRAM (CMS) -->
                 <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos e Localização Exibidos no Site</h3>
+                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos, Localização e Instagram Exibidos no Site</h3>
                     <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div>
@@ -249,12 +249,16 @@
                                 <input type="text" id="cms-localizacao" value="Bela Vista, Cabo de Santo Agostinho – PE" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
+                                <label class="block text-xs font-bold uppercase">Link do Instagram</label>
+                                <input type="text" id="cms-instagram" value="https://www.instagram.com/bvirginiadesign?igsh=Z3Bmb3Y0MzM5OWlz" class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <div>
                                 <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
                                 <input type="text" id="cms-whatsapp" value="5581989002496" class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
                         <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS E LOCALIZAÇÃO NO SITE</button>
+                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS, LOCALIZAÇÃO E INSTAGRAM NO SITE</button>
                         </div>
                     </form>
                 </div>
@@ -272,8 +276,11 @@
 
                 <!-- SUB-ABA 5: GALERIA & TODAS AS FOTOS SOLICITADAS -->
                 <div id="subsec-galeria" class="subtab-content hidden">
-                    <h3 class="text-lg font-bold mb-2">Gerenciamento Completo de Todas as Fotos do Site</h3>
-                    <p class="text-xs text-gray-500 mb-6">Altere fotos de capa, sobre, e de cada card de procedimento específico (celular ou PC) e clique em **SALVAR ESTA FOTO**.</p>
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
+                        <button onclick="adicionarNovaFotoGaleria()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ ADICIONAR FOTO NA GALERIA</button>
+                    </div>
+                    <p class="text-xs text-gray-500 mb-6">Altere fotos de capa, sobre, cards ou adicione novas fotos na galeria (via arquivo do celular/PC ou URL) e clique em **SALVAR**.</p>
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
             </section>
@@ -382,6 +389,8 @@
                             if(txts.localizacao) document.getElementById('cms-localizacao').value = txts.localizacao;
                             if(txts.titulo_capa) document.getElementById('cms-titulo-capa').value = txts.titulo_capa;
                             if(txts.desc_capa) document.getElementById('cms-desc-capa').value = txts.desc_capa;
+                            if(txts.instagram) document.getElementById('cms-instagram').value = txts.instagram;
+                            if(txts.whatsapp) document.getElementById('cms-whatsapp').value = txts.whatsapp;
                         }
                     });
                 }
@@ -449,28 +458,43 @@
             } catch (e) { console.log("Erro ao carregar agenda/financeiro."); }
         }
 
-        // --- PROCEDIMENTOS ---
+        // --- PROCEDIMENTOS COM SUPORTE A ARQUIVO E URL ---
         function renderizarProcedimentos() {
             const container = document.getElementById('grid-procedimentos');
             container.innerHTML = procedimentos.map(p => `
-                <div class="bg-white p-5 rounded shadow border">
-                    <div class="space-y-3">
-                        <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold">
-                        <div class="grid grid-cols-2 gap-3">
-                            <input type="text" id="proc-tempo-${p.id}" value="${p.duracao_min || p.duracao || '30 min'}" class="w-full border p-2 rounded text-sm">
-                            <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700">
-                        </div>
-                        <input type="text" id="proc-foto-${p.id}" value="${p.foto_url || ''}" class="w-full border p-2 text-xs rounded" placeholder="URL da foto do serviço">
-                        <div class="flex space-x-2">
-                            <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
-                            <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
-                        </div>
+                <div class="bg-white p-5 rounded shadow border space-y-3">
+                    <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold">
+                    <div class="grid grid-cols-2 gap-3">
+                        <input type="text" id="proc-tempo-${p.id}" value="${p.duracao_min || p.duracao || '30 min'}" class="w-full border p-2 rounded text-sm">
+                        <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700">
+                    </div>
+                    <div class="h-28 bg-gray-100 rounded overflow-hidden border flex items-center justify-center">
+                        <img id="preview-proc-${p.id}" src="${p.foto_url || ''}" class="h-full w-full object-cover" onerror="this.src='https://via.placeholder.com/300?text=Foto+Serviço'">
+                    </div>
+                    <input type="text" id="proc-foto-${p.id}" value="${p.foto_url || ''}" oninput="document.getElementById('preview-proc-${p.id}').src=this.value" class="w-full border p-2 text-xs rounded" placeholder="URL da foto do serviço">
+                    <input type="file" accept="image/*" onchange="converterArquivoParaBase64Proc(event, ${p.id})" class="w-full text-xs text-gray-500 file:mr-2 file:py-1 file:px-2 file:rounded file:border-0 file:bg-amber-50 file:text-amber-700">
+                    <div class="flex space-x-2 pt-2">
+                        <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
+                        <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
                     </div>
                 </div>
             `).join('') + `
             <div class="md:col-span-2 mt-4">
                 <button onclick="salvarTodosProcedimentos()" class="w-full bg-black text-white font-bold py-3 rounded shadow">💾 SALVAR TODOS OS PROCEDIMENTOS</button>
             </div>`;
+        }
+
+        function converterArquivoParaBase64Proc(event, procId) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const base64 = e.target.result;
+                    document.getElementById(`proc-foto-${procId}`).value = base64;
+                    document.getElementById(`preview-proc-${procId}`).src = base64;
+                };
+                reader.readAsDataURL(file);
+            }
         }
 
         async function salvarProcedimento(id) {
@@ -543,9 +567,12 @@
         // --- FOTOS COM SUPORTE A ARQUIVO (CELULAR/PC) E URL ---
         function renderizarFotos() {
             const container = document.getElementById('grid-fotos-site');
-            container.innerHTML = fotosSite.map(f => `
+            container.innerHTML = fotosSite.map((f, index) => `
                 <div class="bg-white p-4 rounded shadow border space-y-3">
-                    <h4 class="font-bold text-sm text-amber-700">${f.posicao}</h4>
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-sm text-amber-700">${f.posicao}</h4>
+                        ${f.id.startsWith('galeria-') ? `<button onclick="excluirFotoGaleria(${index})" class="text-red-500 text-xs font-bold hover:underline">Remover</button>` : ''}
+                    </div>
                     <div class="h-32 bg-gray-100 rounded overflow-hidden border flex items-center justify-center">
                         <img id="preview-${f.id}" src="${f.url}" class="h-full w-full object-cover" onerror="this.src='https://via.placeholder.com/300?text=Foto'">
                     </div>
@@ -569,6 +596,20 @@
             }
         }
 
+        function adicionarNovaFotoGaleria() {
+            const novoId = 'galeria-' + Date.now();
+            fotosSite.push({ id: novoId, posicao: 'Nova Foto da Galeria', url: 'https://via.placeholder.com/500?text=Nova+Foto' });
+            renderizarFotos();
+        }
+
+        async function excluirFotoGaleria(index) {
+            if (confirm('Deseja remover esta foto da galeria?')) {
+                fotosSite.splice(index, 1);
+                await salvarNoBanco('fotos_site', fotosSite);
+                renderizarFotos();
+            }
+        }
+
         async function salvarFotoUnica(id) {
             const idx = fotosSite.findIndex(f => f.id === id);
             if (idx !== -1) {
@@ -584,10 +625,11 @@
                 titulo_capa: document.getElementById('cms-titulo-capa').value,
                 desc_capa: document.getElementById('cms-desc-capa').value,
                 localizacao: document.getElementById('cms-localizacao').value,
+                instagram: document.getElementById('cms-instagram').value,
                 whatsapp: document.getElementById('cms-whatsapp').value
             };
             await salvarNoBanco('textos_cms', textos);
-            alert('✨ Textos e localização salvos com sucesso!'); 
+            alert('✨ Textos, localização e Instagram salvos com sucesso!'); 
         }
 
         async function salvarRegras(e) { e.preventDefault(); alert('Regras salvas!'); }
