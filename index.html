@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="scroll-smooth">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="site-title">B Virginia Design ✨ | Realçando sua beleza</title>
+    <title>B Virginia Design ✨ | Estúdio de Sobrancelhas e Cílios</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Supabase JS Client -->
@@ -20,126 +20,81 @@
 </head>
 <body class="bg-white font-sans text-gray-800">
 
-    <!-- CABEÇALHO / HEADER -->
-    <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-100 shadow-sm">
-        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="#" class="font-serif text-xl font-bold tracking-wide" id="logo-text">B Virginia Design</a>
-            <nav class="hidden md:flex space-x-8 text-sm font-medium text-gray-600">
-                <a href="#inicio" class="hover:text-amber-600 transition">Início</a>
-                <a href="#sobre" class="hover:text-amber-600 transition">Sobre Mim</a>
-                <a href="#servicos" class="hover:text-amber-600 transition">Procedimentos & Valores</a>
-                <a href="#galeria" class="hover:text-amber-600 transition">Galeria</a>
-                <a href="#avaliacoes" class="hover:text-amber-600 transition">Avaliações</a>
+    <!-- CABEÇALHO -->
+    <header class="bg-white border-b sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="font-serif text-xl font-bold tracking-wider">B VIRGINIA DESIGN</h1>
+            <nav class="hidden md:flex space-x-6 text-sm font-semibold">
+                <a href="#inicio" class="hover:text-amber-600">Início</a>
+                <a href="#sobre" class="hover:text-amber-600">Sobre</a>
+                <a href="#servicos" class="hover:text-amber-600">Procedimentos & Valores</a>
+                <a href="#galeria" class="hover:text-amber-600">Galeria</a>
             </nav>
-            <a href="/admin.html" class="bg-black text-white text-xs font-bold px-4 py-2 rounded-full hover:bg-amber-600 transition">
-                PAINEL ADMIN ⚙️
+            <a href="/admin.html" class="bg-black text-white text-xs font-bold px-4 py-2 rounded shadow hover:bg-amber-600 transition">
+                ÁREA DO ADMIN ⚙️
             </a>
         </div>
     </header>
 
-    <!-- SEÇÃO HERO / CAPA -->
-    <section id="inicio" class="relative bg-gray-900 text-white min-h-[85vh] flex items-center justify-center overflow-hidden">
+    <!-- HERO SECTION (CAPA) -->
+    <section id="inicio" class="relative bg-gray-900 text-white min-h-[75vh] flex items-center justify-center">
         <div class="absolute inset-0 z-0 opacity-40">
-            <img id="img-capa" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600" class="w-full h-full object-cover" alt="Capa Estúdio">
+            <img id="img-capa" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=1600" class="w-full h-full object-cover" alt="Capa">
         </div>
-        <div class="relative z-10 max-w-3xl mx-auto text-center px-6 space-y-6">
-            <span class="bg-amber-500 text-black text-xs font-bold uppercase tracking-widest py-1.5 px-4 rounded-full">Estúdio Especializado</span>
-            <h1 id="hero-titulo" class="text-4xl md:text-6xl font-serif font-bold leading-tight">Beleza através do olhar ✨</h1>
-            <p id="hero-desc" class="text-lg text-gray-200 max-w-xl mx-auto">Realce sua beleza natural com nossos serviços especializados em sobrancelhas e cílios.</p>
-            <div class="pt-4 flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#servicos" class="bg-gold text-white font-bold px-8 py-4 rounded-full shadow-lg hover:opacity-90 transition">
-                    VER PROCEDIMENTOS & VALORES
-                </a>
-                <a id="link-whatsapp-topo" href="https://wa.me/5581989002496" target="_blank" class="bg-white text-black font-bold px-8 py-4 rounded-full shadow-lg hover:bg-gray-100 transition">
-                    AGENDAR PELO WHATSAPP 📱
-                </a>
+        <div class="relative z-10 text-center px-6 max-w-2xl space-y-4">
+            <span class="bg-amber-500 text-black text-xs font-bold uppercase tracking-widest py-1 px-3 rounded">Estúdio Especializado</span>
+            <h2 class="text-4xl md:text-5xl font-serif font-bold">Beleza através do olhar ✨</h2>
+            <p class="text-gray-200 text-sm md:text-base">Realce sua beleza natural com nossos serviços exclusivos de alta qualidade.</p>
+            <div class="pt-4 flex justify-center gap-4">
+                <a href="#servicos" class="bg-gold text-white font-bold px-6 py-3 rounded shadow hover:opacity-90">VER PROCEDIMENTOS & VALORES</a>
             </div>
         </div>
     </section>
 
     <!-- SOBRE MIM -->
-    <section id="sobre" class="py-20 px-6 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-        <div class="space-y-6">
-            <span class="text-amber-600 text-xs font-bold uppercase tracking-widest">Trajetória e Cuidado</span>
-            <h2 id="sobre-titulo" class="text-3xl font-serif font-bold">Seu olhar merece cuidado especial</h2>
-            <p id="sobre-p1" class="text-gray-600 leading-relaxed">Na B Virginia Design, cada atendimento é personalizado para realçar a harmonia do seu rosto de forma natural, com total segurança e técnica avançada.</p>
-            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-100">
-                <div>
-                    <h3 class="font-bold text-2xl text-amber-600">+ de 3 anos</h3>
-                    <p class="text-xs text-gray-500">Transformando olhares</p>
-                </div>
-                <div>
-                    <h3 class="font-bold text-2xl text-amber-600">100%</h3>
-                    <p class="text-xs text-gray-500">Personalizado</p>
-                </div>
-            </div>
+    <section id="sobre" class="py-16 px-6 max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-4">
+            <span class="text-amber-600 text-xs font-bold uppercase tracking-widest">Trajetória</span>
+            <h3 class="text-3xl font-serif font-bold">Seu olhar merece cuidado especial</h3>
+            <p class="text-gray-600 text-sm leading-relaxed">Na B Virginia Design, cada atendimento é personalizado para realçar a harmonia do seu rosto com técnicas avançadas e total segurança.</p>
         </div>
-        <div class="relative">
-            <img id="img-sobre" src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800" class="rounded-2xl shadow-2xl w-full h-[450px] object-cover" alt="Sobre Virgínia">
+        <div>
+            <img id="img-sobre" src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800" class="rounded-lg shadow-lg w-full h-[380px] object-cover" alt="Sobre">
         </div>
     </section>
 
-    <!-- PROCEDIMENTOS E VALORES DINÂMICOS -->
-    <section id="servicos" class="py-20 bg-gray-50 px-6">
+    <!-- PROCEDIMENTOS & VALORES (DINÂMICO DO ADMIN) -->
+    <section id="servicos" class="py-16 bg-gray-50 px-6">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center space-y-3 mb-16">
-                <span class="text-amber-600 text-xs font-bold uppercase tracking-widest">Nossos Serviços</span>
-                <h2 class="text-3xl font-serif font-bold">Procedimentos & Tabela de Preços</h2>
-                <p class="text-gray-500 text-sm">Atualizados diretamente pelo painel administrativo do estúdio.</p>
+            <div class="text-center mb-12">
+                <span class="text-amber-600 text-xs font-bold uppercase tracking-widest">Cardápio de Serviços</span>
+                <h3 class="text-3xl font-serif font-bold">Procedimentos & Tabela de Preços</h3>
             </div>
-
-            <!-- GRID DINÂMICO DE PROCEDIMENTOS -->
-            <div id="grid-servicos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Preenchido via JavaScript pelo Supabase -->
+            <div id="grid-servicos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Preenchido automaticamente do banco do Admin -->
             </div>
         </div>
     </section>
 
-    <!-- GALERIA DE FOTOS DO SITE -->
-    <section id="galeria" class="py-20 px-6 max-w-6xl mx-auto">
-        <div class="text-center space-y-3 mb-16">
+    <!-- GALERIA -->
+    <section id="galeria" class="py-16 px-6 max-w-6xl mx-auto">
+        <div class="text-center mb-12">
             <span class="text-amber-600 text-xs font-bold uppercase tracking-widest">Portfólio</span>
-            <h2 class="text-3xl font-serif font-bold">Galeria de Resultados & Estúdio</h2>
-            <p class="text-gray-500 text-sm">Conheça um pouco do nosso espaço e dos resultados entregues.</p>
+            <h3 class="text-3xl font-serif font-bold">Galeria de Resultados</h3>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <div class="rounded-xl overflow-hidden shadow-lg border">
-                <img id="img-galeria-1" src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=500" class="w-full h-64 object-cover hover:scale-105 transition duration-500" alt="Galeria 1">
-            </div>
-            <div class="rounded-xl overflow-hidden shadow-lg border">
-                <img id="img-galeria-2" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=500" class="w-full h-64 object-cover hover:scale-105 transition duration-500" alt="Galeria 2">
-            </div>
-        </div>
-    </section>
-
-    <!-- AVALIAÇÕES -->
-    <section id="avaliacoes" class="py-20 bg-amber-50/50 px-6 border-t border-b border-amber-100">
-        <div class="max-w-6xl mx-auto">
-            <div class="text-center space-y-3 mb-16">
-                <span class="text-amber-600 text-xs font-bold uppercase tracking-widest">Depoimentos</span>
-                <h2 class="text-3xl font-serif font-bold">O que nossas clientes dizem</h2>
-            </div>
-            <div id="grid-avaliacoes-site" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Preenchido via JS -->
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <img id="img-galeria-1" src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=500" class="rounded shadow w-full h-72 object-cover" alt="Galeria 1">
+            <img id="img-galeria-2" src="https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=500" class="rounded shadow w-full h-72 object-cover" alt="Galeria 2">
         </div>
     </section>
 
     <!-- RODAPÉ -->
-    <footer class="bg-black text-white py-12 px-6">
-        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-            <div>
-                <h3 class="font-serif text-xl font-bold" id="footer-logo">B Virginia Design</h3>
-                <p class="text-xs text-gray-400 mt-1" id="footer-frase">Realçando sua beleza através do olhar</p>
-            </div>
-            <div class="text-xs text-gray-400">
-                <p id="footer-endereco">Bela Vista, Cabo de Santo Agostinho - PE</p>
-                <p class="mt-1">© 2026 Todos os direitos reservados.</p>
-            </div>
-        </div>
+    <footer class="bg-black text-white py-8 text-center text-xs">
+        <p>B Virginia Design - Bela Vista, Cabo de Santo Agostinho - PE</p>
+        <p class="text-gray-400 mt-1">© 2026 Todos os direitos reservados.</p>
     </footer>
 
-    <!-- SCRIPT DE SINCRONIZAÇÃO COM O SUPABASE -->
+    <!-- SCRIPT DE INTEGRAÇÃO COM SUPABASE -->
     <script>
         const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
@@ -147,10 +102,10 @@
 
         async function carregarSiteDoBanco() {
             try {
-                const { data, error } = await _supabase.from('configuracoes_site').select('*');
+                const { data } = await _supabase.from('configuracoes_site').select('*');
                 if (data && data.length > 0) {
                     data.forEach(item => {
-                        // 1. CARREGA FOTOS
+                        // Sincroniza fotos
                         if (item.chave === 'fotos_site') {
                             const fotos = JSON.parse(item.valor);
                             fotos.forEach(f => {
@@ -160,43 +115,29 @@
                                 if (f.id === 'galeria-2') document.getElementById('img-galeria-2').src = f.url;
                             });
                         }
-
-                        // 2. CARREGA PROCEDIMENTOS E VALORES
+                        // Sincroniza procedimentos e preços
                         if (item.chave === 'procedimentos') {
                             const procs = JSON.parse(item.valor);
-                            const containerServicos = document.getElementById('grid-servicos-site');
-                            containerServicos.innerHTML = procs.map(p => `
-                                <div class="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition flex flex-col justify-between">
+                            const container = document.getElementById('grid-servicos-site');
+                            container.innerHTML = procs.map(p => `
+                                <div class="bg-white p-6 rounded shadow border flex flex-col justify-between">
                                     <div>
-                                        <h3 class="font-serif font-bold text-xl mb-2">${p.nome}</h3>
-                                        <p class="text-xs text-gray-500 mb-4">⏱️ Duração estimada: ${p.duracao}</p>
+                                        <h4 class="font-serif font-bold text-lg mb-1">${p.nome}</h4>
+                                        <p class="text-xs text-gray-500 mb-4">⏱️ ${p.duracao}</p>
                                     </div>
-                                    <div class="pt-4 border-t border-gray-100 flex justify-between items-center">
-                                        <span class="text-2xl font-bold text-emerald-700">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
-                                        <a href="https://wa.me/5581989002496?text=Olá! Gostaria de agendar o procedimento: ${encodeURIComponent(p.nome)}" target="_blank" class="bg-black text-white text-xs font-bold px-4 py-2.5 rounded-full hover:bg-amber-600 transition">
+                                    <div class="pt-4 border-t flex justify-between items-center">
+                                        <span class="text-xl font-bold text-green-700">R$ ${p.preco.toFixed(2).replace('.', ',')}</span>
+                                        <a href="https://wa.me/5581989002496?text=Olá! Quero agendar: ${encodeURIComponent(p.nome)}" target="_blank" class="bg-black text-white text-xs font-bold px-3 py-2 rounded hover:bg-amber-600 transition">
                                             AGENDAR 📅
                                         </a>
                                     </div>
                                 </div>
                             `).join('');
                         }
-
-                        // 3. CARREGA AVALIAÇÕES
-                        if (item.chave === 'avaliacoes') {
-                            const avals = JSON.parse(item.valor);
-                            const containerAvals = document.getElementById('grid-avaliacoes-site');
-                            containerAvals.innerHTML = avals.map(a => `
-                                <div class="bg-white p-6 rounded-2xl shadow-sm border border-amber-100 space-y-3">
-                                    <div class="text-amber-500">${'⭐'.repeat(a.estrelas)}</div>
-                                    <p class="text-gray-600 text-sm italic">"${a.texto}"</p>
-                                    <h4 class="font-bold text-sm text-gray-900">— ${a.nome}</h4>
-                                </div>
-                            `).join('');
-                        }
                     });
                 }
             } catch (err) {
-                console.error("Erro ao carregar dados do Supabase no site:", err);
+                console.error("Erro ao carregar dados:", err);
             }
         }
 
