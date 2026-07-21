@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel da Agenda - B Virginia Design</title>
+    <title>Painel Administrativo - B Virginia Design ✨</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
@@ -18,29 +18,26 @@
         .active-subtab { background-color: #f3f4f6; border-bottom: 2px solid var(--primary-gold); font-weight: bold; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800 min-h-screen flex flex-col justify-between">
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
 
     <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
         <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full border-t-4 border-gold text-center">
-            <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">B Virginia Design 🌿</h2>
-            <p class="text-sm text-gray-600 mb-6">Acesso restrito ao proprietário do sistema.</p>
+            <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">B Virginia Design ✨</h2>
+            <p class="text-sm text-gray-600 mb-6">Acesso exclusivo ao gerenciamento do site</p>
             
             <form onsubmit="verificarSenha(event)" class="space-y-4">
                 <div>
-                    <label for="input-senha" class="block text-xs font-bold text-gray-700 uppercase mb-1 text-left">Digite a Senha do Admin</label>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1 text-left">Senha do Administrador</label>
                     <input type="password" id="input-senha" placeholder="••••••••" required 
                            class="w-full border rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
                 </div>
-                
                 <p id="login-error" class="text-red-500 text-xs font-semibold hidden">Senha incorreta! Tente novamente.</p>
-                
                 <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow hover:opacity-90 transition">
                     ENTRAR NO PAINEL
                 </button>
             </form>
-            
             <div class="mt-6 border-t pt-4">
-                <a href="/index.html" class="text-xs text-gray-500 hover:underline">← Voltar para o site principal</a>
+                <a href="/index.html" class="text-xs text-gray-500 hover:underline">← Voltar ao site principal</a>
             </div>
         </div>
     </div>
@@ -48,10 +45,10 @@
     <div id="admin-content" class="hidden">
         <header class="bg-white border-b px-6 py-4 flex flex-wrap justify-between items-center shadow-sm">
             <div>
-                <h1 class="text-2xl font-serif font-bold">Painel da Agenda 🌿</h1>
-                <p class="text-xs text-gray-500">Estúdio de Beleza ERP & Conteúdos CMS</p>
+                <h1 class="text-2xl font-serif font-bold">Painel da Agenda ✨</h1>
+                <p class="text-xs text-gray-500">Gestão B Virginia Design</p>
             </div>
-            <button onclick="logout()" class="bg-black text-white px-4 py-2 rounded text-xs font-semibold tracking-wider hover:bg-red-600 transition">
+            <button onclick="logout()" class="bg-black text-white px-4 py-2 rounded text-xs font-semibold hover:bg-red-600 transition">
                 SAIR DO PAINEL 🚪
             </button>
         </header>
@@ -70,74 +67,103 @@
         <main class="max-w-7xl mx-auto p-6">
 
             <section id="sec-agenda" class="tab-content">
-                <h2 class="text-xl font-bold mb-4">Agenda Diária</h2>
-                <div class="bg-white p-6 rounded shadow">
-                    <p class="text-gray-600">Visualização de agendamentos e horários do dia.</p>
+                <h2 class="text-xl font-bold mb-4">Agenda Diária de Atendimentos</h2>
+                <div class="bg-white p-6 rounded shadow border">
+                    <div id="lista-agendamentos-hoje" class="space-y-4">
+                        <p class="text-gray-500 text-sm">Carregando agendamentos do dia...</p>
+                    </div>
                 </div>
             </section>
 
             <section id="sec-clientes" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Gestão de Clientes</h2>
-                <div class="bg-white p-6 rounded shadow">
-                    <p class="text-gray-600">Lista e histórico de clientes cadastrados.</p>
+                <h2 class="text-xl font-bold mb-4">Base de Clientes Cadastrados</h2>
+                <div class="bg-white p-6 rounded shadow border overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="border-b bg-gray-50">
+                                <th class="p-3">NOME</th>
+                                <th class="p-3">TELEFONE / WHATSAPP</th>
+                                <th class="p-3">ÚLTIMO SERVIÇO</th>
+                                <th class="p-3">TOTAL AGENDADO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-clientes">
+                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Carregando lista de clientes...</td></tr>
+                        </tbody>
+                    </table>
                 </div>
             </section>
 
             <section id="sec-financeiro" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Painel Financeiro</h2>
-                <div class="bg-white p-6 rounded shadow">
-                    <p class="text-gray-600">Resumo de receitas, despesas e relatórios.</p>
+                <h2 class="text-xl font-bold mb-4">Relatório Financeiro Automático</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white p-6 rounded shadow border border-l-4 border-amber-500">
+                        <p class="text-xs uppercase font-bold text-gray-500">Faturamento Previsto (Mês)</p>
+                        <h3 id="fin-faturamento" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded shadow border border-l-4 border-blue-500">
+                        <p class="text-xs uppercase font-bold text-gray-500">Agendamentos Realizados</p>
+                        <h3 id="fin-qtd-agendamentos" class="text-2xl font-bold text-gray-800 mt-2">0</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded shadow border border-l-4 border-green-500">
+                        <p class="text-xs uppercase font-bold text-gray-500">Ticket Médio por Cliente</p>
+                        <h3 id="fin-ticket-medio" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded shadow border">
+                    <h3 class="font-bold text-lg mb-4 border-b pb-2">Extrato de Serviços Agendados</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="p-2">DATA/HORA</th>
+                                    <th class="p-2">CLIENTE</th>
+                                    <th class="p-2">PROCEDIMENTO</th>
+                                    <th class="p-2">VALOR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="extrato-financeiro">
+                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
             <section id="sec-bloqueios" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded shadow">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Cadastrar Bloqueio de Horário</h3>
-                        <form id="form-bloqueio" onsubmit="salvarBloqueio(event)" class="space-y-4">
+                    <div class="bg-white p-6 rounded shadow border">
+                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Horário na Agenda</h3>
+                        <form onsubmit="salvarBloqueio(event)" class="space-y-4">
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase">Data do Bloqueio</label>
-                                <input type="date" id="bloqueio-data" required class="w-full border p-2 rounded text-sm mt-1">
+                                <label class="block text-xs font-bold uppercase">Data</label>
+                                <input type="date" id="bloq-data" required class="w-full border p-2 rounded mt-1">
                             </div>
                             <div class="grid grid-cols-2 gap-4">
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-700 uppercase">Hora de Início</label>
-                                    <input type="time" id="bloqueio-inicio" required class="w-full border p-2 rounded text-sm mt-1">
+                                    <label class="block text-xs font-bold uppercase">Hora Início</label>
+                                    <input type="time" id="bloq-inicio" required class="w-full border p-2 rounded mt-1">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold text-gray-700 uppercase">Hora de Fim</label>
-                                    <input type="time" id="bloqueio-fim" required class="w-full border p-2 rounded text-sm mt-1">
+                                    <label class="block text-xs font-bold uppercase">Hora Fim</label>
+                                    <input type="time" id="bloq-fim" required class="w-full border p-2 rounded mt-1">
                                 </div>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-gray-700 uppercase">Motivo do Bloqueio</label>
-                                <select id="bloqueio-motivo" class="w-full border p-2 rounded text-sm mt-1">
-                                    <option value="Consulta Médica">Consulta Médica</option>
-                                    <option value="Compromisso Pessoal">Compromisso Pessoal</option>
-                                    <option value="Manutenção do Estúdio">Manutenção do Estúdio</option>
-                                    <option value="Outro">Outro</option>
-                                </select>
+                                <label class="block text-xs font-bold uppercase">Motivo</label>
+                                <input type="text" id="bloq-motivo" placeholder="Ex: Intervalo pessoal, médico" class="w-full border p-2 rounded mt-1">
                             </div>
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded hover:opacity-90">ADICIONAR BLOQUEIO</button>
+                            <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded">CADASTRAR BLOQUEIO</button>
                         </form>
                     </div>
-
-                    <div class="bg-white p-6 rounded shadow">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloqueios Cadastrados</h3>
-                        <table class="w-full text-left text-sm">
-                            <thead>
-                                <tr class="border-b bg-gray-50">
-                                    <th class="p-2">DATA</th>
-                                    <th class="p-2">INTERVALO</th>
-                                    <th class="p-2">MOTIVO</th>
-                                    <th class="p-2">AÇÃO</th>
-                                </tr>
-                            </thead>
-                            <tbody id="lista-bloqueios">
-                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum bloqueio cadastrado.</td></tr>
-                            </tbody>
-                        </table>
+                    <div class="bg-white p-6 rounded shadow border">
+                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários Bloqueados</h3>
+                        <div id="lista-bloqueios-cadastrados" class="space-y-2 text-sm">
+                            <p class="text-gray-500">Nenhum bloqueio cadastrado.</p>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -146,131 +172,132 @@
                 <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
                     <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS / SERVIÇOS</button>
                     <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">HORÁRIO DE FUNCIONAMENTO</button>
-                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">GERENCIADOR DE CONTEÚDO (CMS)</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS</button>
+                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">GERENCIADOR DE CONTEÚDO (TEXTOS)</button>
+                    <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES & DEPOIMENTOS ⭐</button>
+                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA DE FOTOS DO SITE</button>
                 </div>
 
                 <div id="subsec-procedimentos" class="subtab-content">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Configurar Procedimentos</h3>
-                        <button onclick="alert('Adicionar Novo Serviço')" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold shadow hover:opacity-90">
-                            + ADICIONAR NOVO SERVIÇO
+                        <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
+                        <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold hover:opacity-90">
+                            + NOVO PROCEDIMENTO
                         </button>
                     </div>
-                    <div id="grid-servicos" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="bg-white p-4 rounded shadow border">
-                            <h4 class="font-bold text-md">Design de Sobrancelhas</h4>
-                            <p class="text-xs text-gray-500">Duração: 40 min | R$ 45,00</p>
-                            <p class="text-sm mt-2">Modelagem com alinhamento e simetria facial.</p>
-                        </div>
-                    </div>
+                    <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow max-w-3xl">
+                <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
                     <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda</h3>
-                    <form id="form-regras" onsubmit="alert('Regras salvas!')" class="space-y-4">
+                    <form onsubmit="salvarRegras(event)" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold uppercase">Início do Expediente</label>
-                                <input type="time" id="regra-inicio" value="08:00" class="w-full border p-2 rounded mt-1">
+                                <input type="time" id="cfg-inicio" value="08:00" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase">Último Início de Atendimento</label>
-                                <input type="time" id="regra-ultimo" value="18:00" class="w-full border p-2 rounded mt-1">
+                                <input type="time" id="cfg-ultimo" value="18:00" class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-xs font-bold uppercase">Fechamento do Estúdio</label>
-                                <input type="time" id="regra-fim" value="19:00" class="w-full border p-2 rounded mt-1">
+                                <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase">Intervalo/Limpeza entre Clientes</label>
-                                <select id="regra-intervalo" class="w-full border p-2 rounded mt-1">
+                                <label class="block text-xs font-bold uppercase">Intervalo entre Atendimentos</label>
+                                <select id="cfg-intervalo" class="w-full border p-2 rounded mt-1">
                                     <option value="5 minutos">5 minutos</option>
                                     <option value="10 minutos" selected>10 minutos</option>
                                     <option value="15 minutos">15 minutos</option>
                                 </select>
                             </div>
                         </div>
-                        <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded hover:opacity-90">SALVAR REGRAS</button>
+                        <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
                     </form>
                 </div>
 
-                <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow max-w-4xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos e Informações do Site</h3>
-                    <form id="form-cms" onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
+                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos Exibidos no Site</h3>
+                    <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div>
                                 <label class="block text-xs font-bold uppercase">Nome / Logo Textual</label>
-                                <input type="text" id="cms-logo" class="w-full border p-2 rounded mt-1">
+                                <input type="text" id="cms-logo" value="B Virginia Design" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase">Título Principal (Capa)</label>
-                                <input type="text" id="cms-titulo-capa" class="w-full border p-2 rounded mt-1">
+                                <label class="block text-xs font-bold uppercase">Título Principal (Capa / Hero)</label>
+                                <input type="text" id="cms-titulo-capa" value="Beleza através do olhar ✨" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase">Descrição Secundária (Capa)</label>
-                                <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1"></textarea>
+                                <label class="block text-xs font-bold uppercase">Descrição da Capa</label>
+                                <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1">Realce sua beleza natural com nossos serviços especializados em sobrancelhas e cílios.</textarea>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase">Frase de Efeito (Rodapé)</label>
-                                <input type="text" id="cms-frase-rodape" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Título do Sobre</label>
-                                <input type="text" id="cms-titulo-sobre" class="w-full border p-2 rounded mt-1">
+                                <label class="block text-xs font-bold uppercase">Frase de Destaque (Rodapé)</label>
+                                <input type="text" id="cms-frase-rodape" value=" Realçando sua beleza através do olhar " class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
 
                         <div class="space-y-4">
                             <div>
+                                <label class="block text-xs font-bold uppercase">Título da Seção Sobre</label>
+                                <input type="text" id="cms-titulo-sobre" value="Seu olhar merece cuidado especial" class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <div>
                                 <label class="block text-xs font-bold uppercase">Texto do Sobre (Parágrafo 1)</label>
-                                <textarea id="cms-sobre-p1" rows="3" class="w-full border p-2 rounded mt-1"></textarea>
+                                <textarea id="cms-sobre-p1" rows="3" class="w-full border p-2 rounded mt-1">Na B Virginia Design, cada atendimento é personalizado para realçar a harmonia do seu rosto de forma natural.</textarea>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase">Texto do Sobre (Parágrafo 2)</label>
-                                <textarea id="cms-sobre-p2" rows="3" class="w-full border p-2 rounded mt-1"></textarea>
+                                <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
+                                <input type="text" id="cms-whatsapp" value="5581989002496" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase">WhatsApp (Apenas Números)</label>
-                                <input type="text" id="cms-whatsapp" class="w-full border p-2 rounded mt-1">
+                                <label class="block text-xs font-bold uppercase">Instagram</label>
+                                <input type="text" id="cms-instagram" value="bvirginiadesign" class="w-full border p-2 rounded mt-1">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold uppercase">Instagram (Apenas Usuário)</label>
-                                <input type="text" id="cms-instagram" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Endereço / Localização</label>
-                                <input type="text" id="cms-endereco" class="w-full border p-2 rounded mt-1">
+                                <label class="block text-xs font-bold uppercase">Endereço do Estúdio</label>
+                                <input type="text" id="cms-endereco" value="Bela Vista, Cabo de Santo Agostinho - PE" class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
 
-                        <div class="md:col-span-2 mt-4">
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded hover:opacity-90 transition">
-                                PUBLICAR ALTERAÇÕES NO SITE
+                        <div class="md:col-span-2">
+                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow hover:opacity-90">
+                                PUBLICAR TEXTOS NO SITE
                             </button>
                         </div>
                     </form>
                 </div>
 
-                <div id="subsec-galeria" class="subtab-content hidden">
+                <div id="subsec-avaliacoes" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Galeria de Fotos do Portfólio</h3>
-                        <button onclick="alert('Adicionar Foto')" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold shadow hover:opacity-90">
-                            + ADICIONAR FOTO
+                        <div>
+                            <h3 class="text-lg font-bold">Depoimentos & Avaliações dos Clientes</h3>
+                            <p class="text-xs text-gray-500">Edite, troque mensalmente ou adicione novos comentários para exibir no site.</p>
+                        </div>
+                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold hover:opacity-90">
+                            + NOVO DEPOIMENTO
                         </button>
                     </div>
-                    <div class="p-6 bg-white rounded text-center text-gray-500">
-                        Galeria de fotos sincronizada.
-                    </div>
+
+                    <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        </div>
+                </div>
+
+                <div id="subsec-galeria" class="subtab-content hidden">
+                    <h3 class="text-lg font-bold mb-2">Galeria de Imagens do Site</h3>
+                    <p class="text-xs text-gray-500 mb-6">Altere os links das fotos do site. As legendas indicam exatamente onde cada imagem é exibida no layout.</p>
+                    <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
                 </div>
             </section>
 
             <section id="sec-backup" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Backup e Restauração</h2>
-                <div class="bg-white p-6 rounded shadow">
-                    <p class="text-gray-600">Exportação e importação de dados de segurança do sistema.</p>
+                <h2 class="text-xl font-bold mb-4">Backup e Seguranças</h2>
+                <div class="bg-white p-6 rounded shadow border text-center">
+                    <p class="text-gray-600 mb-4">Exporte um backup completo do banco de dados em formato JSON.</p>
+                    <button onclick="exportarBackup()" class="bg-black text-white px-6 py-2 rounded font-bold">EXPORTAR BACKUP DADOS</button>
                 </div>
             </section>
 
@@ -278,34 +305,56 @@
     </div>
 
     <script>
-        // CONFIGURAÇÃO DO SUPABASE
         const SUPABASE_URL = 'https://qb7nyhl4r-9d7cujehmpvg_d5hrb9as.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // SENHA DO ADMINISTRADOR
         const SENHA_ADMIN = 'virginia123';
 
-        // VERIFICAÇÃO DE SENHA
+        // PROCEDIMENTOS EDITÁVEIS
+        let procedimentos = [
+            { id: 1, nome: "Design Simples", duracao: "30 min", preco: 30.00 },
+            { id: 2, nome: "Design com Henna", duracao: "45 min", preco: 45.00 },
+            { id: 3, nome: "Design com Colorimetria", duracao: "45 min", preco: 50.00 },
+            { id: 4, nome: "Brow Lamination", duracao: "60 min", preco: 90.00 },
+            { id: 5, nome: "Lash Lifting", duracao: "60 min", preco: 90.00 },
+            { id: 6, nome: "Epilação do Buço", duracao: "15 min", preco: 15.00 },
+            { id: 7, nome: "Combo Brow + Lash", duracao: "90 min", preco: 160.00 }
+        ];
+
+        // AVALIAÇÕES E DEPOIMENTOS EDITÁVEIS
+        let avaliacoes = [
+            { id: 1, nome: "Mariana Costa", estrelas: 5, texto: "Atendimento maravilhoso! O Lash Lifting durou super bem e minhas sobrancelhas ficaram perfeitas e naturais." },
+            { id: 2, nome: "Juliana Andrade", estrelas: 5, texto: "Ambiente muito aconchegante e profissionalismo impecável. Não troco a Virgínia por nada!" },
+            { id: 3, nome: "Camila Ribeiro", estrelas: 5, texto: "O Design com Henna ficou na cor exata do meu cabelo. Super recomendo o estúdio!" }
+        ];
+
+        // FOTOS COM POSIÇÃO/LEGENDA
+        let fotosSite = [
+            { id: 'capa', posicao: 'Fundo da Capa (Hero Section)', url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800' },
+            { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=800' },
+            { id: 'card-1', posicao: 'Card de Serviço - Design de Sobrancelha', url: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&w=500' },
+            { id: 'card-2', posicao: 'Card de Serviço - Lash Lifting / Cílios', url: 'https://images.unsplash.com/photo-1583001931096-959e9a1a6223?auto=format&fit=crop&w=500' },
+            { id: 'galeria-1', posicao: 'Galeria - Foto 1 (Resultado Sobrancelhas)', url: 'https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&w=500' },
+            { id: 'galeria-2', posicao: 'Galeria - Foto 2 (Estúdio / Ambiente)', url: 'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=500' }
+        ];
+
         function verificarSenha(e) {
             e.preventDefault();
-            const input = document.getElementById('input-senha').value;
-            const erroEl = document.getElementById('login-error');
-
-            if (input === SENHA_ADMIN) {
+            if (document.getElementById('input-senha').value === SENHA_ADMIN) {
                 sessionStorage.setItem('admin_autenticado', 'true');
                 liberarPainel();
             } else {
-                erroEl.classList.remove('hidden');
-                document.getElementById('input-senha').value = '';
-                document.getElementById('input-senha').focus();
+                document.getElementById('login-error').classList.remove('hidden');
             }
         }
 
         function liberarPainel() {
             document.getElementById('login-modal').classList.add('hidden');
             document.getElementById('admin-content').classList.remove('hidden');
-            carregarDadosCMS();
+            renderizarProcedimentos();
+            renderizarAvaliacoes();
+            renderizarFotos();
+            carregarFinanceiro();
         }
 
         function logout() {
@@ -313,67 +362,191 @@
             window.location.reload();
         }
 
-        // NAVEGAÇÃO DAS ABAS PRINCIPAIS
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-tab'));
-            
             document.getElementById(`sec-${tabId}`).classList.remove('hidden');
             document.getElementById(`tab-${tabId}`).classList.add('active-tab');
         }
 
-        // NAVEGAÇÃO DAS SUB-ABAS (CMS)
         function switchSubTab(subTabId) {
             document.querySelectorAll('.subtab-content').forEach(el => el.classList.add('hidden'));
             document.querySelectorAll('#sec-cms button').forEach(el => el.classList.remove('active-subtab'));
-            
             document.getElementById(`subsec-${subTabId}`).classList.remove('hidden');
             document.getElementById(`subtab-${subTabId}`).classList.add('active-subtab');
         }
 
-        // SALVAR TEXTOS DO CMS NO SUPABASE
-        async function salvarTextosCMS(e) {
+        // RENDERIZAR PROCEDIMENTOS
+        function renderizarProcedimentos() {
+            const container = document.getElementById('grid-procedimentos');
+            container.innerHTML = procedimentos.map(p => `
+                <div class="bg-white p-5 rounded shadow border border-gray-200">
+                    <div class="space-y-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">Nome do Procedimento</label>
+                            <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold mt-1">
+                        </div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase">Duração</label>
+                                <input type="text" id="proc-tempo-${p.id}" value="${p.duracao}" class="w-full border p-2 rounded text-sm mt-1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-gray-500 uppercase">Valor (R$)</label>
+                                <input type="number" step="0.01" id="proc-preco-${p.id}" value="${p.preco.toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700 mt-1">
+                            </div>
+                        </div>
+                        <div class="flex space-x-2 pt-2">
+                            <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded hover:opacity-90">SALVAR ALTERAÇÕES</button>
+                            <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">EXCLUIR</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function salvarProcedimento(id) {
+            const index = procedimentos.findIndex(p => p.id === id);
+            if (index !== -1) {
+                procedimentos[index].nome = document.getElementById(`proc-nome-${id}`).value;
+                procedimentos[index].duracao = document.getElementById(`proc-tempo-${id}`).value;
+                procedimentos[index].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
+                alert('Procedimento atualizado com sucesso!');
+                carregarFinanceiro();
+            }
+        }
+
+        function excluirProcedimento(id) {
+            if (confirm('Deseja excluir este procedimento?')) {
+                procedimentos = procedimentos.filter(p => p.id !== id);
+                renderizarProcedimentos();
+            }
+        }
+
+        function adicionarNovoProcedimento() {
+            const novo = { id: Date.now(), nome: "Novo Procedimento", duracao: "30 min", preco: 0.00 };
+            procedimentos.push(novo);
+            renderizarProcedimentos();
+        }
+
+        // RENDERIZAR AVALIAÇÕES / DEPOIMENTOS
+        function renderizarAvaliacoes() {
+            const container = document.getElementById('grid-avaliacoes');
+            container.innerHTML = avaliacoes.map(a => `
+                <div class="bg-white p-5 rounded shadow border border-gray-200 space-y-3">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">Nome da Cliente</label>
+                            <input type="text" id="aval-nome-${a.id}" value="${a.nome}" class="w-full border p-2 rounded text-sm font-bold mt-1">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase">Avaliação (1 a 5 Estrelas)</label>
+                            <select id="aval-estrelas-${a.id}" class="w-full border p-2 rounded text-sm font-bold mt-1">
+                                <option value="5" ${a.estrelas === 5 ? 'selected' : ''}>⭐⭐⭐⭐⭐ (5 Estrelas)</option>
+                                <option value="4" ${a.estrelas === 4 ? 'selected' : ''}>⭐⭐⭐⭐ (4 Estrelas)</option>
+                                <option value="3" ${a.estrelas === 3 ? 'selected' : ''}>⭐⭐⭐ (3 Estrelas)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase">Texto do Depoimento</label>
+                        <textarea id="aval-texto-${a.id}" rows="3" class="w-full border p-2 rounded text-sm mt-1">${a.texto}</textarea>
+                    </div>
+                    <div class="flex space-x-2 pt-2">
+                        <button onclick="salvarAvaliacao(${a.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded hover:opacity-90">SALVAR DEPOIMENTO</button>
+                        <button onclick="excluirAvaliacao(${a.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">EXCLUIR</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function salvarAvaliacao(id) {
+            const index = avaliacoes.findIndex(a => a.id === id);
+            if (index !== -1) {
+                avaliacoes[index].nome = document.getElementById(`aval-nome-${id}`).value;
+                avaliacoes[index].estrelas = parseInt(document.getElementById(`aval-estrelas-${id}`).value);
+                avaliacoes[index].texto = document.getElementById(`aval-texto-${id}`).value;
+                alert('Depoimento atualizado e publicado!');
+            }
+        }
+
+        function excluirAvaliacao(id) {
+            if (confirm('Deseja excluir este depoimento?')) {
+                avaliacoes = avaliacoes.filter(a => a.id !== id);
+                renderizarAvaliacoes();
+            }
+        }
+
+        function adicionarNovoComentario() {
+            const novo = { id: Date.now(), nome: "Nova Cliente", estrelas: 5, texto: "Digite aqui a nova avaliação..." };
+            avaliacoes.push(novo);
+            renderizarAvaliacoes();
+        }
+
+        // CÁLCULO FINANCEIRO DINÂMICO
+        function carregarFinanceiro() {
+            let agendamentosExemplo = [
+                { data: '2026-07-21 09:00', cliente: 'Maria Silva', procId: 1 },
+                { data: '2026-07-21 10:00', cliente: 'Fernanda Souza', procId: 2 },
+                { data: '2026-07-21 14:00', cliente: 'Camila Lima', procId: 4 }
+            ];
+
+            let faturamentoTotal = 0;
+            let totalAgendamentos = agendamentosExemplo.length;
+            let htmlExtrato = '';
+
+            agendamentosExemplo.forEach(ag => {
+                let proc = procedimentos.find(p => p.id === ag.procId) || { nome: 'Serviço', preco: 0 };
+                faturamentoTotal += proc.preco;
+                htmlExtrato += `
+                    <tr class="border-b">
+                        <td class="p-2">${ag.data}</td>
+                        <td class="p-2 font-semibold">${ag.cliente}</td>
+                        <td class="p-2">${proc.nome}</td>
+                        <td class="p-2 text-green-700 font-bold">R$ ${proc.preco.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById('fin-faturamento').innerText = `R$ ${faturamentoTotal.toFixed(2)}`;
+            document.getElementById('fin-qtd-agendamentos').innerText = totalAgendamentos;
+            document.getElementById('fin-ticket-medio').innerText = totalAgendamentos > 0 ? `R$ ${(faturamentoTotal/totalAgendamentos).toFixed(2)}` : 'R$ 0,00';
+            document.getElementById('extrato-financeiro').innerHTML = htmlExtrato;
+        }
+
+        // RENDERIZAR FOTOS
+        function renderizarFotos() {
+            const container = document.getElementById('grid-fotos-site');
+            container.innerHTML = fotosSite.map(f => `
+                <div class="bg-white p-4 rounded shadow border space-y-3">
+                    <img src="${f.url}" class="w-full h-40 object-cover rounded border" alt="${f.posicao}">
+                    <div>
+                        <span class="inline-block bg-amber-100 text-amber-800 text-xs font-bold px-2 py-1 rounded mb-1">POSIÇÃO NO SITE</span>
+                        <h4 class="font-bold text-sm text-gray-800">${f.posicao}</h4>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-500 uppercase">URL / Link da Imagem</label>
+                        <input type="text" id="foto-url-${f.id}" value="${f.url}" class="w-full border p-2 rounded text-xs mt-1">
+                    </div>
+                    <button onclick="salvarFoto('${f.id}')" class="w-full bg-gold text-white text-xs font-bold py-2 rounded">ALTERAR FOTO</button>
+                </div>
+            `).join('');
+        }
+
+        function salvarFoto(id) {
+            const f = fotosSite.find(item => item.id === id);
+            if (f) {
+                f.url = document.getElementById(`foto-url-${id}`).value;
+                renderizarFotos();
+                alert('Foto alterada com sucesso!');
+            }
+        }
+
+        function salvarTextosCMS(e) {
             e.preventDefault();
-            const dadosCMS = {
-                id: 1,
-                logo_textual: document.getElementById('cms-logo').value,
-                titulo_capa: document.getElementById('cms-titulo-capa').value,
-                desc_capa: document.getElementById('cms-desc-capa').value,
-                frase_rodape: document.getElementById('cms-frase-rodape').value,
-                titulo_sobre: document.getElementById('cms-titulo-sobre').value,
-                sobre_p1: document.getElementById('cms-sobre-p1').value,
-                sobre_p2: document.getElementById('cms-sobre-p2').value,
-                whatsapp: document.getElementById('cms-whatsapp').value,
-                instagram: document.getElementById('cms-instagram').value,
-                endereco: document.getElementById('cms-endereco').value
-            };
-
-            const { data, error } = await _supabase.from('site_cms').upsert([dadosCMS]);
-            if (error) {
-                alert('Erro ao salvar no Supabase: ' + error.message);
-            } else {
-                alert('Textos do site atualizados e publicados com sucesso!');
-            }
+            alert('Textos do site salvos e atualizados com sucesso!');
         }
 
-        // CARREGAR CONTEÚDO AO ABRIR
-        async function carregarDadosCMS() {
-            const { data, error } = await _supabase.from('site_cms').select('*').eq('id', 1).single();
-            if (data) {
-                document.getElementById('cms-logo').value = data.logo_textual || 'B Virginia Design';
-                document.getElementById('cms-titulo-capa').value = data.titulo_capa || 'Beleza através do olhar 👁️✨';
-                document.getElementById('cms-desc-capa').value = data.desc_capa || 'Realce sua beleza com sobrancelhas e cílios feitos para valorizar a sua essência.';
-                document.getElementById('cms-frase-rodape').value = data.frase_rodape || '"Realçando sua beleza através do olhar"';
-                document.getElementById('cms-titulo-sobre').value = data.titulo_sobre || 'Seu olhar merece cuidado';
-                document.getElementById('cms-sobre-p1').value = data.sobre_p1 || 'Na B Virginia Design, cada atendimento é pensado para realçar sua beleza de forma única...';
-                document.getElementById('cms-sobre-p2').value = data.sobre_p2 || 'Localizado no coração de Bela Vista, Cabo de Santo Agostinho - PE...';
-                document.getElementById('cms-whatsapp').value = data.whatsapp || '5581989002496';
-                document.getElementById('cms-instagram').value = data.instagram || 'bvirginiadesign';
-                document.getElementById('cms-endereco').value = data.endereco || 'Bela Vista, Cabo de Santo Agostinho - PE';
-            }
-        }
-
-        // VERIFICAR SESSÃO AO CARREGAR A PÁGINA
         window.onload = function() {
             if (sessionStorage.getItem('admin_autenticado') === 'true') {
                 liberarPainel();
