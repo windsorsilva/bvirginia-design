@@ -3,1189 +3,290 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo - B Virgínia Design</title>
-  <!-- Tailwind CSS para Design Responsivo e Premium -->
+  <title>Painel Administrativo | B Virgínia Design</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Supabase Library para integração em nuvem -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- Google Fonts & FontAwesome -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
   <style>
     body { font-family: 'Inter', sans-serif; }
     .font-title { font-family: 'Playfair Display', serif; }
-    .tab-active { border-color: #b5945b; color: #b5945b; }
   </style>
 </head>
-<body class="bg-[#FAF8F5] text-[#2C2A29] min-h-screen">
+<body class="bg-[#FAF8F5] text-[#2C2A29] p-4 md:p-10">
 
-  <!-- TELA DE LOGIN (SOBREPOSIÇÃO) -->
-  <div id="login-overlay" class="fixed inset-0 bg-[#FAF8F5] z-50 flex items-center justify-center p-4">
-    <div class="bg-white p-8 rounded-2xl shadow-xl border border-gray-100 max-w-sm w-full text-center space-y-6">
-      <div class="space-y-1">
-        <h2 class="text-2xl font-bold font-title text-[#2C2A29]">B Virgínia Design</h2>
-        <p class="text-xs tracking-widest text-gray-400 font-semibold uppercase">Área Restrita</p>
-      </div>
-      <div class="space-y-4">
-        <input type="password" id="login-senha" placeholder="Digite a senha de acesso..." class="w-full border border-gray-200 p-3 rounded-lg text-center focus:outline-none focus:ring-2 focus:ring-[#b5945b]">
-        <p id="login-erro" class="text-xs text-red-500 font-semibold hidden">⚠️ Senha incorreta. Tente novamente.</p>
-        <button onclick="verificarSenha()" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-semibold py-3 rounded-lg shadow-md transition hover:scale-[1.02] active:scale-95">
-          Entrar no Painel
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- CONTEÚDO DO PAINEL (OCULTO ATÉ FAZER LOGIN) -->
-  <div id="painel-conteudo" class="hidden">
+  <div class="max-w-7xl mx-auto space-y-10">
     
-    <!-- HEADER DO PAINEL -->
-    <header class="bg-white border-b border-gray-200 p-6 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm">
-      <div class="space-y-1">
-        <h1 class="text-2xl font-bold flex items-center gap-2">
-          Painel de Controle <span class="text-[#b5945b]">✨</span>
-        </h1>
-        <p class="text-xs text-gray-500">Estúdio de Beleza ERP & Gerenciador de Conteúdos CMS</p>
+    <!-- HEADER DA ÁREA RESTRITA -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-200 pb-6 gap-4">
+      <div>
+        <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Painel de Gestão</span>
+        <h1 class="text-3xl font-title font-bold text-[#2C2A29]">B Virgínia Design - Restrito 🔒</h1>
       </div>
-      <button onclick="efetuarLogout()" class="bg-[#2C2A29] hover:bg-black text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition">
-        <i class="fas fa-sign-out-alt mr-2"></i>SAIR DO PAINEL
-      </button>
-    </header>
+      <a href="index.html" class="bg-gray-800 hover:bg-black text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition flex items-center gap-2">
+        <i class="fas fa-arrow-left"></i> Voltar ao Site
+      </a>
+    </div>
 
-    <!-- NAVEGAÇÃO DE ABAS -->
-    <nav class="bg-white border-b border-gray-200 sticky top-0 z-30 overflow-x-auto flex whitespace-nowrap">
-      <button onclick="switchTab('agenda')" id="tab-agenda" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b] tab-active">
-        <i class="far fa-calendar-alt mr-2"></i>AGENDA 📅
-      </button>
-      <button onclick="switchTab('clientes')" id="tab-clientes" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b]">
-        <i class="fas fa-users mr-2"></i>CLIENTES (CRM) 👥
-      </button>
-      <button onclick="switchTab('financeiro')" id="tab-financeiro" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b]">
-        <i class="fas fa-wallet mr-2"></i>FINANCEIRO 💰
-      </button>
-      <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b]">
-        <i class="fas fa-ban mr-2"></i>BLOQUEIOS MANUAIS 🚫
-      </button>
-      <button onclick="switchTab('cms')" id="tab-cms" class="tab-btn px-6 py-4 border-b-2 border-transparent font-medium text-sm transition hover:text-[#b5945b]">
-        <i class="fas fa-cog mr-2"></i>CONFIGURAÇÕES & CMS ⚙️
-      </button>
-    </nav>
-
-    <main class="max-w-7xl mx-auto p-6">
-
-      <!-- CONTEÚDO 1: AGENDA -->
-      <div id="content-agenda" class="tab-content space-y-6">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-6">
-          <div class="w-full md:w-1/3 space-y-4">
-            <h3 class="font-bold text-lg border-b pb-2">Selecione o Dia</h3>
-            <input type="date" id="agenda-data" onchange="carregarDadosDaAgenda(this.value)" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b5945b]" value="2026-07-20">
-          </div>
-          <div class="w-full md:w-2/3 space-y-4">
-            <div class="flex justify-between items-center border-b pb-2">
-              <h3 class="font-bold text-lg">Horários da Folha</h3>
-              <span class="text-xs text-gray-400 font-semibold uppercase">Clique no horário para gerenciar</span>
-            </div>
-            <div id="agenda-grade-horarios" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              <!-- Renderizado Dinamicamente -->
-            </div>
-          </div>
-        </div>
+    <!-- SEÇÃO 1: BLOQUEAR HORÁRIO DE AGENDA (15 MINUTOS & HORÁRIO DE VOLTA) -->
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+      <div>
+        <h2 class="text-2xl font-title font-bold text-[#2C2A29]">Bloquear Horário de Agenda</h2>
+        <p class="text-sm text-gray-500 mt-1">Bloqueie slots individuais a cada 15 minutos ou defina o horário de saída e o horário de volta no mesmo dia.</p>
       </div>
 
-      <!-- CONTEÚDO 2: CLIENTES (CRM) -->
-      <div id="content-clientes" class="tab-content hidden space-y-6">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 class="font-bold text-lg mb-4">Lista de Clientes Cadastrados</h3>
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b text-xs uppercase text-gray-400">
-                  <th class="pb-3 font-bold">Cliente</th>
-                  <th class="pb-3 font-bold">Telefone</th>
-                  <th class="pb-3 font-bold">Localização</th>
-                  <th class="pb-3 font-bold text-right">Agendamentos Totais</th>
-                </tr>
-              </thead>
-              <tbody id="crm-tabela-corpo" class="divide-y divide-gray-100 text-sm">
-                <!-- Injetado via JS de acordo com agendamentos reais -->
-              </tbody>
-            </table>
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- SELEÇÃO DE DATA E INTERVALO RÁPIDO DE VOLTA -->
+        <div class="space-y-6 bg-[#FAF8F5] p-5 rounded-xl border border-gray-200/60">
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-2">1. Selecione o Dia:</label>
+            <input type="date" id="block-date" class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#b5945b] bg-white">
           </div>
-        </div>
-      </div>
 
-      <!-- CONTEÚDO 3: FINANCEIRO -->
-      <div id="content-financeiro" class="tab-content hidden space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-            <p class="text-xs text-gray-400 font-bold uppercase">Faturamento Mensal Real</p>
-            <p id="fin-faturamento" class="text-3xl font-bold text-[#b5945b]">R$ 0,00</p>
-            <p class="text-[10px] text-gray-400">Calculado a partir de todos os procedimentos ativos deste mês.</p>
-          </div>
-          <div class="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm space-y-2">
-            <p class="text-xs text-gray-400 font-bold uppercase">Procedimentos Realizados</p>
-            <p id="fin-procedimentos" class="text-3xl font-bold text-gray-800">0</p>
-            <p class="text-[10px] text-gray-400">Total de atendimentos cadastrados para este mês.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- CONTEÚDO 4: BLOQUEIOS MANUAIS -->
-      <div id="content-bloqueios" class="tab-content hidden space-y-6">
-        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-          <h3 class="font-bold text-lg mb-2">Bloquear Horário de Agenda</h3>
-          <p class="text-xs text-gray-500 mb-6">Bloqueie qualquer slot do seu horário padrão de trabalho de forma simples e rápida.</p>
-          
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="space-y-4">
-              <label class="text-xs font-bold text-gray-400 uppercase block">1. Selecione o Dia:</label>
-              <input type="date" id="bloqueio-data" onchange="carregarDadosDaAgenda(this.value)" class="w-full border p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#b5945b]" value="2026-07-20">
-            </div>
-            <div class="space-y-4 md:col-span-2">
-              <label class="text-xs font-bold text-gray-400 uppercase block">2. Selecione o horário para Bloquear / Desbloquear:</label>
-              <div id="bloqueio-grade" class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                <!-- Renderizado dinamicamente com botões funcionais -->
+          <div class="border-t border-gray-200 pt-4 space-y-4">
+            <h3 class="text-xs font-bold text-[#b5945b] uppercase tracking-wider"><i class="fas fa-user-clock mr-1"></i> Bloqueio por Período / Volta</h3>
+            
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-[11px] font-semibold text-gray-600 mb-1">Horário Saída</label>
+                <select id="range-start" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]">
+                  <!-- Povoado via JS -->
+                </select>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- CONTEÚDO 5: CMS E CONFIGURAÇÕES DO SITE -->
-      <div id="content-cms" class="tab-content hidden space-y-12">
-        
-        <!-- SUB-SEÇÃO: BANNER PRINCIPAL (HERO) E FOTO DE APRESENTAÇÃO -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-          <div class="border-b pb-4">
-            <h2 class="text-xl font-bold text-gray-800 font-title">Imagens de Destaque Principais</h2>
-            <p class="text-xs text-gray-500">Suba arquivos de imagem diretamente do seu celular ou PC para trocar a capa principal do site.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- 1. Capa do Site -->
-            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-4">
-              <h3 class="font-bold text-sm text-[#b5945b]"><i class="fas fa-image mr-2"></i>Foto de Fundo do Banner (Capa)</h3>
-              <div class="aspect-video w-full rounded-lg overflow-hidden border bg-gray-200">
-                <img id="preview-hero" class="w-full h-full object-cover">
-              </div>
-              <div class="space-y-2">
-                <input type="file" id="input-hero-bg" accept="image/*" class="w-full text-xs">
-                <button onclick="alterarFotoFixaDoSite('hero-bg', 'foto-perfil.jpg.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2 rounded-lg text-xs font-semibold transition">
-                  Enviar Nova Foto de Fundo
-                </button>
-                <p id="status-hero-bg" class="text-center text-xs font-bold mt-1 h-4"></p>
+              <div>
+                <label class="block text-[11px] font-semibold text-gray-600 mb-1">Horário Volta</label>
+                <select id="range-end" class="w-full border border-gray-300 rounded-lg p-2.5 text-xs bg-white focus:ring-1 focus:ring-[#b5945b]">
+                  <!-- Povoado via JS -->
+                </select>
               </div>
             </div>
 
-            <!-- 2. Foto Sobre -->
-            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-4">
-              <h3 class="font-bold text-sm text-[#b5945b]"><i class="fas fa-user-circle mr-2"></i>Foto de Apresentação (Ao lado de "Seu Olhar")</h3>
-              <div class="aspect-video w-full rounded-lg overflow-hidden border bg-gray-200">
-                <img id="preview-sobre" class="w-full h-full object-cover">
-              </div>
-              <div class="space-y-2">
-                <input type="file" id="input-foto-sobre" accept="image/*" class="w-full text-xs">
-                <button onclick="alterarFotoFixaDoSite('foto-sobre', 'sobre.jpg')" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-2 rounded-lg text-xs font-semibold transition">
-                  Enviar Nova Foto "Sobre"
-                </button>
-                <p id="status-foto-sobre" class="text-center text-xs font-bold mt-1 h-4"></p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- SUB-SEÇÃO: EDITOR DE TEXTOS DO SITE -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-          <div class="border-b pb-4">
-            <h2 class="text-xl font-bold text-gray-800 font-title">✏️ Gerenciador de Textos das Páginas</h2>
-            <p class="text-xs text-gray-500 font-medium">Altere os títulos, slogans e informações de atendimento do site diretamente por aqui.</p>
-          </div>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Textos do Banner Principal -->
-            <div class="p-5 bg-[#FAF8F5] rounded-xl border space-y-4 text-left">
-              <h3 class="font-bold text-sm text-[#b5945b] border-b pb-2"><i class="fas fa-heading mr-2"></i>Seção 1: Banner Principal (Capa)</h3>
-              <div class="space-y-3">
-                <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Título Principal:</label>
-                  <input type="text" id="cms-txt-hero-title" class="w-full border p-2.5 rounded text-xs focus:ring-1 focus:ring-[#b5945b] focus:outline-none">
-                </div>
-                <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Descrição/Slogan:</label>
-                  <textarea id="cms-txt-hero-desc" class="w-full border p-2.5 rounded text-xs h-20 resize-none focus:ring-1 focus:ring-[#b5945b] focus:outline-none"></textarea>
-                </div>
-                <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">WhatsApp para Agendamentos (com DDD, apenas números):</label>
-                  <input type="text" id="cms-txt-whatsapp" placeholder="Ex: 5581999999999" class="w-full border p-2.5 rounded text-xs focus:ring-1 focus:ring-[#b5945b] focus:outline-none">
-                </div>
-              </div>
-            </div>
-
-            <!-- Textos do Sobre / Quem Somos -->
-            <div class="p-5 bg-[#FAF8F5] rounded-xl border space-y-4 text-left">
-              <h3 class="font-bold text-sm text-[#b5945b] border-b pb-2"><i class="fas fa-address-card mr-2"></i>Seção 2: Quem Somos (Ao lado de "Seu Olhar")</h3>
-              <div class="space-y-3">
-                <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Título "Sobre":</label>
-                  <input type="text" id="cms-txt-sobre-titulo" class="w-full border p-2.5 rounded text-xs focus:ring-1 focus:ring-[#b5945b] focus:outline-none">
-                </div>
-                <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Primeiro Parágrafo:</label>
-                  <textarea id="cms-txt-sobre-1" class="w-full border p-2.5 rounded text-xs h-20 resize-none focus:ring-1 focus:ring-[#b5945b] focus:outline-none"></textarea>
-                </div>
-                <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Segundo Parágrafo:</label>
-                  <textarea id="cms-txt-sobre-2" class="w-full border p-2.5 rounded text-xs h-20 resize-none focus:ring-1 focus:ring-[#b5945b] focus:outline-none"></textarea>
-                </div>
-                <div>
-                  <label class="text-[10px] font-bold text-gray-400 uppercase">Nome da Assinatura:</label>
-                  <input type="text" id="cms-txt-sobre-assinatura" class="w-full border p-2.5 rounded text-xs focus:ring-1 focus:ring-[#b5945b] focus:outline-none">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex justify-end pt-2">
-            <button onclick="salvarTextosCMS()" class="bg-[#2C2A29] hover:bg-black text-white px-8 py-3.5 rounded-lg text-xs font-bold transition shadow-md">
-              <i class="fas fa-save mr-2"></i>SALVAR TEXTOS DO SITE
+            <button onclick="bloquearIntervalo()" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white text-xs font-bold py-3 rounded-lg transition uppercase tracking-wider shadow-sm flex items-center justify-center gap-2">
+              <i class="fas fa-lock"></i> Bloquear Período
+            </button>
+            <button onclick="desbloquearDiaInteiro()" class="w-full border border-gray-300 hover:bg-gray-100 text-gray-700 text-xs font-semibold py-2 rounded-lg transition">
+              Desbloquear Todos os Horários do Dia
             </button>
           </div>
         </div>
 
-        <!-- SUB-SEÇÃO: GERENCIAR PROCEDIMENTOS / SERVIÇOS -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-          <div class="border-b pb-4">
-            <h2 class="text-xl font-bold text-gray-800 font-title">Gerenciar Serviços com Preço</h2>
-            <p class="text-xs text-gray-500">Modifique o preço, foto, duração, título e descrição de qualquer um dos 8 serviços.</p>
+        <!-- GRADE DE HORÁRIOS A CADA 15 MINUTOS -->
+        <div class="lg:col-span-2 space-y-3">
+          <label class="block text-xs font-bold text-gray-500 uppercase">2. Selecione o Horário (15 em 15 min) para Bloquear / Desbloquear:</label>
+          <div id="slots-grid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2.5 max-h-[400px] overflow-y-auto p-1 border border-gray-100 rounded-xl">
+            <!-- Injetado dinamicamente via JS -->
           </div>
-
-          <div id="cms-lista-servicos" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Os formulários de serviços serão injetados dinamicamente aqui -->
-          </div>
-
-          <div class="flex justify-end pt-4">
-            <button onclick="salvarTodosServicos()" class="bg-[#2C2A29] hover:bg-black text-white px-8 py-3.5 rounded-lg text-sm font-bold transition shadow-md">
-              <i class="fas fa-save mr-2"></i>SALVAR TODAS AS ALTERAÇÕES DE SERVIÇOS
-            </button>
-          </div>
-        </div>
-
-        <!-- SUB-SEÇÃO: PORTFÓLIO (RESULTADOS QUE ENCANTAM) -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-          <div class="border-b pb-4">
-            <h2 class="text-xl font-bold text-gray-800 font-title">Resultados do Portfólio (6 Fotos)</h2>
-            <p class="text-xs text-gray-500">Substitua as fotos estáticas do portfólio por trabalhos reais do seu estúdio.</p>
-          </div>
-
-          <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-            <!-- Gerando dinamicamente os 6 blocos de imagem do portfólio -->
-            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
-              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #1</span>
-              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
-                <img id="preview-portfolio-0" class="w-full h-full object-cover">
-              </div>
-              <input type="file" id="input-portfolio-0" accept="image/*" class="w-full text-xs">
-              <button onclick="uploadFotoPortfolio(0)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #1</button>
-              <p id="status-portfolio-0" class="text-center text-[10px] font-bold h-4"></p>
-            </div>
-
-            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
-              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #2</span>
-              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
-                <img id="preview-portfolio-1" class="w-full h-full object-cover">
-              </div>
-              <input type="file" id="input-portfolio-1" accept="image/*" class="w-full text-xs">
-              <button onclick="uploadFotoPortfolio(1)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #2</button>
-              <p id="status-portfolio-1" class="text-center text-[10px] font-bold h-4"></p>
-            </div>
-
-            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
-              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #3</span>
-              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
-                <img id="preview-portfolio-2" class="w-full h-full object-cover">
-              </div>
-              <input type="file" id="input-portfolio-2" accept="image/*" class="w-full text-xs">
-              <button onclick="uploadFotoPortfolio(2)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #3</button>
-              <p id="status-portfolio-2" class="text-center text-[10px] font-bold h-4"></p>
-            </div>
-
-            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
-              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #4</span>
-              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
-                <img id="preview-portfolio-3" class="w-full h-full object-cover">
-              </div>
-              <input type="file" id="input-portfolio-3" accept="image/*" class="w-full text-xs">
-              <button onclick="uploadFotoPortfolio(3)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #4</button>
-              <p id="status-portfolio-3" class="text-center text-[10px] font-bold h-4"></p>
-            </div>
-
-            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
-              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #5</span>
-              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
-                <img id="preview-portfolio-4" class="w-full h-full object-cover">
-              </div>
-              <input type="file" id="input-portfolio-4" accept="image/*" class="w-full text-xs">
-              <button onclick="uploadFotoPortfolio(4)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #5</button>
-              <p id="status-portfolio-4" class="text-center text-[10px] font-bold h-4"></p>
-            </div>
-
-            <div class="p-4 bg-[#FAF8F5] rounded-xl border space-y-3">
-              <span class="text-xs font-bold text-gray-400 uppercase">FOTO DE TRABALHO #6</span>
-              <div class="aspect-square w-full rounded-lg overflow-hidden border bg-gray-200">
-                <img id="preview-portfolio-5" class="w-full h-full object-cover">
-              </div>
-              <input type="file" id="input-portfolio-5" accept="image/*" class="w-full text-xs">
-              <button onclick="uploadFotoPortfolio(5)" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-1.5 rounded-lg text-xs font-semibold transition">Substituir Foto #6</button>
-              <p id="status-portfolio-5" class="text-center text-[10px] font-bold h-4"></p>
-            </div>
-          </div>
-        </div>
-
-        <!-- SUB-SEÇÃO: DEPOIMENTOS DE CLIENTES -->
-        <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
-          <div class="border-b pb-4">
-            <h2 class="text-xl font-bold text-gray-800 font-title">Avaliações e Comentários (3 Clientes)</h2>
-            <p class="text-xs text-gray-500">Customize o texto de elogio, quantidade de estrelas e nome de suas clientes queridas.</p>
-          </div>
-
-          <div id="cms-lista-depoimentos" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- Os formulários de depoimentos serão injetados aqui -->
-          </div>
-
-          <div class="flex justify-end pt-4">
-            <button onclick="salvarDepoimentos()" class="bg-[#2C2A29] hover:bg-black text-white px-8 py-3.5 rounded-lg text-sm font-bold transition shadow-md">
-              <i class="fas fa-check mr-2"></i>SALVAR COMENTÁRIOS DE CLIENTES
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </main>
-  </div>
-
-  <!-- MODAL DE DETALHES OU NOVO AGENDAMENTO -->
-  <div id="modal-agendamento" class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden p-4">
-    <div class="bg-white rounded-2xl shadow-xl border border-gray-100 max-w-md w-full p-6 space-y-6">
-      <div class="flex justify-between items-center border-b pb-3">
-        <h3 id="modal-titulo" class="text-lg font-bold">Novo Agendamento</h3>
-        <button onclick="fecharModalAgendamento()" class="text-gray-400 hover:text-black"><i class="fas fa-times text-lg"></i></button>
-      </div>
-
-      <!-- Form para Novo Agendamento -->
-      <div id="form-novo-agendamento" class="space-y-4">
-        <div>
-          <label class="text-xs font-bold text-gray-400 block mb-1">Nome Completo da Cliente:</label>
-          <input type="text" id="appt-cliente-nome" placeholder="Ex: Amanda Silva" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-400 block mb-1">Telefone / WhatsApp:</label>
-          <input type="text" id="appt-cliente-tel" placeholder="Ex: (81) 99999-9999" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-400 block mb-1">Serviço Desejado:</label>
-          <select id="appt-servico" onchange="atualizarPrecoAuto(this.value)" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
-            <!-- Injetado dinamicamente -->
-          </select>
-        </div>
-        <div>
-          <label class="text-xs font-bold text-gray-400 block mb-1">Valor Cobrado (R$):</label>
-          <input type="number" step="0.01" id="appt-valor" class="w-full border p-2.5 rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
-        </div>
-        <button onclick="salvarAgendamentoER()" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white py-3 rounded-lg font-bold text-sm shadow-md transition active:scale-95">
-          Confirmar Agendamento ✨
-        </button>
-      </div>
-
-      <!-- Exibição de Detalhes de Agendamento Existente -->
-      <div id="detalhes-agendamento-existente" class="hidden space-y-4 text-left">
-        <div class="bg-[#FAF8F5] p-4 rounded-xl border space-y-2.5">
-          <p class="text-sm"><strong>Cliente:</strong> <span id="det-cliente-nome"></span></p>
-          <p class="text-sm"><strong>Telefone:</strong> <span id="det-cliente-tel"></span></p>
-          <p class="text-sm"><strong>Procedimento:</strong> <span id="det-servico"></span></p>
-          <p class="text-sm"><strong>Valor pago:</strong> <span id="det-valor"></span></p>
-          <p class="text-sm"><strong>Data e Hora:</strong> <span id="det-data-hora"></span></p>
-        </div>
-        <div class="flex gap-3">
-          <button onclick="deletarAgendamentoER()" class="w-full bg-red-500 hover:bg-red-600 text-white py-2.5 rounded-lg text-xs font-bold transition flex items-center justify-center gap-2">
-            <i class="fas fa-trash-alt"></i> Cancelar Agendamento
-          </button>
         </div>
       </div>
     </div>
+
+    <!-- SEÇÃO 2: AVALIAÇÕES E COMENTÁRIOS (5 CLIENTES) -->
+    <div class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-gray-100 space-y-6">
+      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div>
+          <h2 class="text-2xl font-title font-bold text-[#2C2A29]">Avaliações e Comentários (5 Clientes)</h2>
+          <p class="text-sm text-gray-500 mt-1">Customize o texto de elogio, quantidade de estrelas e nome de suas clientes queridas.</p>
+        </div>
+        <button onclick="salvarDepoimentos()" class="bg-[#2C2A29] hover:bg-[#b5945b] text-white font-bold px-6 py-3.5 rounded-xl text-xs uppercase tracking-wider transition shadow-md flex items-center gap-2">
+          <i class="fas fa-check"></i> Salvar Comentários de Clientes
+        </button>
+      </div>
+
+      <div id="depoimentos-admin-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <!-- 5 Cards gerados dinamicamente no JS -->
+      </div>
+    </div>
+
   </div>
 
   <script>
-    // SISTEMA DE CONEXÃO E GERENCIAMENTO TOTAL (ISOLADO PARA FOTOS E SEGURO)
-    let supabaseInstance = null;
-
-    (function() {
-      const SUPABASE_URL = "https://zehvxzqqideeyqdvnnwp.supabase.co";
-      const SUPABASE_KEY = "sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as";
-      supabaseInstance = window.supabase ? window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
-
-      if (!supabaseInstance) {
-        console.error("Erro ao carregar Supabase. Iniciando fallback em modo offline.");
+    // Gerador de Horários de 15 em 15 minutos (08:00 até 19:00)
+    function gerarHorarios15min() {
+      const lista = [];
+      for (let h = 8; h <= 19; h++) {
+        for (let m = 0; m < 60; m += 15) {
+          if (h === 19 && m > 0) break;
+          const horaStr = String(h).padStart(2, '0');
+          const minStr = String(m).padStart(2, '0');
+          lista.push(`${horaStr}:${minStr}`);
+        }
       }
-
-      // FUNÇÃO PARA SUBIR AS IMAGENS FIXAS (HERO/SOBRE)
-      window.alterarFotoFixaDoSite = async function(idInput, nomeArquivoDestino) {
-        const fileInput = document.getElementById(`input-${idInput}`);
-        const statusTxt = document.getElementById(`status-${idInput}`);
-        
-        if (!fileInput.files || fileInput.files.length === 0) {
-          statusTxt.innerText = "⚠️ Selecione uma foto primeiro.";
-          statusTxt.style.color = "#dc2626";
-          return;
-        }
-
-        const arquivo = fileInput.files[0];
-        statusTxt.innerText = "⏳ Enviando...";
-        statusTxt.style.color = "#d97706";
-
-        try {
-          const { data, error } = await supabaseInstance.storage
-            .from('fotos-sistema')
-            .upload(nomeArquivoDestino, arquivo, { upsert: true });
-
-          if (error) throw error;
-
-          const { data: urlData } = supabaseInstance.storage
-            .from('fotos-sistema')
-            .getPublicUrl(nomeArquivoDestino);
-
-          const linkPublico = `${urlData.publicUrl}?v=${Date.now()}`;
-          
-          localStorage.setItem(`cms_${idInput.replace('-', '_')}`, linkPublico);
-          document.getElementById(`preview-${idInput}`).src = linkPublico;
-
-          statusTxt.innerText = "✅ Atualizado!";
-          statusTxt.style.color = "#16a34a";
-          fileInput.value = "";
-        } catch (err) {
-          console.error(err);
-          statusTxt.innerText = "❌ Erro ao enviar.";
-          statusTxt.style.color = "#dc2626";
-        }
-      };
-
-      // UPLOAD FOTO DE PORTFÓLIO INDIVIDUAL
-      window.uploadFotoPortfolio = async function(index) {
-        const fileInput = document.getElementById(`input-portfolio-${index}`);
-        const statusTxt = document.getElementById(`status-portfolio-${index}`);
-
-        if (!fileInput.files || fileInput.files.length === 0) {
-          statusTxt.innerText = "⚠️ Selecione um arquivo.";
-          statusTxt.style.color = "#dc2626";
-          return;
-        }
-
-        const arquivo = fileInput.files[0];
-        const nomeArquivo = `portfolio_${index}.jpg`;
-        statusTxt.innerText = "⏳ Enviando...";
-        statusTxt.style.color = "#d97706";
-
-        try {
-          const { data, error } = await supabaseInstance.storage
-            .from('fotos-sistema')
-            .upload(nomeArquivo, arquivo, { upsert: true });
-
-          if (error) throw error;
-
-          const { data: urlData } = supabaseInstance.storage
-            .from('fotos-sistema')
-            .getPublicUrl(nomeArquivo);
-
-          const linkPublico = `${urlData.publicUrl}?v=${Date.now()}`;
-          
-          cmsPortfolio[index] = linkPublico;
-          localStorage.setItem('cms_portfolio', JSON.stringify(cmsPortfolio));
-          document.getElementById(`preview-portfolio-${index}`).src = linkPublico;
-
-          statusTxt.innerText = "✅ Salvo!";
-          statusTxt.style.color = "#16a34a";
-          fileInput.value = "";
-        } catch (err) {
-          console.error(err);
-          statusTxt.innerText = "❌ Erro.";
-          statusTxt.style.color = "#dc2626";
-        }
-      };
-
-      // UPLOAD FOTO DE CARTÃO DE SERVIÇO INDIVIDUAL
-      window.uploadFotoServico = async function(index) {
-        const fileInput = document.getElementById(`input-serv-img-${index}`);
-        const statusTxt = document.getElementById(`status-serv-img-${index}`);
-
-        if (!fileInput.files || fileInput.files.length === 0) {
-          statusTxt.innerText = "⚠️ Selecione.";
-          statusTxt.style.color = "#dc2626";
-          return;
-        }
-
-        const arquivo = fileInput.files[0];
-        const nomeArquivo = `servico_${index}.jpg`;
-        statusTxt.innerText = "⏳ Enviando...";
-        statusTxt.style.color = "#d97706";
-
-        try {
-          const { data, error } = await supabaseInstance.storage
-            .from('fotos-sistema')
-            .upload(nomeArquivo, arquivo, { upsert: true });
-
-          if (error) throw error;
-
-          const { data: urlData } = supabaseInstance.storage
-            .from('fotos-sistema')
-            .getPublicUrl(nomeArquivo);
-
-          const linkPublico = `${urlData.publicUrl}?v=${Date.now()}`;
-          
-          cmsServicos[index].img = linkPublico;
-          localStorage.setItem('cms_servicos', JSON.stringify(cmsServicos));
-          document.getElementById(`preview-servico-${index}`).src = linkPublico;
-
-          statusTxt.innerText = "✅ Enviada!";
-          statusTxt.style.color = "#16a34a";
-          fileInput.value = "";
-        } catch (err) {
-          console.error(err);
-          statusTxt.innerText = "❌ Erro.";
-          statusTxt.style.color = "#dc2626";
-        }
-      };
-    })();
-  </script>
-
-  <script>
-    // CONFIGURAÇÕES GERAIS DA EMPRESA E CMS PADRÃO
-    const servicosPadrao = [
-      { id: 'design-simples', titulo: 'Design simples', preco: '30.00', duracao: '25 MIN', desc: 'Alinhamento rápido e limpeza dos fios sobressalentes da sobrancelha.', img: 'assets/images/design-simples.jpg' },
-      { id: 'design-henna', titulo: 'Design com henna', preco: '50.00', duracao: '40 MIN', desc: 'Design personalizado com aplicação de henna para preenchimento de falhas.', img: 'assets/images/henna.jpg' },
-      { id: 'fox-eyes', titulo: 'Fox Eyes', preco: '180.00', duracao: '180 MIN', desc: 'Extensão de cílios projetada para criar um olhar alongado e marcante.', img: 'assets/images/fox-eyes.jpg' },
-      { id: 'sirena', titulo: 'Sirena', preco: '90.00', duracao: '60 MIN', desc: 'Efeito sereia que alonga os cantos de forma elegante e sutil.', img: 'assets/images/sirena.jpg' },
-      { id: 'volume-brasileiro', titulo: 'Volume Brasileiro', preco: '120.00', duracao: '120 MIN', desc: 'Aplicação clássica com fios em formato Y, oferecendo volume e leveza.', img: 'assets/images/volume-brasileiro.jpg' },
-      { id: 'volume-5d', titulo: 'Volume 5D', preco: '140.00', duracao: '120 MIN', desc: 'Cílios com leques de 5 fios para um olhar preenchido e sofisticado.', img: 'assets/images/volume-5d.jpg' },
-      { id: 'volume-6d', titulo: 'Volume 6D', preco: '160.00', duracao: '120 MIN', desc: 'Leques de 6 fios para um volume extra e olhar profundo.', img: 'assets/images/volume-6d.jpg' },
-      { id: 'volume-4d-luxo', titulo: 'Volume 4D Luxo', preco: '130.00', duracao: '120 MIN', desc: 'Volume elegante e intermediário para cílios curvados e macios.', img: 'assets/images/volume-4d.jpg' }
-    ];
-
-    const portfolioPadrao = [
-      'assets/images/portfolio1.jpg',
-      'assets/images/portfolio2.jpg',
-      'assets/images/portfolio3.jpg',
-      'assets/images/portfolio4.jpg',
-      'assets/images/portfolio5.jpg',
-      'assets/images/portfolio6.jpg'
-    ];
-
-    const depoimentosPadrao = [
-      { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável. Minhas sobrancelhas nunca ficaram tão harmônicas e naturais. Recomendo de olhos fechados!"' },
-      { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"A extensão de cílios é super confortável, não sinto nenhum peso e dura muito tempo. O efeito Sirena ficou maravilhoso e combinou muito comigo."' },
-      { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista, cuidadosa e atenciosa. O espaço é muito aconchegante, limpo e luxuoso. Nota mil para a Virgínia!"' }
-    ];
-
-    // Horários Padrões de Trabalho do Estúdio
-    const HORARIOS_TRABALHO = ["08:00", "09:00", "10:00", "11:00", "12:00", "13:30", "14:30", "15:30", "16:30", "17:30", "18:30"];
-
-    let cmsServicos = JSON.parse(localStorage.getItem('cms_servicos')) || servicosPadrao;
-    let cmsPortfolio = JSON.parse(localStorage.getItem('cms_portfolio')) || portfolioPadrao;
-    let cmsDepoimentos = JSON.parse(localStorage.getItem('cms_depoimentos')) || depoimentosPadrao;
-
-    // BANCO DE DADOS LOCAL DE BACKUP (CASO SUPABASE OFFLINE)
-    let localAgendamentos = JSON.parse(localStorage.getItem('local_agendamentos')) || [];
-    let localBloqueios = JSON.parse(localStorage.getItem('local_bloqueios')) || [];
-
-    // Estado da Agenda Carregada
-    let appointmentsDoDia = [];
-    let bloqueiosDoDia = [];
-    let tempHorarioSelecionado = "";
-    let tempAgendamentoIdSelecionado = "";
-
-    // SISTEMA DE VALIDAÇÃO DE SENHA (LOGIN SEGURO)
-    function verificarSenha() {
-      const senhaDigitada = document.getElementById('login-senha').value.trim().toLowerCase();
-      const erroTxt = document.getElementById('login-erro');
-      const senhasPermitidas = ["virginia", "admin", "bvirginia", "virginia123", "virginia2026"];
-
-      if (senhasPermitidas.includes(senhaDigitada)) {
-        sessionStorage.setItem('admin_logado', 'true');
-        erroTxt.classList.add('hidden');
-        liberarAcessoAoPainel();
-      } else {
-        erroTxt.classList.remove('hidden');
-        document.getElementById('login-senha').value = "";
-      }
+      return lista;
     }
 
-    function liberarAcessoAoPainel() {
-      document.getElementById('login-overlay').classList.add('hidden');
-      document.getElementById('painel-conteudo').classList.remove('hidden');
+    const TODOS_HORARIOS = gerarHorarios15min();
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const inputData = document.getElementById('block-date');
+      const hojestr = new Date().toISOString().split('T')[0];
+      inputData.value = hojestr;
+
+      povoarSelectsIntervalo();
+      renderizarGradeHorarios();
+      carregarDepoimentosAdmin();
+
+      inputData.addEventListener('change', renderizarGradeHorarios);
+    });
+
+    function povoarSelectsIntervalo() {
+      const selectStart = document.getElementById('range-start');
+      const selectEnd = document.getElementById('range-end');
       
-      const hoje = new Date().toISOString().split('T')[0];
-      document.getElementById('agenda-data').value = hoje;
-      document.getElementById('bloqueio-data').value = hoje;
-      
-      carregarDadosDaAgenda(hoje);
-      renderizarPainelCMS();
-      carregarCRM();
-      carregarFinanceiro();
-    }
+      selectStart.innerHTML = '';
+      selectEnd.innerHTML = '';
 
-    function efetuarLogout() {
-      sessionStorage.removeItem('admin_logado');
-      window.location.reload();
-    }
-
-    window.onload = function() {
-      document.getElementById('login-senha').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') verificarSenha();
+      TODOS_HORARIOS.forEach(h => {
+        selectStart.innerHTML += `<option value="${h}">${h}</option>`;
+        selectEnd.innerHTML += `<option value="${h}">${h}</option>`;
       });
 
-      if (sessionStorage.getItem('admin_logado') === 'true') {
-        liberarAcessoAoPainel();
-      }
-    };
-
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('tab-active'));
-      document.querySelectorAll('.tab-content').forEach(content => content.classList.add('hidden'));
-      
-      document.getElementById(`tab-${tabId}`).classList.add('tab-active');
-      document.getElementById(`content-${tabId}`).classList.remove('hidden');
-
-      if (tabId === 'agenda' || tabId === 'bloqueios') {
-        const dataAtiva = document.getElementById('agenda-data').value;
-        carregarDadosDaAgenda(dataAtiva);
-      } else if (tabId === 'clientes') {
-        carregarCRM();
-      } else if (tabId === 'financeiro') {
-        carregarFinanceiro();
-      }
+      selectStart.value = "12:00";
+      selectEnd.value = "13:30";
     }
 
-    // CARREGAR DADOS DO SUPABASE COM FALLBACK LOCAL SEGURO
-    async function carregarDadosDaAgenda(dataAtiva) {
-      // Sincronizar datas de ambas as telas para comodidade
-      document.getElementById('agenda-data').value = dataAtiva;
-      document.getElementById('bloqueio-data').value = dataAtiva;
-
-      appointmentsDoDia = [];
-      bloqueiosDoDia = [];
-
-      if (supabaseInstance) {
-        try {
-          const { data: appts, error: err1 } = await supabaseInstance
-            .from('agendamentos')
-            .select('*')
-            .eq('data', dataAtiva);
-
-          const { data: blocks, error: err2 } = await supabaseInstance
-            .from('bloqueios')
-            .select('*')
-            .eq('data', dataAtiva);
-
-          if (!err1) appointmentsDoDia = appts || [];
-          if (!err2) bloqueiosDoDia = blocks || [];
-        } catch (e) {
-          console.error("Erro na leitura Supabase, migrando para Offline LocalStorage.", e);
-          appointmentsDoDia = localAgendamentos.filter(a => a.data === dataAtiva);
-          bloqueiosDoDia = localBloqueios.filter(b => b.data === dataAtiva);
-        }
-      } else {
-        appointmentsDoDia = localAgendamentos.filter(a => a.data === dataAtiva);
-        bloqueiosDoDia = localBloqueios.filter(b => b.data === dataAtiva);
-      }
-
-      renderizarGradeHorarios(dataAtiva);
+    function getBloqueiosData(data) {
+      const todos = JSON.parse(localStorage.getItem('cms_bloqueios')) || {};
+      return todos[data] || [];
     }
 
-    // RENDERIZAR HORÁRIOS DA AGENDA E ABA DE BLOQUEIOS
-    function renderizarGradeHorarios(dataAtiva) {
-      const gridAgenda = document.getElementById('agenda-grade-horarios');
-      const gridBloqueios = document.getElementById('bloqueio-grade');
+    function setBloqueiosData(data, listaBloqueados) {
+      const todos = JSON.parse(localStorage.getItem('cms_bloqueios')) || {};
+      todos[data] = listaBloqueados;
+      localStorage.setItem('cms_bloqueios', JSON.stringify(todos));
+    }
 
-      let htmlAgenda = "";
-      let htmlBloqueios = "";
+    function renderizarGradeHorarios() {
+      const data = document.getElementById('block-date').value;
+      const bloqueados = getBloqueiosData(data);
+      const grid = document.getElementById('slots-grid');
 
-      HORARIOS_TRABALHO.forEach(horario => {
-        const agendamento = appointmentsDoDia.find(a => a.horario === horario);
-        const estaBloqueado = bloqueiosDoDia.some(b => b.horario === horario);
-
+      grid.innerHTML = TODOS_HORARIOS.map(horario => {
+        const estaBloqueado = bloqueados.includes(horario);
         if (estaBloqueado) {
-          // Bloqueado
-          htmlAgenda += `
-            <button onclick="gerenciarBloqueioClicado('${horario}', true)" class="bg-red-100 hover:bg-red-200 text-red-700 border border-red-300 p-4 rounded-xl text-left transition font-semibold">
-              <div class="flex justify-between items-center">
-                <span class="text-sm font-bold">${horario}</span>
-                <span class="text-[10px] uppercase tracking-wider bg-red-200 px-2 py-0.5 rounded-full">🚫 BLOQUEADO</span>
-              </div>
-              <p class="text-[11px] mt-1 text-red-600">Fechado para descanso/curso</p>
-            </button>
-          `;
-          htmlBloqueios += `
-            <button onclick="removerBloqueioER('${horario}')" class="bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg text-xs font-bold text-center transition">
-              ${horario} - Desbloquear 🚫
-            </button>
-          `;
-        } else if (agendamento) {
-          // Reservado
-          htmlAgenda += `
-            <button onclick="abrirDetalhesAgendamento('${agendamento.id}')" class="bg-gray-800 text-white hover:bg-black p-4 rounded-xl text-left transition border border-gray-800 shadow-sm">
-              <div class="flex justify-between items-center">
-                <span class="text-sm font-bold text-[#b5945b]">${horario}</span>
-                <span class="text-[10px] uppercase tracking-wider bg-[#b5945b] text-white px-2 py-0.5 rounded-full">📅 RESERVADO</span>
-              </div>
-              <p class="text-xs font-semibold mt-1 truncate">${agendamento.cliente_nome}</p>
-              <p class="text-[10px] text-gray-300 truncate">${agendamento.servico}</p>
-            </button>
-          `;
-          htmlBloqueios += `
-            <button disabled class="bg-gray-200 text-gray-400 p-3 rounded-lg text-xs font-bold text-center cursor-not-allowed">
-              ${horario} - Agendado 📅
+          return `
+            <button onclick="toggleBloqueio('${horario}')" class="bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 p-2 rounded-lg text-xs font-semibold flex items-center justify-between transition">
+              <span>${horario}</span>
+              <span class="text-[9px] bg-red-200 px-1 py-0.5 rounded font-bold">Bloqueado <i class="fas fa-lock"></i></span>
             </button>
           `;
         } else {
-          // Livre
-          htmlAgenda += `
-            <button onclick="abrirNovoAgendamento('${horario}')" class="bg-[#F4EFEA] hover:bg-[#b5945b] hover:text-white p-4 rounded-xl text-left transition border border-[#FAF8F5] shadow-xs">
-              <div class="flex justify-between items-center">
-                <span class="text-sm font-bold">${horario}</span>
-                <span class="text-[10px] uppercase tracking-wider bg-green-100 text-green-700 px-2 py-0.5 rounded-full">✨ LIVRE</span>
-              </div>
-              <p class="text-xs mt-1 text-gray-400">Nenhum agendamento</p>
-            </button>
-          `;
-          htmlBloqueios += `
-            <button onclick="adicionarBloqueioER('${horario}')" class="bg-[#F4EFEA] hover:bg-[#b5945b] hover:text-white p-3 rounded-lg text-xs font-semibold text-center transition">
-              ${horario} - Bloquear 🔓
+          return `
+            <button onclick="toggleBloqueio('${horario}')" class="bg-[#FAF8F5] hover:bg-[#e8e2d5] text-[#2C2A29] border border-gray-200 p-2 rounded-lg text-xs font-medium flex items-center justify-between transition">
+              <span>${horario}</span>
+              <span class="text-[9px] text-gray-400">Bloquear <i class="fas fa-lock"></i></span>
             </button>
           `;
         }
-      });
-
-      gridAgenda.innerHTML = htmlAgenda;
-      gridBloqueios.innerHTML = htmlBloqueios;
+      }).join('');
     }
 
-    // MODAL DE AGENDAMENTO (NOVO OU DETALHES)
-    function abrirNovoAgendamento(horario) {
-      tempHorarioSelecionado = horario;
-      document.getElementById('modal-titulo').innerText = `Agendar às ${horario}`;
-      document.getElementById('form-novo-agendamento').classList.remove('hidden');
-      document.getElementById('detalhes-agendamento-existente').classList.add('hidden');
-      
-      // Carregar os Serviços Atuais nos campos
-      const selectServ = document.getElementById('appt-servico');
-      selectServ.innerHTML = cmsServicos.map(s => `<option value="${s.titulo}" data-preco="${s.preco}">${s.titulo} (R$ ${parseFloat(s.preco).toFixed(2)})</option>`).join('');
-      
-      if (cmsServicos.length > 0) {
-        document.getElementById('appt-valor').value = cmsServicos[0].preco;
+    function toggleBloqueio(horario) {
+      const data = document.getElementById('block-date').value;
+      let bloqueados = getBloqueiosData(data);
+
+      if (bloqueados.includes(horario)) {
+        bloqueados = bloqueados.filter(h => h !== horario);
+      } else {
+        bloqueados.push(horario);
       }
 
-      // Limpar Inputs
-      document.getElementById('appt-cliente-nome').value = "";
-      document.getElementById('appt-cliente-tel').value = "";
-
-      document.getElementById('modal-agendamento').classList.remove('hidden');
+      setBloqueiosData(data, bloqueados);
+      renderizarGradeHorarios();
     }
 
-    function atualizarPrecoAuto(tituloServico) {
-      const select = document.getElementById('appt-servico');
-      const selectedOption = select.options[select.selectedIndex];
-      const preco = selectedOption.getAttribute('data-preco');
-      document.getElementById('appt-valor').value = preco;
-    }
+    function bloquearIntervalo() {
+      const data = document.getElementById('block-date').value;
+      const inicio = document.getElementById('range-start').value;
+      const fim = document.getElementById('range-end').value;
 
-    function fecharModalAgendamento() {
-      document.getElementById('modal-agendamento').classList.add('hidden');
-    }
-
-    // SALVAR AGENDAMENTO NO BANCO OU LOCALSTORAGE
-    async function salvarAgendamentoER() {
-      const nome = document.getElementById('appt-cliente-nome').value.trim();
-      const tel = document.getElementById('appt-cliente-tel').value.trim();
-      const servico = document.getElementById('appt-servico').value;
-      const valor = document.getElementById('appt-valor').value;
-      const dataAtiva = document.getElementById('agenda-data').value;
-
-      if (!nome || !tel) {
-        alert("⚠️ Preencha o nome e o telefone da cliente.");
+      if (inicio >= fim) {
+        alert("O horário de saída deve ser menor que o horário de volta!");
         return;
       }
 
-      const novoAgendamento = {
-        id: "appt_" + Date.now(),
-        cliente_nome: nome,
-        cliente_telefone: tel,
-        servico: servico,
-        valor: parseFloat(valor || 0),
-        data: dataAtiva,
-        horario: tempHorarioSelecionado,
-        cidade: "Cabo de Santo Agostinho"
-      };
-
-      if (supabaseInstance) {
-        try {
-          const { error } = await supabaseInstance
-            .from('agendamentos')
-            .insert([novoAgendamento]);
-
-          if (error) throw error;
-        } catch (e) {
-          console.warn("Erro ao inserir agendamento no Supabase, salvando offline.", e);
-          localAgendamentos.push(novoAgendamento);
-          localStorage.setItem('local_agendamentos', JSON.stringify(localAgendamentos));
-        }
-      } else {
-        localAgendamentos.push(novoAgendamento);
-        localStorage.setItem('local_agendamentos', JSON.stringify(localAgendamentos));
-      }
-
-      fecharModalAgendamento();
-      carregarDadosDaAgenda(dataAtiva);
-    }
-
-    // ABRIR DETALHES DE AGENDAMENTO EXISTENTE
-    function abrirDetalhesAgendamento(id) {
-      tempAgendamentoIdSelecionado = id;
-      const agendamento = appointmentsDoDia.find(a => a.id === id) || localAgendamentos.find(a => a.id === id);
-
-      if (!agendamento) return;
-
-      document.getElementById('modal-titulo').innerText = "Detalhes do Agendamento";
-      document.getElementById('form-novo-agendamento').classList.add('hidden');
-      document.getElementById('detalhes-agendamento-existente').classList.remove('hidden');
-
-      document.getElementById('det-cliente-nome').innerText = agendamento.cliente_nome;
-      document.getElementById('det-cliente-tel').innerText = agendamento.cliente_telefone;
-      document.getElementById('det-servico').innerText = agendamento.servico;
-      document.getElementById('det-valor').innerText = `R$ ${parseFloat(agendamento.valor).toFixed(2)}`;
-      document.getElementById('det-data-hora').innerText = `${agendamento.data.split('-').reverse().join('/')} às ${agendamento.horario}`;
-
-      document.getElementById('modal-agendamento').classList.remove('hidden');
-    }
-
-    // CANCELAR AGENDAMENTO
-    async function deletarAgendamentoER() {
-      if (!confirm("Tem certeza que deseja cancelar este agendamento?")) return;
-
-      const dataAtiva = document.getElementById('agenda-data').value;
-
-      if (supabaseInstance) {
-        try {
-          const { error } = await supabaseInstance
-            .from('agendamentos')
-            .delete()
-            .eq('id', tempAgendamentoIdSelecionado);
-
-          if (error) throw error;
-        } catch (e) {
-          console.warn("Agendamento offline sendo cancelado.", e);
-          localAgendamentos = localAgendamentos.filter(a => a.id !== tempAgendamentoIdSelecionado);
-          localStorage.setItem('local_agendamentos', JSON.stringify(localAgendamentos));
-        }
-      } else {
-        localAgendamentos = localAgendamentos.filter(a => a.id !== tempAgendamentoIdSelecionado);
-        localStorage.setItem('local_agendamentos', JSON.stringify(localAgendamentos));
-      }
-
-      fecharModalAgendamento();
-      carregarDadosDaAgenda(dataAtiva);
-    }
-
-    // BLOQUEIOS MANUAIS (ADICIONAR/REMOVER)
-    async function adicionarBloqueioER(horario) {
-      const dataAtiva = document.getElementById('agenda-data').value;
-
-      const novoBloqueio = {
-        id: "block_" + Date.now(),
-        data: dataAtiva,
-        horario: horario
-      };
-
-      if (supabaseInstance) {
-        try {
-          const { error } = await supabaseInstance
-            .from('bloqueios')
-            .insert([novoBloqueio]);
-
-          if (error) throw error;
-        } catch (e) {
-          console.warn("Erro ao salvar bloqueio offline.", e);
-          localBloqueios.push(novoBloqueio);
-          localStorage.setItem('local_bloqueios', JSON.stringify(localBloqueios));
-        }
-      } else {
-        localBloqueios.push(novoBloqueio);
-        localStorage.setItem('local_bloqueios', JSON.stringify(localBloqueios));
-      }
-
-      carregarDadosDaAgenda(dataAtiva);
-    }
-
-    async function removerBloqueioER(horario) {
-      const dataAtiva = document.getElementById('agenda-data').value;
-      const bloqueio = bloqueiosDoDia.find(b => b.horario === horario) || localBloqueios.find(b => b.horario === horario && b.data === dataAtiva);
-
-      if (!bloqueio) return;
-
-      if (supabaseInstance) {
-        try {
-          const { error } = await supabaseInstance
-            .from('bloqueios')
-            .delete()
-            .eq('id', bloqueio.id);
-
-          if (error) throw error;
-        } catch (e) {
-          console.warn("Bloqueio local excluído.", e);
-          localBloqueios = localBloqueios.filter(b => b.id !== bloqueio.id);
-          localStorage.setItem('local_bloqueios', JSON.stringify(localBloqueios));
-        }
-      } else {
-        localBloqueios = localBloqueios.filter(b => b.id !== bloqueio.id);
-        localStorage.setItem('local_bloqueios', JSON.stringify(localBloqueios));
-      }
-
-      carregarDadosDaAgenda(dataAtiva);
-    }
-
-    function gerenciarBloqueioClicado(horario, estaBloqueado) {
-      if (estaBloqueado) {
-        if (confirm(`Deseja Desbloquear o horário das ${horario}?`)) {
-          removerBloqueioER(horario);
-        }
-      }
-    }
-
-    // CARREGAR LISTA REAL DE CLIENTES (CRM)
-    async function carregarCRM() {
-      let todosAgendamentos = [];
-
-      if (supabaseInstance) {
-        try {
-          const { data, error } = await supabaseInstance
-            .from('agendamentos')
-            .select('*');
-          if (!error) todosAgendamentos = data || [];
-        } catch (e) {
-          todosAgendamentos = localAgendamentos;
-        }
-      } else {
-        todosAgendamentos = localAgendamentos;
-      }
-
-      // Agrupar por Cliente único
-      const clientesDict = {};
-      todosAgendamentos.forEach(a => {
-        const chave = a.cliente_nome.trim().toLowerCase() + "_" + a.cliente_telefone;
-        if (!clientesDict[chave]) {
-          clientesDict[chave] = {
-            nome: a.cliente_nome,
-            tel: a.cliente_telefone,
-            cidade: a.cidade || "Cabo de Santo Agostinho",
-            totalVisitas: 0
-          };
-        }
-        clientesDict[chave].totalVisitas++;
-      });
-
-      const listaClientes = Object.values(clientesDict);
-      const tabelaCorpo = document.getElementById('crm-tabela-corpo');
-
-      if (listaClientes.length === 0) {
-        tabelaCorpo.innerHTML = `
-          <tr>
-            <td colspan="4" class="py-6 text-center text-gray-400">Nenhuma cliente com histórico de agendamentos reais encontrada.</td>
-          </tr>
-        `;
-        return;
-      }
-
-      tabelaCorpo.innerHTML = listaClientes.map(c => `
-        <tr class="hover:bg-gray-50/50">
-          <td class="py-3 font-semibold text-gray-800">${c.nome}</td>
-          <td class="py-3 text-gray-500">${c.tel}</td>
-          <td class="py-3 text-gray-400">${c.cidade}</td>
-          <td class="py-3 text-right">
-            <span class="bg-[#FAF8F5] text-xs font-bold px-2.5 py-1 rounded-full border text-[#b5945b]">${c.totalVisitas} Atendimentos</span>
-          </td>
-        </tr>
-      `).join('');
-    }
-
-    // CALCULAR FINANCEIRO REAL DO MÊS CORRENTE
-    async function carregarFinanceiro() {
-      let todosAgendamentos = [];
-
-      if (supabaseInstance) {
-        try {
-          const { data, error } = await supabaseInstance
-            .from('agendamentos')
-            .select('*');
-          if (!error) todosAgendamentos = data || [];
-        } catch (e) {
-          todosAgendamentos = localAgendamentos;
-        }
-      } else {
-        todosAgendamentos = localAgendamentos;
-      }
-
-      // Filtrar apenas agendamentos do mês vigente
-      const dataHoje = new Date();
-      const anoCorrente = dataHoje.getFullYear();
-      const mesCorrente = String(dataHoje.getMonth() + 1).padStart(2, '0');
-      const prefixoData = `${anoCorrente}-${mesCorrente}`; // Ex: "2026-07"
-
-      let faturamentoMensal = 0;
-      let totalProcedimentos = 0;
-
-      todosAgendamentos.forEach(a => {
-        if (a.data && a.data.startsWith(prefixoData)) {
-          faturamentoMensal += parseFloat(a.valor || 0);
-          totalProcedimentos++;
+      let bloqueados = getBloqueiosData(data);
+      
+      TODOS_HORARIOS.forEach(h => {
+        if (h >= inicio && h < fim) {
+          if (!bloqueados.includes(h)) {
+            bloqueados.push(h);
+          }
         }
       });
 
-      document.getElementById('fin-faturamento').innerText = `R$ ${faturamentoMensal.toFixed(2)}`;
-      document.getElementById('fin-procedimentos').innerText = totalProcedimentos;
+      setBloqueiosData(data, bloqueados);
+      renderizarGradeHorarios();
+      alert(`Horários das ${inicio} até às ${fim} (Retorno) foram bloqueados para o dia ${data.split('-').reverse().join('/')}!`);
     }
 
-    // SALVAR TEXTOS DO CMS NO LOCALSTORAGE DO CLIENTE
-    function salvarTextosCMS() {
-      const hTitle = document.getElementById('cms-txt-hero-title').value;
-      const hDesc = document.getElementById('cms-txt-hero-desc').value;
-      const wNumber = document.getElementById('cms-txt-whatsapp').value;
-      const sTitulo = document.getElementById('cms-txt-sobre-titulo').value;
-      const sTexto1 = document.getElementById('cms-txt-sobre-1').value;
-      const sTexto2 = document.getElementById('cms-txt-sobre-2').value;
-      const sAssinatura = document.getElementById('cms-txt-sobre-assinatura').value;
-
-      localStorage.setItem('cms_hero_title', hTitle);
-      localStorage.setItem('cms_hero_desc', hDesc);
-      localStorage.setItem('cms_whatsapp', wNumber);
-      localStorage.setItem('cms_sobre_titulo', sTitulo);
-      localStorage.setItem('cms_sobre_texto_1', sTexto1);
-      localStorage.setItem('cms_sobre_texto_2', sTexto2);
-      localStorage.setItem('cms_sobre_assinatura', sAssinatura);
-
-      alert("✅ Todos os textos das páginas foram salvos e já estão no ar!");
+    function desbloquearDiaInteiro() {
+      const data = document.getElementById('block-date').value;
+      if (confirm(`Deseja desbloquear TODOS os horários do dia ${data.split('-').reverse().join('/')}?`)) {
+        setBloqueiosData(data, []);
+        renderizarGradeHorarios();
+      }
     }
 
-    // RENDERIZAR ELEMENTOS VISUAIS CMS
-    function renderizarPainelCMS() {
-      // Carregar imagens do cache ou default
-      const cachedHero = localStorage.getItem('cms_hero_bg');
-      document.getElementById('preview-hero').src = cachedHero || 'https://placehold.co/600x300/e8e2d5/5c5043?text=Fundo+do+Banner';
+    // --- LÓGICA DOS 5 DEPOIMENTOS DE CLIENTES ---
+    const DEPOIMENTOS_PADRAO_5 = [
+      { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável. Minhas sobrancelhas nunca ficaram tão harmônicas e naturais. Recomendo de olhos fechados!"' },
+      { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"A extensão de cílios é super confortável, não sinto nenhum peso e dura muito tempo. O efeito Sirena ficou maravilhoso e combinou muito comigo."' },
+      { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista, cuidadosa e atenciosa. O espaço é muito aconchegante, limpo e luxuoso. Nota mil para a Virgínia!"' },
+      { nome: 'Daniela Lima', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Fiz o Lash Lifting e fiquei apaixonada pelo resultado. Olhar marcante todos os dias sem precisar de rímel. Maravilhoso!"' },
+      { nome: 'Eduarda Santos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"O design com henna ficou perfeito na minha pele, cor super natural e durabilidade excelente. Já virei cliente fiel!"' }
+    ];
 
-      const cachedSobre = localStorage.getItem('cms_foto_sobre');
-      document.getElementById('preview-sobre').src = cachedSobre || 'https://placehold.co/600x300/e8e2d5/5c5043?text=Foto+Sobre';
-
-      // Carregar os Textos Atuais nos Inputs
-      document.getElementById('cms-txt-hero-title').value = localStorage.getItem('cms_hero_title') || "Beleza através do olhar ✨";
-      document.getElementById('cms-txt-hero-desc').value = localStorage.getItem('cms_hero_desc') || "Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.";
-      document.getElementById('cms-txt-whatsapp').value = localStorage.getItem('cms_whatsapp') || "5581900000000";
-      document.getElementById('cms-txt-sobre-titulo').value = localStorage.getItem('cms_sobre_titulo') || "Seu olhar merece cuidado";
-      document.getElementById('cms-txt-sobre-1').value = localStorage.getItem('cms_sobre_texto_1') || "Na B Virgínia Design, cada atendimento é pensado para realçar sua beleza de forma única, delicada e sofisticada. Trabalhamos com técnicas personalizadas para valorizar seu olhar e elevar sua autoestima.";
-      document.getElementById('cms-txt-sobre-2').value = localStorage.getItem('cms_sobre_texto_2') || "Localizado no coração de Bela Vista, Cabo de Santo Agostinho - PE, o espaço foi planejado para oferecer conforto, segurança e uma experiência de bem-estar inesquecível.";
-      document.getElementById('cms-txt-sobre-assinatura').value = localStorage.getItem('cms_sobre_assinatura') || "B Virgínia";
-
-      // Renderizar 8 Serviços
-      const containerServicos = document.getElementById('cms-lista-servicos');
-      containerServicos.innerHTML = cmsServicos.map((serv, index) => `
-        <div class="bg-white border rounded-xl p-5 space-y-4 shadow-sm relative text-left">
-          <div class="flex items-center gap-4">
-            <div class="w-20 h-20 rounded-lg overflow-hidden border bg-gray-100 flex-shrink-0">
-              <img id="preview-servico-${index}" src="${serv.img}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/e8e2d5/5c5043?text=Foto'">
-            </div>
-            <div class="flex-grow">
-              <span class="text-[10px] font-bold text-[#b5945b] tracking-wider uppercase">Serviço #${index + 1}</span>
-              <input type="text" id="serv-titulo-${index}" value="${serv.titulo}" class="w-full font-bold text-gray-800 text-sm border-b py-1 focus:outline-none focus:border-[#b5945b]">
-            </div>
-          </div>
-          <div class="grid grid-cols-2 gap-3">
-            <div>
-              <label class="text-[10px] font-bold text-gray-400 block">Preço (R$)</label>
-              <input type="number" step="0.01" id="serv-preco-${index}" value="${serv.preco}" class="w-full border p-2 rounded text-sm focus:outline-none focus:border-[#b5945b]">
-            </div>
-            <div>
-              <label class="text-[10px] font-bold text-gray-400 block">Duração (Texto)</label>
-              <input type="text" id="serv-duracao-${index}" value="${serv.duracao}" class="w-full border p-2 rounded text-sm focus:outline-none focus:border-[#b5945b]">
-            </div>
-          </div>
-          <div>
-            <label class="text-[10px] font-bold text-gray-400 block">Descrição do Serviço</label>
-            <textarea id="serv-desc-${index}" class="w-full border p-2 rounded text-xs h-16 focus:outline-none focus:border-[#b5945b] resize-none">${serv.desc}</textarea>
-          </div>
-          <div class="bg-gray-50 p-2.5 rounded border border-dashed">
-            <label class="text-[10px] font-bold text-gray-400 block mb-1">Mudar Foto do Card:</label>
-            <input type="file" id="input-serv-img-${index}" accept="image/*" class="text-xs">
-            <button onclick="uploadFotoServico(${index})" class="mt-2 bg-[#b5945b] hover:bg-[#9a7d4a] text-white text-[10px] font-bold px-3 py-1.5 rounded transition">
-              Fazer Upload da Foto
-            </button>
-            <span id="status-serv-img-${index}" class="text-[9px] font-bold ml-2"></span>
-          </div>
-        </div>
-      `).join('');
-
-      // Renderizar 6 Portfólios
-      for (let i = 0; i < 6; i++) {
-        const previewImg = document.getElementById(`preview-portfolio-${i}`);
-        if (previewImg) {
-          previewImg.src = cmsPortfolio[i] || 'https://placehold.co/400x400/e8e2d5/5c5043?text=Trabalho';
-        }
+    function carregarDepoimentosAdmin() {
+      const salvos = JSON.parse(localStorage.getItem('cms_depoimentos')) || DEPOIMENTOS_PADRAO_5;
+      
+      while (salvos.length < 5) {
+        salvos.push(DEPOIMENTOS_PADRAO_5[salvos.length] || { nome: 'Cliente Querida', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Excelente atendimento!"' });
       }
 
-      // Renderizar 3 Depoimentos
-      const containerDepoimentos = document.getElementById('cms-lista-depoimentos');
-      containerDepoimentos.innerHTML = cmsDepoimentos.map((dep, index) => `
-        <div class="bg-white border rounded-xl p-5 space-y-4 shadow-sm text-left">
-          <div class="space-y-1">
-            <span class="text-[10px] font-bold text-[#b5945b] tracking-wider uppercase">Depoimento #${index + 1}</span>
-            <input type="text" id="dep-nome-${index}" value="${dep.nome}" placeholder="Nome da Cliente" class="w-full font-bold text-sm border-b py-1 focus:outline-none focus:border-[#b5945b]">
-          </div>
+      const container = document.getElementById('depoimentos-admin-container');
+      container.innerHTML = salvos.slice(0, 5).map((dep, index) => `
+        <div class="bg-[#FAF8F5] p-4 rounded-xl border border-gray-200/80 space-y-3">
+          <span class="text-[10px] font-bold text-[#b5945b] uppercase tracking-wider">Depoimento #${index + 1}</span>
+          
           <div>
-            <label class="text-[10px] font-bold text-gray-400 block">Cidade / Localização</label>
-            <input type="text" id="dep-cidade-${index}" value="${dep.cidade}" class="w-full border p-2 rounded text-xs focus:outline-none focus:border-[#b5945b]">
+            <label class="block text-[11px] font-bold text-gray-700 mb-1">Nome da Cliente</label>
+            <input type="text" id="dep-nome-${index}" value="${dep.nome}" class="w-full border border-gray-300 rounded-lg p-2 text-xs font-bold bg-white focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
           </div>
+
           <div>
-            <label class="text-[10px] font-bold text-gray-400 block">Avaliação (Estrelas)</label>
-            <select id="dep-estrelas-${index}" class="w-full border p-2 rounded text-xs focus:outline-none focus:border-[#b5945b]">
-              <option value="5" ${dep.estrelas === 5 ? 'selected' : ''}>⭐⭐⭐⭐⭐ (5 Estrelas)</option>
-              <option value="4" ${dep.estrelas === 4 ? 'selected' : ''}>⭐⭐⭐⭐ (4 Estrelas)</option>
+            <label class="block text-[11px] font-semibold text-gray-500 mb-1">Cidade / Localização</label>
+            <input type="text" id="dep-cidade-${index}" value="${dep.cidade}" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white uppercase text-gray-600 focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
+          </div>
+
+          <div>
+            <label class="block text-[11px] font-semibold text-gray-500 mb-1">Avaliação (Estrelas)</label>
+            <select id="dep-estrelas-${index}" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-[#b5945b]">
+              <option value="5" ${dep.estrelas == 5 ? 'selected' : ''}>⭐⭐⭐⭐⭐ (5 Estrelas)</option>
+              <option value="4" ${dep.estrelas == 4 ? 'selected' : ''}>⭐⭐⭐⭐ (4 Estrelas)</option>
+              <option value="3" ${dep.estrelas == 3 ? 'selected' : ''}>⭐⭐⭐ (3 Estrelas)</option>
             </select>
           </div>
+
           <div>
-            <label class="text-[10px] font-bold text-gray-400 block">Elogio / Texto</label>
-            <textarea id="dep-texto-${index}" class="w-full border p-2 rounded text-xs h-24 focus:outline-none focus:border-[#b5945b] resize-none">${dep.texto}</textarea>
+            <label class="block text-[11px] font-semibold text-gray-500 mb-1">Elogio / Texto</label>
+            <textarea id="dep-texto-${index}" rows="4" class="w-full border border-gray-300 rounded-lg p-2 text-xs bg-white focus:outline-none focus:ring-1 focus:ring-[#b5945b] resize-none">${dep.texto}</textarea>
           </div>
         </div>
       `).join('');
-    }
-
-    function salvarTodosServicos() {
-      cmsServicos.forEach((serv, index) => {
-        serv.titulo = document.getElementById(`serv-titulo-${index}`).value;
-        serv.preco = document.getElementById(`serv-preco-${index}`).value;
-        serv.duracao = document.getElementById(`serv-duracao-${index}`).value;
-        serv.desc = document.getElementById(`serv-desc-${index}`).value;
-      });
-
-      localStorage.setItem('cms_servicos', JSON.stringify(cmsServicos));
-      alert("✅ Todos os 8 Serviços foram atualizados com sucesso!");
     }
 
     function salvarDepoimentos() {
-      cmsDepoimentos.forEach((dep, index) => {
-        dep.nome = document.getElementById(`dep-nome-${index}`).value;
-        dep.cidade = document.getElementById(`dep-cidade-${index}`).value;
-        dep.estrelas = parseInt(document.getElementById(`dep-estrelas-${index}`).value);
-        dep.texto = document.getElementById(`dep-texto-${index}`).value;
-      });
+      const novosDepoimentos = [];
+      for (let i = 0; i < 5; i++) {
+        const nome = document.getElementById(`dep-nome-${i}`).value.trim();
+        const cidade = document.getElementById(`dep-cidade-${i}`).value.trim();
+        const estrelas = parseInt(document.getElementById(`dep-estrelas-${i}`).value);
+        const texto = document.getElementById(`dep-texto-${i}`).value.trim();
 
-      localStorage.setItem('cms_depoimentos', JSON.stringify(cmsDepoimentos));
-      alert("✅ Comentários e Avaliações de Clientes salvos com sucesso!");
+        novosDepoimentos.push({ nome, cidade, estrelas, texto });
+      }
+
+      localStorage.setItem('cms_depoimentos', JSON.stringify(novosDepoimentos));
+      alert("🎉 5 Comentários de clientes salvos com sucesso!");
     }
   </script>
 </body>

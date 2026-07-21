@@ -99,8 +99,8 @@
         <h2 class="text-3xl md:text-4xl font-title font-semibold">O que nossas clientes dizem</h2>
         <p class="text-gray-500 max-w-xl mx-auto">A satisfação e autoestima de cada cliente é a nossa principal prioridade.</p>
       </div>
-      <div id="depoimentos-container" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <!-- Depoimentos injetados dinamicamente -->
+      <div id="depoimentos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto">
+        <!-- 5 Depoimentos injetados dinamicamente -->
       </div>
     </div>
   </section>
@@ -237,7 +237,7 @@
         'foto-fox-eyes':        'fox-eyes.jpg'
       };
 
-      // Lista de Serviços Padrão (Fallback de contingência caso os arquivos dinâmicos falhem)
+      // Lista de Serviços Padrão (Fallback de contingência)
       const SERVICOS_PADRAO = [
         { nome: "Design Simples", preco: "R$ 35,00", desc: "Higienização, alinhamento simétrico e remoção de fios com pinça.", foto: "assets/images/galeria-1.png", supabaseId: "foto-design-simples" },
         { nome: "Design com Henna", preco: "R$ 50,00", desc: "Design personalizado com aplicação de henna de alta fixação.", foto: "assets/images/galeria-2.png", supabaseId: "foto-design-henna" },
@@ -277,7 +277,7 @@
 
       Object.entries(imagensDinamicas).forEach(([id, arquivo]) => carregarFotoSupabase(id, arquivo));
 
-      // Garantir renderização dos Serviços e do Selecionador do Formulário
+      // Garantir renderização dos Serviços e Selecionador do Formulário
       setTimeout(() => {
         let listaServicos = SERVICOS_PADRAO;
 
@@ -290,7 +290,7 @@
           console.warn("Utilizando SERVICOS_PADRAO para renderização...", e);
         }
 
-        // 1. Povoar os Cards de Serviços na tela
+        // 1. Povoar Cards de Serviços na tela
         const containerServicos = document.getElementById('dynamic-services');
         if (containerServicos && containerServicos.children.length === 0) {
           containerServicos.innerHTML = listaServicos.map(s => `
@@ -316,7 +316,7 @@
           `).join('');
         }
 
-        // 2. Povoar o campo <select> do Formulário de Agendamento
+        // 2. Povoar campo <select> do Formulário de Agendamento
         const selectServico = document.getElementById('form-service');
         if (selectServico && selectServico.children.length <= 1) {
           selectServico.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>';
@@ -364,26 +364,30 @@
         `).join('');
       }
 
-      // Depoimentos
+      // 5 Depoimentos de Clientes
       const depoimentosPadrao = [
         { nome: 'Amanda Silva', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Atendimento incrível e impecável. Minhas sobrancelhas nunca ficaram tão harmônicas e naturais. Recomendo de olhos fechados!"' },
         { nome: 'Beatriz Costa', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"A extensão de cílios é super confortável, não sinto nenhum peso e dura muito tempo. O efeito Sirena ficou maravilhoso e combinou muito comigo."' },
-        { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista, cuidadosa e atenciosa. O espaço é muito aconchegante, limpo e luxuoso. Nota mil para a Virgínia!"' }
+        { nome: 'Caroline Ramos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Profissional extremamente detalhista, cuidadosa e atenciosa. O espaço é muito aconchegante, limpo e luxuoso. Nota mil para a Virgínia!"' },
+        { nome: 'Daniela Lima', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"Fiz o Lash Lifting e fiquei apaixonada pelo resultado. Olhar marcante todos os dias sem precisar de rímel. Maravilhoso!"' },
+        { nome: 'Eduarda Santos', cidade: 'CABO DE SANTO AGOSTINHO', estrelas: 5, texto: '"O design com henna ficou perfeito na minha pele, cor super natural e durabilidade excelente. Já virei cliente fiel!"' }
       ];
+
       const cmsDepoimentos = JSON.parse(localStorage.getItem('cms_depoimentos')) || depoimentosPadrao;
       const containerDep = document.getElementById('depoimentos-container');
       if (containerDep) {
-        containerDep.innerHTML = cmsDepoimentos.map(dep => `
-          <div class="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between space-y-6 fade-in-active">
-            <div class="space-y-4">
+        containerDep.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 max-w-7xl mx-auto";
+        containerDep.innerHTML = cmsDepoimentos.slice(0, 5).map(dep => `
+          <div class="bg-white p-6 rounded-2xl shadow-sm hover:shadow-md transition duration-300 flex flex-col justify-between space-y-4 fade-in-active">
+            <div class="space-y-3">
               <div class="flex text-[#D4AF37] gap-1">
-                ${Array.from({ length: dep.estrelas }).map(() => '<i class="fas fa-star text-sm"></i>').join('')}
+                ${Array.from({ length: dep.estrelas }).map(() => '<i class="fas fa-star text-xs"></i>').join('')}
               </div>
-              <p class="text-[#2C2A29] italic leading-relaxed text-sm font-medium">${dep.texto}</p>
+              <p class="text-[#2C2A29] italic leading-relaxed text-xs font-medium">${dep.texto}</p>
             </div>
-            <div class="border-t border-gray-100 pt-4">
-              <h4 class="font-title font-semibold text-[#2C2A29]">${dep.nome}</h4>
-              <span class="text-[10px] text-gray-400 font-bold tracking-wider uppercase">${dep.cidade}</span>
+            <div class="border-t border-gray-100 pt-3">
+              <h4 class="font-title font-semibold text-sm text-[#2C2A29]">${dep.nome}</h4>
+              <span class="text-[9px] text-gray-400 font-bold tracking-wider uppercase">${dep.cidade}</span>
             </div>
           </div>
         `).join('');
