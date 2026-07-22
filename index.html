@@ -15,6 +15,7 @@
 </head>
 <body class="bg-[#FAF8F5] text-[#2C2A29]">
 
+  <!-- CABEÇALHO / NAVBAR COM INSTAGRAM -->
   <header class="absolute top-0 left-0 right-0 z-20 flex justify-between items-center px-6 md:px-16 py-6 text-white">
     <div class="font-title text-xl font-bold tracking-wider">B Virgínia Design ✨</div>
     <div class="flex items-center space-x-6 text-sm font-medium">
@@ -26,6 +27,7 @@
     </div>
   </header>
 
+  <!-- HERO BANNER -->
   <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500 pt-28" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
     <div class="max-w-xl text-white space-y-6 z-10">
       <span class="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">B Virgínia Design</span>
@@ -42,6 +44,7 @@
     </div>
   </section>
 
+  <!-- SEÇÃO SOBRE -->
   <section class="py-16 px-6 md:px-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
     <div class="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
       <img id="foto-sobre-element" src="assets/images/hero-bg.png" alt="B Virgínia Design" class="w-full h-full object-cover transition duration-500" onerror="this.src='https://placehold.co/600x800/e8e2d5/5c5043?text=B+Virginia'">
@@ -54,6 +57,7 @@
     </div>
   </section>
 
+  <!-- SERVIÇOS -->
   <section id="servicos" class="py-20 bg-[#F4EFEA] px-6 md:px-16">
     <div class="max-w-7xl mx-auto text-center mb-16 space-y-3">
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Nossos Procedimentos</span>
@@ -62,6 +66,7 @@
     <div id="dynamic-services" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto"></div>
   </section>
 
+  <!-- PORTFÓLIO -->
   <section class="py-20 px-6 md:px-16 max-w-7xl mx-auto">
     <div class="text-center mb-16 space-y-3">
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Portfólio</span>
@@ -70,6 +75,7 @@
     <div id="portfolio-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
   </section>
 
+  <!-- DEPOIMENTOS -->
   <section class="py-20 bg-[#F4EFEA] px-6 md:px-16">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-16 space-y-3">
@@ -80,6 +86,7 @@
     </div>
   </section>
 
+  <!-- FORMULÁRIO DE AGENDAMENTO -->
   <section id="agendamento" class="py-20 px-6 md:px-16">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
       <div class="space-y-6">
@@ -134,6 +141,7 @@
     </div>
   </section>
 
+  <!-- RODAPÉ -->
   <footer class="bg-[#2C2A29] text-gray-400 py-16 px-6 md:px-16 border-t border-amber-900/20">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
       <div class="space-y-4">
@@ -160,20 +168,22 @@
     </div>
   </footer>
 
+  <!-- SCRIPT COMPLETO DO SITE DO CLIENTE -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Lista oficial exata com os nomes corretos solicitados
+    // Procedimentos atualizados estritamente com os nomes e durações corretos fornecidos
     const SERVICOS_PADRAO = [
-      { nome: "Design Simples", preco: 46.00, duracao_min: 30, foto_url: "assets/images/galeria-1.png" },
-      { nome: "Design com Henna", preco: 45.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-      { nome: "Design com Colorimetria", preco: 50.00, duracao_min: 50, foto_url: "assets/images/galeria-3.png" },
-      { nome: "Brow Lamination", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
-      { nome: "Lash Lifting", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-5.png" },
-      { nome: "Epilação do Buço", preco: 15.00, duracao_min: 15, foto_url: "assets/images/galeria-6.png" },
-      { nome: "Combo Brow + Lash", preco: 160.00, duracao_min: 120, foto_url: "assets/images/galeria-1.png" }
+      { nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
+      { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
+      { nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "assets/images/galeria-3.png" },
+      { nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
+      { nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-5.png" },
+      { nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-6.png" },
+      { nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-1.png" },
+      { nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-2.png" }
     ];
 
     const PORTFOLIO_PADRAO = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
@@ -190,6 +200,10 @@
       servicosCarregados = servs;
       document.getElementById('dynamic-services').innerHTML = servs.map(s => {
         let duracaoTxt = s.duracao_min >= 60 ? (s.duracao_min / 60) + 'h' : s.duracao_min + ' min';
+        if (s.duracao_min === 180) duracaoTxt = '3h';
+        if (s.duracao_min === 120) duracaoTxt = '2h';
+        if (s.duracao_min === 60) duracaoTxt = '1h';
+
         return `
         <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
           <div>
@@ -208,7 +222,7 @@
 
       const select = document.getElementById('form-service');
       select.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>' + 
-        servs.map(s => `<option value="${s.nome}" data-duracao="${s.duracao_min}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
+        servs.map(s => `<option value="${s.nome}" data-duracao="${s.duracao_min || 30}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
     }
 
     function renderizarPortfolio(port) {
@@ -239,8 +253,6 @@
       renderizarDepoimentos(DEPOIMENTOS_PADRAO);
 
       try {
-        await _supabase.from('configuracoes_site').delete().eq('chave', 'procedimentos');
-
         const { data: ags } = await _supabase.from('agendamentos').select('*');
         agendamentosGlobais = ags || [];
 
@@ -258,6 +270,10 @@
               });
               const portImgs = fotos.filter(f => f.id.startsWith('galeria-') || f.id.startsWith('galeria')).map(f => f.url);
               if (portImgs.length > 0) renderizarPortfolio(portImgs);
+            }
+            if (c.chave === 'procedimentos') {
+              const procs = JSON.parse(c.valor);
+              if (procs && procs.length > 0) renderizarServicos(procs);
             }
             if (c.chave === 'avaliacoes') {
               const avals = JSON.parse(c.valor);
@@ -311,8 +327,8 @@
       let duracaoMinutos = parseInt(selectedOption.getAttribute('data-duracao')) || 30;
 
       let horariosPossiveis = [];
-      let inicioMin = 10 * 60; // 10:00
-      let fimMin = 19 * 60;    // 19:00
+      let inicioMin = 10 * 60;
+      let fimMin = 19 * 60;
 
       for (let t = inicioMin; t < fimMin; t += 30) {
         let h = Math.floor(t / 60).toString().padStart(2, '0');

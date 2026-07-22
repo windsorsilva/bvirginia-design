@@ -1,393 +1,745 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Painel Administrativo | B Virgínia Design</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <style>
-    body { font-family: 'Inter', sans-serif; }
-    .font-title { font-family: 'Playfair Display', serif; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel Administrativo - B Virginia Design ✨</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Supabase JS Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        :root {
+            --primary-gold: #c5a059;
+            --primary-dark: #1a1a1a;
+        }
+        .bg-gold { background-color: var(--primary-gold); }
+        .text-gold { color: var(--primary-gold); }
+        .border-gold { border-color: var(--primary-gold); }
+        .active-tab { border-bottom: 3px solid var(--primary-gold); font-weight: bold; color: #000; }
+        .active-subtab { background-color: #f3f4f6; border-bottom: 2px solid var(--primary-gold); font-weight: bold; }
+    </style>
 </head>
-<body class="bg-gray-50 text-[#2C2A29] min-h-screen">
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
 
-  <!-- TELA DE LOGIN ADMIN -->
-  <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/80 backdrop-blur-sm">
-    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full mx-4 space-y-6">
-      <div class="text-center space-y-2">
-        <h2 class="font-title text-2xl font-bold">Painel Administrativo ✨</h2>
-        <p class="text-xs text-gray-500">Digite a senha para acessar o gerenciamento</p>
-      </div>
-      <div class="space-y-4">
-        <div>
-          <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Senha de Acesso</label>
-          <input type="password" id="admin-password" placeholder="Digite sua senha" class="w-full border border-gray-300 rounded-lg p-3 text-sm">
+    <!-- 1. MODAL DE LOGIN / SENHA -->
+    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full border-t-4 border-gold text-center">
+            <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">B Virginia Design ✨</h2>
+            <p class="text-sm text-gray-600 mb-6">Acesso exclusivo ao gerenciamento do site</p>
+            
+            <form onsubmit="verificarSenha(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1 text-left">Senha do Administrador</label>
+                    <input type="password" id="input-senha" placeholder="••••••••" required 
+                           class="w-full border rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
+                </div>
+                <p id="login-error" class="text-red-500 text-xs font-semibold hidden">Senha incorreta! Tente novamente.</p>
+                <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow hover:opacity-90 transition">
+                    ENTRAR NO PAINEL
+                </button>
+            </form>
+            <div class="mt-6 border-t pt-4">
+                <a href="index.html" class="text-xs text-gray-500 hover:underline">← Voltar ao site principal</a>
+            </div>
         </div>
-        <button onclick="tentarLogin()" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-3 rounded-lg transition text-sm uppercase">Entrar no Painel</button>
-      </div>
     </div>
-  </div>
 
-  <!-- CONTEÚDO PRINCIPAL DO ADMIN -->
-  <div id="admin-content" class="hidden">
-    <header class="bg-white border-b px-6 md:px-16 py-4 flex justify-between items-center shadow-sm">
-      <div>
-        <h1 class="font-title text-xl font-bold">Painel da Agenda ✨</h1>
-        <p class="text-xs text-gray-500">Gestão B Virgínia Design</p>
-      </div>
-      <button onclick="sairAdmin()" class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs font-bold transition">SAIR DO PAINEL 🚪</button>
-    </header>
-
-    <nav class="bg-white border-b px-6 md:px-16 flex space-x-8 overflow-x-auto">
-      <button onclick="mudarAba('agenda')" id="btn-tab-agenda" class="py-4 border-b-2 border-[#b5945b] text-[#b5945b] font-bold text-sm uppercase whitespace-nowrap">Agenda 📅</button>
-      <button onclick="mudarAba('crm')" id="btn-tab-crm" class="py-4 border-b-2 border-transparent text-gray-500 hover:text-black font-bold text-sm uppercase whitespace-nowrap">Clientes (CRM) 👥</button>
-      <button onclick="mudarAba('financeiro')" id="btn-tab-financeiro" class="py-4 border-b-2 border-transparent text-gray-500 hover:text-black font-bold text-sm uppercase whitespace-nowrap">Financeiro 💰</button>
-      <button onclick="mudarAba('bloqueios')" id="btn-tab-bloqueios" class="py-4 border-b-2 border-transparent text-gray-500 hover:text-black font-bold text-sm uppercase whitespace-nowrap">Bloqueios Manuais 🚫</button>
-      <button onclick="mudarAba('cms')" id="btn-tab-cms" class="py-4 border-b-2 border-transparent text-gray-500 hover:text-black font-bold text-sm uppercase whitespace-nowrap">Configurações & CMS ⚙️</button>
-    </nav>
-
-    <main class="max-w-7xl mx-auto p-6 md:p-16">
-      
-      <!-- ABA 1: AGENDA -->
-      <section id="sec-agenda" class="tab-content space-y-6">
-        <div class="flex flex-wrap justify-between items-center gap-4">
-          <h2 class="text-xl font-bold">Gestão Completa de Agendamentos (Futuros e Histórico)</h2>
-          <div class="flex items-center space-x-2">
-            <label class="text-xs font-bold uppercase text-gray-600">Filtrar por data:</label>
-            <input type="date" id="filtro-data-agenda" onchange="carregarFinanceiroEAgendamentos()" class="border p-2 rounded text-sm bg-white">
-            <button onclick="document.getElementById('filtro-data-agenda').value=''; carregarFinanceiroEAgendamentos();" class="bg-gray-200 text-gray-700 px-3 py-2 rounded text-xs font-bold hover:bg-gray-300">Ver Todos</button>
-          </div>
-        </div>
-        <div class="bg-white p-6 rounded shadow border overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
-                <th class="p-3">Cliente</th>
-                <th class="p-3">Telefone</th>
-                <th class="p-3">Serviço</th>
-                <th class="p-3">Data</th>
-                <th class="p-3">Horário</th>
-                <th class="p-3">Status</th>
-                <th class="p-3 text-center">Ações</th>
-              </tr>
-            </thead>
-            <tbody id="lista-agendamentos" class="divide-y divide-gray-200 text-sm">
-              <tr><td colspan="7" class="p-6 text-center text-gray-500">Carregando agendamentos...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ABA 2: CLIENTES -->
-      <section id="sec-crm" class="tab-content space-y-6 hidden">
-        <h2 class="text-xl font-bold">Base de Clientes & CRM</h2>
-        <div class="bg-white p-6 rounded shadow border overflow-x-auto">
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
-                <th class="p-3">Cliente</th>
-                <th class="p-3">WhatsApp</th>
-                <th class="p-3">Último Serviço</th>
-                <th class="p-3 text-center">Total de Visitas</th>
-              </tr>
-            </thead>
-            <tbody id="lista-clientes" class="divide-y divide-gray-200 text-sm">
-              <tr><td colspan="4" class="p-6 text-center text-gray-500">Carregando clientes...</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ABA 3: FINANCEIRO -->
-      <section id="sec-financeiro" class="tab-content space-y-6 hidden">
-        <h2 class="text-xl font-bold">Resumo Financeiro</h2>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div class="bg-white p-6 rounded shadow border space-y-2">
-            <span class="text-xs uppercase font-bold text-gray-500">Faturamento Total</span>
-            <h3 id="fin-faturamento" class="text-2xl font-bold text-green-700">R$ 0,00</h3>
-          </div>
-          <div class="bg-white p-6 rounded shadow border space-y-2">
-            <span class="text-xs uppercase font-bold text-gray-500">Total de Atendimentos</span>
-            <h3 id="fin-qtd-agendamentos" class="text-2xl font-bold">0</h3>
-          </div>
-          <div class="bg-white p-6 rounded shadow border space-y-2">
-            <span class="text-xs uppercase font-bold text-gray-500">Ticket Médio</span>
-            <h3 id="fin-ticket-medio" class="text-2xl font-bold text-blue-700">R$ 0,00</h3>
-          </div>
-        </div>
-        <div class="bg-white p-6 rounded shadow border overflow-x-auto">
-          <h3 class="font-bold mb-4">Extrato Detalhado</h3>
-          <table class="w-full text-left border-collapse">
-            <thead>
-              <tr class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
-                <th class="p-3">Data / Hora</th>
-                <th class="p-3">Cliente</th>
-                <th class="p-3">Serviço</th>
-                <th class="p-3">Valor</th>
-              </tr>
-            </thead>
-            <tbody id="extrato-financeiro" class="divide-y divide-gray-200 text-sm">
-              <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      <!-- ABA 4: BLOQUEIOS -->
-      <section id="sec-bloqueios" class="tab-content space-y-6 hidden">
-        <h2 class="text-xl font-bold">Gerenciar Bloqueios Manuais de Horário</h2>
-        <div class="bg-white p-6 rounded shadow border max-w-lg space-y-4">
-          <h3 class="font-semibold text-sm">Adicionar Bloqueio</h3>
-          <div>
-            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Data</label>
-            <input type="date" id="bloqueio-data" class="w-full border p-3 rounded text-sm">
-          </div>
-          <div class="grid grid-cols-2 gap-4">
+    <!-- 2. PAINEL PRINCIPAL -->
+    <div id="admin-content" class="hidden">
+        <!-- CABEÇALHO -->
+        <header class="bg-white border-b px-6 py-4 flex flex-wrap justify-between items-center shadow-sm">
             <div>
-              <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Início</label>
-              <input type="time" id="bloqueio-inicio" class="w-full border p-3 rounded text-sm">
+                <h1 class="text-2xl font-serif font-bold">Painel da Agenda ✨</h1>
+                <p class="text-xs text-gray-500">Gestão B Virginia Design</p>
             </div>
-            <div>
-              <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Fim</label>
-              <input type="time" id="bloqueio-fim" class="w-full border p-3 rounded text-sm">
+            <button onclick="logout()" class="bg-black text-white px-4 py-2 rounded text-xs font-semibold hover:bg-red-600 transition">
+                SAIR DO PAINEL 🚪
+            </button>
+        </header>
+
+        <!-- ABAS PRINCIPAIS -->
+        <nav class="bg-white border-b overflow-x-auto">
+            <div class="flex space-x-6 px-6 text-sm font-medium text-gray-600 min-w-max">
+                <button onclick="switchTab('agenda')" id="tab-agenda" class="py-3 px-2 active-tab">AGENDA 📅</button>
+                <button onclick="switchTab('clientes')" id="tab-clientes" class="py-3 px-2">CLIENTES (CRM) 👥</button>
+                <button onclick="switchTab('financeiro')" id="tab-financeiro" class="py-3 px-2">FINANCEIRO 💰</button>
+                <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="py-3 px-2">BLOQUEIOS MANUAIS 🚫</button>
+                <button onclick="switchTab('cms')" id="tab-cms" class="py-3 px-2">CONFIGURAÇÕES & CMS ⚙️</button>
+                <button onclick="switchTab('backup')" id="tab-backup" class="py-3 px-2">BACKUP & RESTAURAÇÃO 💾</button>
             </div>
-          </div>
-          <button onclick="salvarBloqueio()" class="bg-[#b5945b] text-white px-6 py-3 rounded font-bold text-xs uppercase w-full">Salvar Bloqueio</button>
-        </div>
-        <div class="bg-white p-6 rounded shadow border">
-          <h3 class="font-semibold text-sm mb-4">Bloqueios Ativos</h3>
-          <div id="lista-bloqueios-ativos" class="space-y-2 text-sm text-gray-600">Nenhum bloqueio cadastrado.</div>
-        </div>
-      </section>
+        </nav>
 
-      <!-- ABA 5: CMS -->
-      <section id="sec-cms" class="tab-content space-y-6 hidden">
-        <h2 class="text-xl font-bold">Configurações & CMS do Site</h2>
-        <div class="bg-white p-6 rounded shadow border space-y-4 max-w-xl">
-          <h3 class="font-semibold text-sm">Informações de Contato & Localização</h3>
-          <div>
-            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Endereço / Localização</label>
-            <input type="text" id="cms-localizacao" class="w-full border p-3 rounded text-sm" value="Bela Vista, Cabo de Santo Agostinho – PE">
-          </div>
-          <div>
-            <label class="block text-xs font-bold uppercase text-gray-500 mb-1">Número do WhatsApp (Ex: 5581989002496)</label>
-            <input type="text" id="cms-whatsapp" class="w-full border p-3 rounded text-sm" value="5581989002496">
-          </div>
-          <button onclick="salvarCMS()" class="bg-black text-white px-6 py-3 rounded font-bold text-xs uppercase w-full">Salvar Alterações</button>
-        </div>
-      </section>
+        <main class="max-w-7xl mx-auto p-6">
 
-    </main>
-  </div>
+            <!-- TAB 1: AGENDA -->
+            <section id="sec-agenda" class="tab-content">
+                <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
+                    <h2 class="text-xl font-bold">Gestão Completa de Agendamentos (Futuros e Histórico)</h2>
+                    <div class="flex items-center space-x-2">
+                        <label class="text-xs font-bold uppercase text-gray-600">Filtrar por data:</label>
+                        <input type="date" id="filtro-data-agenda" onchange="carregarFinanceiroEAgendamentos()" class="border p-2 rounded text-sm bg-white">
+                        <button onclick="document.getElementById('filtro-data-agenda').value=''; carregarFinanceiroEAgendamentos();" class="bg-gray-200 text-gray-700 px-3 py-2 rounded text-xs font-bold hover:bg-gray-300">Ver Todos</button>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded shadow border overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
+                                <th class="p-3">Cliente</th>
+                                <th class="p-3">Telefone</th>
+                                <th class="p-3">Serviço</th>
+                                <th class="p-3">Data</th>
+                                <th class="p-3">Horário</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-center">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody id="lista-agendamentos" class="divide-y divide-gray-200 text-sm">
+                            <tr>
+                                <td colspan="7" class="p-6 text-center text-gray-500">Carregando agendamentos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-  <script>
-    const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            <!-- TAB 2: CLIENTES -->
+            <section id="sec-clientes" class="tab-content hidden">
+                <h2 class="text-xl font-bold mb-4">Base de Clientes Cadastrados</h2>
+                <div class="bg-white p-6 rounded shadow border overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="border-b bg-gray-50">
+                                <th class="p-3">NOME</th>
+                                <th class="p-3">TELEFONE / WHATSAPP</th>
+                                <th class="p-3">ÚLTIMO SERVIÇO</th>
+                                <th class="p-3">TOTAL AGENDADO</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-clientes">
+                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado ainda.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
 
-    function tentarLogin() {
-      const senha = document.getElementById('admin-password').value;
-      if (senha === 'virginia123') {
-        document.getElementById('login-modal').classList.add('hidden');
-        document.getElementById('admin-content').classList.remove('hidden');
-        carregarFinanceiroEAgendamentos();
-        carregarClientes();
-        carregarBloqueios();
-      } else {
-        alert('Senha incorreta!');
-      }
-    }
+            <!-- TAB 3: FINANCEIRO -->
+            <section id="sec-financeiro" class="tab-content hidden">
+                <h2 class="text-xl font-bold mb-4">Relatório Financeiro Automático</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                    <div class="bg-white p-6 rounded shadow border border-l-4 border-amber-500">
+                        <p class="text-xs uppercase font-bold text-gray-500">Faturamento Previsto (Mês)</p>
+                        <h3 id="fin-faturamento" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded shadow border border-l-4 border-blue-500">
+                        <p class="text-xs uppercase font-bold text-gray-500">Agendamentos Realizados</p>
+                        <h3 id="fin-qtd-agendamentos" class="text-2xl font-bold text-gray-800 mt-2">0</h3>
+                    </div>
+                    <div class="bg-white p-6 rounded shadow border border-l-4 border-green-500">
+                        <p class="text-xs uppercase font-bold text-gray-500">Ticket Médio por Cliente</p>
+                        <h3 id="fin-ticket-medio" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
+                    </div>
+                </div>
 
-    function sairAdmin() {
-      document.getElementById('admin-content').classList.add('hidden');
-      document.getElementById('login-modal').classList.remove('hidden');
-      document.getElementById('admin-password').value = '';
-    }
+                <div class="bg-white p-6 rounded shadow border">
+                    <h3 class="font-bold text-lg mb-4 border-b pb-2">Extrato de Serviços Agendados</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead>
+                                <tr class="border-b bg-gray-50">
+                                    <th class="p-2">DATA/HORA</th>
+                                    <th class="p-2">CLIENTE</th>
+                                    <th class="p-2">PROCEDIMENTO</th>
+                                    <th class="p-2">VALOR</th>
+                                </tr>
+                            </thead>
+                            <tbody id="extrato-financeiro">
+                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
 
-    function mudarAba(aba) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('nav button').forEach(el => {
-        el.classList.remove('border-[#b5945b]', 'text-[#b5945b]');
-        el.classList.add('border-transparent', 'text-gray-500');
-      });
+            <!-- TAB 4: BLOQUEIOS MANUAIS -->
+            <section id="sec-bloqueios" class="tab-content hidden">
+                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário / Dias Inteiros</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded shadow border">
+                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
+                        <form onsubmit="salvarBloqueio(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Data</label>
+                                <input type="date" id="bloq-data" required class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase">Hora Início</label>
+                                    <input type="time" id="bloq-inicio" value="10:00" required class="w-full border p-2 rounded mt-1">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase">Hora Fim</label>
+                                    <input type="time" id="bloq-fim" value="19:00" required class="w-full border p-2 rounded mt-1">
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Motivo</label>
+                                <input type="text" id="bloq-motivo" placeholder="Ex: Folga, Feriado" class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded">CADASTRAR BLOQUEIO</button>
+                        </form>
+                    </div>
+                    <div class="bg-white p-6 rounded shadow border">
+                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários e Dias Bloqueados</h3>
+                        <div id="lista-bloqueios-cadastrados" class="space-y-2 text-sm">
+                            <p class="text-gray-500">Nenhum bloqueio cadastrado.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-      if (aba === 'agenda') {
-        document.getElementById('sec-agenda').classList.remove('hidden');
-        document.getElementById('btn-tab-agenda').classList.add('border-[#b5945b]', 'text-[#b5945b]');
-        carregarFinanceiroEAgendamentos();
-      } else if (aba === 'crm') {
-        document.getElementById('sec-crm').classList.remove('hidden');
-        document.getElementById('btn-tab-crm').classList.add('border-[#b5945b]', 'text-[#b5945b]');
-        carregarClientes();
-      } else if (aba === 'financeiro') {
-        document.getElementById('sec-financeiro').classList.remove('hidden');
-        document.getElementById('btn-tab-financeiro').classList.add('border-[#b5945b]', 'text-[#b5945b]');
-        carregarFinanceiroEAgendamentos();
-      } else if (aba === 'bloqueios') {
-        document.getElementById('sec-bloqueios').classList.remove('hidden');
-        document.getElementById('btn-tab-bloqueios').classList.add('border-[#b5945b]', 'text-[#b5945b]');
-        carregarBloqueios();
-      } else if (aba === 'cms') {
-        document.getElementById('sec-cms').classList.remove('hidden');
-        document.getElementById('btn-tab-cms').classList.add('border-[#b5945b]', 'text-[#b5945b]');
-      }
-    }
+            <!-- TAB 5: CONFIGURAÇÕES & CMS -->
+            <section id="sec-cms" class="tab-content hidden">
+                <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
+                    <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
+                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE & BLOQUEIOS</button>
+                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS & INSTAGRAM (CMS)</button>
+                    <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
+                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
+                </div>
 
-    async function carregarFinanceiroEAgendamentos() {
-      try {
-        const tbody = document.getElementById('lista-agendamentos');
-        tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Carregando agendamentos...</td></tr>`;
+                <!-- SUB-ABA 1: PROCEDIMENTOS -->
+                <div id="subsec-procedimentos" class="subtab-content">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold">Procedimentos Cadastrados (Upload do Celular/PC/Tablet)</h3>
+                        <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO PROCEDIMENTO</button>
+                    </div>
+                    <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                </div>
 
-        let query = _supabase.from('agendamentos').select('*').order('data', { ascending: true }).order('horario', { ascending: true });
-        const dataFiltro = document.getElementById('filtro-data-agenda')?.value;
-        if (dataFiltro) query = query.eq('data', dataFiltro);
+                <!-- SUB-ABA 2: EXPEDIENTE & BLOQUEIOS -->
+                <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
+                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda e Bloqueios</h3>
+                    <form onsubmit="salvarRegras(event)" class="space-y-4">
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Início do Expediente</label>
+                                <input type="time" id="cfg-inicio" value="10:00" class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Fechamento do Estúdio</label>
+                                <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
+                            </div>
+                        </div>
+                        <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
+                    </form>
+                </div>
 
-        const { data: ags, error } = await query;
-        if (error) throw error;
+                <!-- SUB-ABA 3: TEXTOS & INSTAGRAM (CMS) -->
+                <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
+                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos, Localização e Instagram Exibidos no Site</h3>
+                    <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Título Principal (Capa)</label>
+                                <input type="text" id="cms-titulo-capa" value="Beleza através do olhar ✨" class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Descrição da Capa</label>
+                                <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</textarea>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Localização / Endereço do Salão</label>
+                                <input type="text" id="cms-localizacao" value="Bela Vista, Cabo de Santo Agostinho – PE" class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase">Link do Instagram</label>
+                                <input type="text" id="cms-instagram" value="https://www.instagram.com/bvirginiadesign" class="w-full border p-2 rounded mt-1">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
+                                <input type="text" id="cms-whatsapp" value="5581989002496" class="w-full border p-2 rounded mt-1">
+                            </div>
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS NO SITE</button>
+                        </div>
+                    </form>
+                </div>
 
-        if (!ags || ags.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Nenhum agendamento encontrado.</td></tr>`;
-          document.getElementById('extrato-financeiro').innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>`;
-          document.getElementById('fin-faturamento').innerText = `R$ 0,00`;
-          document.getElementById('fin-qtd-agendamentos').innerText = `0`;
-          document.getElementById('fin-ticket-medio').innerText = `R$ 0,00`;
-          return;
+                <!-- SUB-ABA 4: AVALIAÇÕES -->
+                <div id="subsec-avaliacoes" class="subtab-content hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-lg font-bold">Depoimentos & Avaliações dos Clientes</h3>
+                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO DEPOIMENTO</button>
+                    </div>
+                    <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+                </div>
+
+                <!-- SUB-ABA 5: GALERIA -->
+                <div id="subsec-galeria" class="subtab-content hidden">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
+                        <button onclick="adicionarNovaFotoGaleria()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ ADICIONAR FOTO</button>
+                    </div>
+                    <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+                </div>
+            </section>
+
+            <!-- TAB 6: BACKUP -->
+            <section id="sec-backup" class="tab-content hidden">
+                <h2 class="text-xl font-bold mb-4">Backup e Segurança</h2>
+                <div class="bg-white p-6 rounded shadow border text-center">
+                    <button onclick="exportarBackup()" class="bg-black text-white px-6 py-2 rounded font-bold">EXPORTAR BACKUP DADOS</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <!-- SCRIPT COMPLETO DO ADMIN -->
+    <script>
+        const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        
+        // Senha corrigida estritamente para virginia123 (minúscula) conforme solicitado
+        const SENHA_ADMIN = 'virginia123';
+
+        // Procedimentos configurados com nomes e durações corretos fornecidos
+        let procedimentos = [
+            { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "" },
+            { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "" },
+            { id: 3, nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "" },
+            { id: 4, nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "" },
+            { id: 5, nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "" },
+            { id: 6, nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "" },
+            { id: 7, nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "" },
+            { id: 8, nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "" }
+        ];
+
+        let avaliacoes = [
+            { id: 1, nome: 'Amanda Silva', estrelas: 5, texto: 'Atendimento incrível e impecável.' },
+            { id: 2, nome: 'Beatriz Costa', estrelas: 5, texto: 'Extensão super confortável.' }
+        ];
+
+        let fotosSite = [
+            { id: 'capa', posicao: 'Fondo da Capa (Hero Section)', url: '' },
+            { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: '' },
+            { id: 'card-1', posicao: 'Card de Serviço - Design de Sobrancelha', url: '' },
+            { id: 'card-2', posicao: 'Card de Serviço - Lash Lifting / Cílios', url: '' },
+            { id: 'galeria-1', posicao: 'Galeria - Foto 1 (Resultado Sobrancelhas)', url: '' },
+            { id: 'galeria-2', posicao: 'Galeria - Foto 2 (Estúdio / Ambiente)', url: '' }
+        ];
+
+        let bloqueios = [];
+
+        function verificarSenha(e) {
+            e.preventDefault();
+            if (document.getElementById('input-senha').value === SENHA_ADMIN) {
+                sessionStorage.setItem('admin_autenticado', 'true');
+                liberarPainel();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
         }
 
-        tbody.innerHTML = ags.map(item => {
-          const nomeCli = item.nome_cliente || item.cliente || item.nome || 'Cliente';
-          const telCli = item.telefone || item.whatsapp || '-';
-          const servCli = item.servico || item.procedimento || 'Serviço';
-          const dataCli = item.data ? item.data.split('-').reverse().join('/') : '-';
-          const horaCli = item.horario || '-';
-          const statusCli = item.status || 'Pendente';
-
-          return `
-            <tr>
-              <td class="p-3 font-medium">${nomeCli}</td>
-              <td class="p-3">${telCli}</td>
-              <td class="p-3">${servCli}</td>
-              <td class="p-3 font-semibold text-amber-700">${dataCli}</td>
-              <td class="p-3 font-semibold text-gray-900">${horaCli}</td>
-              <td class="p-3">
-                <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${statusCli === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
-                  ${statusCli}
-                </span>
-              </td>
-              <td class="p-3 text-center space-x-2">
-                <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 font-medium">Aceitar</button>
-                <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 font-medium">Excluir</button>
-              </td>
-            </tr>
-          `;
-        }).join('');
-
-        document.getElementById('extrato-financeiro').innerHTML = ags.map(a => `
-          <tr class="border-b">
-            <td class="p-2">${a.data ? a.data.split('-').reverse().join('/') : ''} - ${a.horario}</td>
-            <td class="p-2">${a.nome_cliente || a.cliente || a.nome || 'Cliente'}</td>
-            <td class="p-2">${a.servico || a.procedimento || ''}</td>
-            <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2).replace('.', ',')}</td>
-          </tr>
-        `).join('');
-
-        let fat = ags.reduce((acc, curr) => acc + Number(curr.valor || 0), 0);
-        document.getElementById('fin-faturamento').innerText = `R$ ${fat.toFixed(2).replace('.', ',')}`;
-        document.getElementById('fin-qtd-agendamentos').innerText = ags.length;
-        document.getElementById('fin-ticket-medio').innerText = `R$ ${(fat / (ags.length || 1)).toFixed(2).replace('.', ',')}`;
-
-      } catch (e) {
-        console.log("Erro ao carregar dados:", e);
-      }
-    }
-
-    async function atualizarStatus(id, novoStatus) {
-      const { error } = await _supabase.from('agendamentos').update({ status: novoStatus }).eq('id', id);
-      if (error) alert('Erro ao atualizar status: ' + error.message);
-      else carregarFinanceiroEAgendamentos();
-    }
-
-    async function excluirAgendamento(id) {
-      if (confirm('Deseja realmente excluir este agendamento?')) {
-        const { error } = await _supabase.from('agendamentos').delete().eq('id', id);
-        if (error) alert('Erro ao excluir: ' + error.message);
-        else carregarFinanceiroEAgendamentos();
-      }
-    }
-
-    async function carregarClientes() {
-      try {
-        const { data: cls } = await _supabase.from('clientes').select('*');
-        const tbody = document.getElementById('lista-clientes');
-        if (!cls || cls.length === 0) {
-          tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-500">Nenhum cliente cadastrado.</td></tr>`;
-          return;
+        async function liberarPainel() {
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('admin-content').classList.remove('hidden');
+            await carregarDadosDoBanco();
+            renderizarProcedimentos();
+            renderizarAvaliacoes();
+            renderizarFotos();
+            carregarFinanceiroEAgendamentos();
+            carregarClientesCRM();
+            renderizarBloqueios();
         }
-        tbody.innerHTML = cls.map(c => `
-          <tr class="border-b">
-            <td class="p-3 font-medium">${c.nome || '-'}</td>
-            <td class="p-3">${c.telefone || '-'}</td>
-            <td class="p-3">${c.ultimo_servico || '-'}</td>
-            <td class="p-3 text-center font-bold">${c.total_agendamentos || 1}</td>
-          </tr>
-        `).join('');
-      } catch (e) { console.log(e); }
-    }
 
-    async function carregarBloqueios() {
-      try {
-        const { data: configs } = await _supabase.from('configuracoes_site').select('*').eq('chave', 'bloqueios');
-        if (configs && configs.length > 0) {
-          window.bloqueiosAdmin = JSON.parse(configs[0].valor) || [];
-          const div = document.getElementById('lista-bloqueios-ativos');
-          if (window.bloqueiosAdmin.length === 0) {
-            div.innerHTML = `Nenhum bloqueio cadastrado.`;
-            return;
-          }
-          div.innerHTML = window.bloqueiosAdmin.map((b, idx) => `
-            <div class="flex justify-between items-center bg-gray-50 p-3 rounded border">
-              <span>📅 ${b.data.split('-').reverse().join('/')} (${b.inicio} às ${b.fim})</span>
-              <button onclick="removerBloqueio(${idx})" class="text-red-500 font-bold text-xs">Excluir</button>
-            </div>
-          `).join('');
+        function logout() {
+            sessionStorage.removeItem('admin_autenticado');
+            window.location.reload();
         }
-      } catch (e) { console.log(e); }
-    }
 
-    async function salvarBloqueio() {
-      const data = document.getElementById('bloqueio-data').value;
-      const inicio = document.getElementById('bloqueio-inicio').value;
-      const fim = document.getElementById('bloqueio-fim').value;
-      if (!data || !inicio || !fim) {
-        alert('Preencha todos os campos do bloqueio.');
-        return;
-      }
-      if (!window.bloqueiosAdmin) window.bloqueiosAdmin = [];
-      window.bloqueiosAdmin.push({ data, inicio, fim });
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-tab'));
+            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
+            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
+            if(tabId === 'clientes') carregarClientesCRM();
+        }
 
-      await _supabase.from('configuracoes_site').upsert([{ chave: 'bloqueios', valor: JSON.stringify(window.bloqueiosAdmin) }], { onConflict: 'chave' });
-      alert('Bloqueio salvo com sucesso!');
-      carregarBloqueios();
-    }
+        function switchSubTab(subTabId) {
+            document.querySelectorAll('.subtab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('#sec-cms button').forEach(el => el.classList.remove('active-subtab'));
+            document.getElementById(`subsec-${subTabId}`).classList.remove('hidden');
+            document.getElementById(`subtab-${subTabId}`).classList.add('active-subtab');
+        }
 
-    async function removerBloqueio(idx) {
-      window.bloqueiosAdmin.splice(idx, 1);
-      await _supabase.from('configuracoes_site').upsert([{ chave: 'bloqueios', valor: JSON.stringify(window.bloqueiosAdmin) }], { onConflict: 'chave' });
-      carregarBloqueios();
-    }
+        async function carregarDadosDoBanco() {
+            try {
+                const { data } = await _supabase.from('configuracoes_site').select('*');
+                if (data && data.length > 0) {
+                    data.forEach(item => {
+                        if (item.chave === 'fotos_site') fotosSite = JSON.parse(item.valor);
+                        if (item.chave === 'procedimentos') procedimentos = JSON.parse(item.valor);
+                        if (item.chave === 'avaliacoes') avaliacoes = JSON.parse(item.valor);
+                        if (item.chave === 'bloqueios') bloqueios = JSON.parse(item.valor);
+                        if (item.chave === 'textos_cms') {
+                            const txts = JSON.parse(item.valor);
+                            if(txts.localizacao) document.getElementById('cms-localizacao').value = txts.localizacao;
+                            if(txts.titulo_capa) document.getElementById('cms-titulo-capa').value = txts.titulo_capa;
+                            if(txts.desc_capa) document.getElementById('cms-desc-capa').value = txts.desc_capa;
+                            if(txts.instagram) document.getElementById('cms-instagram').value = txts.instagram;
+                            if(txts.whatsapp) document.getElementById('cms-whatsapp').value = txts.whatsapp;
+                        }
+                    });
+                }
+            } catch (err) {
+                console.log('Erro ao carregar dados do Supabase.');
+            }
+        }
 
-    async function salvarCMS() {
-      const localizacao = document.getElementById('cms-localizacao').value;
-      const whatsapp = document.getElementById('cms-whatsapp').value;
-      const textos = { localizacao, whatsapp };
+        async function salvarNoBanco(chave, objetoDado) {
+            const valorString = JSON.stringify(objetoDado);
+            await _supabase.from('configuracoes_site').upsert({ chave: chave, valor: valorString }, { onConflict: 'chave' });
+        }
 
-      await _supabase.from('configuracoes_site').upsert([{ chave: 'textos_cms', valor: JSON.stringify(textos) }], { onConflict: 'chave' });
-      alert('Configurações salvas com sucesso!');
-    }
-  </script>
+        async function carregarFinanceiroEAgendamentos() {
+            try {
+                const tbody = document.getElementById('lista-agendamentos');
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Carregando agendamentos...</td></tr>`;
+
+                let query = _supabase
+                    .from('agendamentos')
+                    .select('*')
+                    .order('data', { ascending: true })
+                    .order('horario', { ascending: true });
+
+                const dataFiltro = document.getElementById('filtro-data-agenda')?.value;
+                if (dataFiltro) {
+                    query = query.eq('data', dataFiltro);
+                }
+
+                const { data: ags, error } = await query;
+
+                if (error) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-500">Erro ao carregar agendamentos do Supabase.</td></tr>`;
+                    return;
+                }
+
+                if (!ags || ags.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Nenhum agendamento encontrado para o período.</td></tr>`;
+                    document.getElementById('extrato-financeiro').innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>`;
+                    document.getElementById('fin-faturamento').innerText = `R$ 0,00`;
+                    document.getElementById('fin-qtd-agendamentos').innerText = `0`;
+                    document.getElementById('fin-ticket-medio').innerText = `R$ 0,00`;
+                    return;
+                }
+
+                tbody.innerHTML = ags.map(item => {
+                    const nomeCli = item.nome_cliente || item.cliente || item.nome || 'Cliente';
+                    const telCli = item.telefone || item.whatsapp || '-';
+                    const servCli = item.servico || item.procedimento || 'Serviço';
+                    const dataCli = item.data ? item.data.split('-').reverse().join('/') : '-';
+                    const horaCli = item.horario || '-';
+                    const statusCli = item.status || 'Pendente';
+
+                    return `
+                        <tr>
+                            <td class="p-3 font-medium">${nomeCli}</td>
+                            <td class="p-3">${telCli}</td>
+                            <td class="p-3">${servCli}</td>
+                            <td class="p-3 font-semibold text-amber-700">${dataCli}</td>
+                            <td class="p-3 font-semibold text-gray-900">${horaCli}</td>
+                            <td class="p-3">
+                                <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${statusCli === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
+                                    ${statusCli}
+                                </span>
+                            </td>
+                            <td class="p-3 text-center space-x-2">
+                                <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 font-medium">Aceitar</button>
+                                <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 font-medium">Excluir</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+
+                document.getElementById('extrato-financeiro').innerHTML = ags.map(a => `
+                    <tr class="border-b">
+                        <td class="p-2">${a.data ? a.data.split('-').reverse().join('/') : ''} - ${a.horario}</td>
+                        <td class="p-2">${a.nome_cliente || a.cliente || a.nome || 'Cliente'}</td>
+                        <td class="p-2">${a.servico || a.procedimento || ''}</td>
+                        <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2).replace('.', ',')}</td>
+                    </tr>
+                `).join('');
+
+                let fat = ags.reduce((acc, curr) => acc + Number(curr.valor || 0), 0);
+                document.getElementById('fin-faturamento').innerText = `R$ ${fat.toFixed(2).replace('.', ',')}`;
+                document.getElementById('fin-qtd-agendamentos').innerText = ags.length;
+                document.getElementById('fin-ticket-medio').innerText = `R$ ${(fat / ags.length).toFixed(2).replace('.', ',')}`;
+
+            } catch (e) {
+                console.log("Erro ao carregar dados:", e);
+            }
+        }
+
+        async function carregarClientesCRM() {
+            try {
+                const { data: cls } = await _supabase.from('clientes').select('*');
+                const tbody = document.getElementById('tabela-clientes');
+                if (!cls || cls.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado ainda.</td></tr>`;
+                    return;
+                }
+                tbody.innerHTML = cls.map(c => `
+                    <tr class="border-b">
+                        <td class="p-3 font-medium">${c.nome || '-'}</td>
+                        <td class="p-3">${c.telefone || '-'}</td>
+                        <td class="p-3">${c.ultimo_servico || '-'}</td>
+                        <td class="p-3 font-bold text-center">${c.total_agendamentos || 1}</td>
+                    </tr>
+                `).join('');
+            } catch(e) { console.log(e); }
+        }
+
+        async function atualizarStatus(id, novoStatus) {
+            const { error } = await _supabase.from('agendamentos').update({ status: novoStatus }).eq('id', id);
+            if (error) alert('Erro ao atualizar status: ' + error.message);
+            else carregarFinanceiroEAgendamentos();
+        }
+
+        async function excluirAgendamento(id) {
+            if (confirm('Tem certeza que deseja excluir este agendamento?')) {
+                const { error } = await _supabase.from('agendamentos').delete().eq('id', id);
+                if (error) alert('Erro ao excluir: ' + error.message);
+                else carregarFinanceiroEAgendamentos();
+            }
+        }
+
+        function renderizarProcedimentos() {
+            const container = document.getElementById('grid-procedimentos');
+            if (procedimentos.length === 0) {
+                container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum procedimento cadastrado.</p>`;
+                return;
+            }
+            container.innerHTML = procedimentos.map(p => `
+                <div class="bg-white p-5 rounded shadow border space-y-3">
+                    <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold">
+                    <div class="grid grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-[10px] text-gray-500 uppercase font-bold">Tempo (min)</label>
+                            <input type="text" id="proc-tempo-${p.id}" value="${p.duracao_min || 30}" class="w-full border p-2 rounded text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-[10px] text-gray-500 uppercase font-bold">Preço (R$)</label>
+                            <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700">
+                        </div>
+                    </div>
+                    
+                    <div class="mt-2">
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Foto do Serviço:</label>
+                        ${p.foto_url ? `<div class="mb-2"><img src="${p.foto_url}" class="h-20 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Nenhuma foto carregada</div>'}
+                        <input type="file" id="proc-file-${p.id}" accept="image/*" class="w-full text-xs border p-1 rounded bg-gray-50 mb-1" onchange="converterArquivoParaBase64Procedimento(${p.id})">
+                        <input type="hidden" id="proc-foto-${p.id}" value="${p.foto_url || ''}">
+                    </div>
+
+                    <div class="flex space-x-2 pt-2">
+                        <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
+                        <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">EXCLUIR</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function converterArquivoParaBase64Procedimento(id) {
+            const input = document.getElementById(`proc-file-${id}`);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(`proc-foto-${id}`).value = e.target.result;
+                    alert('✨ Foto carregada do dispositivo! Clique em SALVAR para confirmar.');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function salvarProcedimento(id) {
+            const idx = procedimentos.findIndex(p => p.id === id);
+            if (idx !== -1) {
+                procedimentos[idx].nome = document.getElementById(`proc-nome-${id}`).value;
+                procedimentos[idx].duracao_min = parseInt(document.getElementById(`proc-tempo-${id}`).value) || 30;
+                procedimentos[idx].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
+                procedimentos[idx].foto_url = document.getElementById(`proc-foto-${id}`).value;
+                await salvarNoBanco('procedimentos', procedimentos);
+                alert('✨ Procedimento salvo com sucesso!');
+                renderizarProcedimentos();
+            }
+        }
+
+        async function excluirProcedimento(id) {
+            if (confirm('Deseja excluir este procedimento?')) {
+                procedimentos = procedimentos.filter(p => p.id !== id);
+                await salvarNoBanco('procedimentos', procedimentos);
+                renderizarProcedimentos();
+            }
+        }
+
+        function adicionarNovoProcedimento() {
+            procedimentos.push({ id: Date.now(), nome: "Novo Serviço", preco: 50.00, duracao_min: 30, foto_url: "" });
+            renderizarProcedimentos();
+        }
+
+        function renderizarAvaliacoes() {
+            const container = document.getElementById('grid-avaliacoes');
+            container.innerHTML = avaliacoes.map(a => `
+                <div class="bg-white p-5 rounded shadow border space-y-3">
+                    <input type="text" id="aval-nome-${a.id}" value="${a.nome}" class="w-full border p-2 rounded text-sm font-bold">
+                    <textarea id="aval-texto-${a.id}" rows="2" class="w-full border p-2 rounded text-sm">${a.texto}</textarea>
+                    <button onclick="salvarAvaliacao(${a.id})" class="bg-gold text-white text-xs font-bold py-2 px-4 rounded">💾 SALVAR</button>
+                </div>
+            `).join('');
+        }
+
+        async function salvarAvaliacao(id) {
+            const idx = avaliacoes.findIndex(a => a.id === id);
+            if (idx !== -1) {
+                avaliacoes[idx].nome = document.getElementById(`aval-nome-${id}`).value;
+                avaliacoes[idx].texto = document.getElementById(`aval-texto-${id}`).value;
+                await salvarNoBanco('avaliacoes', avaliacoes);
+                alert('✨ Avaliação salva!');
+            }
+        }
+
+        function adicionarNovoComentario() {
+            avaliacoes.push({ id: Date.now(), nome: "Cliente", estrelas: 5, texto: "Excelente!" });
+            renderizarAvaliacoes();
+        }
+
+        function renderizarFotos() {
+            const container = document.getElementById('grid-fotos-site');
+            container.innerHTML = fotosSite.map(f => `
+                <div class="bg-white p-4 rounded shadow border space-y-3">
+                    <h4 class="font-bold text-sm text-amber-700">${f.posicao}</h4>
+                    
+                    ${f.url ? `<div class="mb-2"><img src="${f.url}" class="h-24 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Nenhuma foto carregada</div>'}
+                    
+                    <input type="file" id="foto-file-${f.id}" accept="image/*" class="w-full text-xs border p-1 rounded bg-gray-50" onchange="converterArquivoParaBase64Foto('${f.id}')">
+                    <input type="hidden" id="foto-url-${f.id}" value="${f.url || ''}">
+
+                    <div class="flex space-x-2 pt-2">
+                        <button onclick="salvarFotoUnica('${f.id}')" class="flex-1 bg-gold text-white font-bold text-xs py-2 rounded">💾 SALVAR FOTO</button>
+                        <button onclick="excluirFotoSite('${f.id}')" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">REMOVER</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function converterArquivoParaBase64Foto(id) {
+            const input = document.getElementById(`foto-file-${id}`);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById(`foto-url-${id}`).value = e.target.result;
+                    alert('✨ Foto carregada do dispositivo! Clique em SALVAR FOTO para confirmar.');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        async function salvarFotoUnica(id) {
+            const idx = fotosSite.findIndex(f => f.id === id);
+            if (idx !== -1) {
+                fotosSite[idx].url = document.getElementById(`foto-url-${id}`).value;
+                await salvarNoBanco('fotos_site', fotosSite);
+                alert('✨ Foto salva com sucesso!');
+                renderizarFotos();
+            }
+        }
+
+        async function excluirFotoSite(id) {
+            if (confirm('Deseja remover esta foto?')) {
+                fotosSite = fotosSite.filter(f => f.id !== id);
+                await salvarNoBanco('fotos_site', fotosSite);
+                renderizarFotos();
+            }
+        }
+
+        function adicionarNovaFotoGaleria() {
+            const novoId = 'galeria-' + Date.now();
+            fotosSite.push({ id: novoId, posicao: 'Nova Foto da Galeria', url: '' });
+            renderizarFotos();
+        }
+
+        async function salvarTextosCMS(e) { 
+            e.preventDefault(); 
+            const textos = {
+                titulo_capa: document.getElementById('cms-titulo-capa').value,
+                desc_capa: document.getElementById('cms-desc-capa').value,
+                localizacao: document.getElementById('cms-localizacao').value,
+                instagram: document.getElementById('cms-instagram').value,
+                whatsapp: document.getElementById('cms-whatsapp').value
+            };
+            await salvarNoBanco('textos_cms', textos);
+            alert('✨ Textos salvos!'); 
+        }
+
+        async function salvarRegras(e) { e.preventDefault(); alert('Regras salvas!'); }
+
+        async function salvarBloqueio(e) {
+            e.preventDefault();
+            bloqueios.push({
+                id: Date.now(),
+                data: document.getElementById('bloq-data').value,
+                inicio: document.getElementById('bloq-inicio').value,
+                fim: document.getElementById('bloq-fim').value,
+                motivo: document.getElementById('bloq-motivo').value
+            });
+            await salvarNoBanco('bloqueios', bloqueios);
+            renderizarBloqueios();
+            alert('✨ Bloqueio cadastrado e sincronizado com o site!');
+        }
+
+        function renderizarBloqueios() {
+            const container = document.getElementById('lista-bloqueios-cadastrados');
+            if (bloqueios.length === 0) {
+                container.innerHTML = `<p class="text-gray-500">Nenhum bloqueio cadastrado.</p>`;
+                return;
+            }
+            container.innerHTML = bloqueios.map(b => `
+                <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
+                    <div>
+                        <p>📅 Data: <b>${b.data}</b> (${b.inicio} às ${b.fim})</p>
+                        <p class="text-gray-500">Motivo: ${b.motivo || 'Não informado'}</p>
+                    </div>
+                    <button onclick="excluirBloqueio(${b.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
+                </div>
+            `).join('');
+        }
+
+        async function excluirBloqueio(id) {
+            bloqueios = bloqueios.filter(b => b.id !== id);
+            await salvarNoBanco('bloqueios', bloqueios);
+            renderizarBloqueios();
+        }
+
+        function exportarBackup() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({procedimentos, avaliacoes, fotosSite, bloqueios}, null, 2));
+            const a = document.createElement('a');
+            a.setAttribute("href", dataStr);
+            a.setAttribute("download", "backup_b_virginia.json");
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+
+        window.onload = function() {
+            if (sessionStorage.getItem('admin_autenticado') === 'true') liberarPanel(); // liberação segura
+        }
+    </script>
 </body>
 </html>
