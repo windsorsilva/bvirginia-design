@@ -15,7 +15,6 @@
 </head>
 <body class="bg-[#FAF8F5] text-[#2C2A29]">
 
-  <!-- CABEÇALHO / NAVBAR -->
   <header class="absolute top-0 left-0 right-0 z-20 flex justify-between items-center px-6 md:px-16 py-6 text-white">
     <div class="font-title text-xl font-bold tracking-wider">B Virgínia Design ✨</div>
     <div class="flex items-center space-x-6 text-sm font-medium">
@@ -27,7 +26,6 @@
     </div>
   </header>
 
-  <!-- HERO BANNER -->
   <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500 pt-28" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
     <div class="max-w-xl text-white space-y-6 z-10">
       <span class="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">B Virgínia Design</span>
@@ -44,7 +42,6 @@
     </div>
   </section>
 
-  <!-- SEÇÃO SOBRE -->
   <section class="py-16 px-6 md:px-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
     <div class="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
       <img id="foto-sobre-element" src="assets/images/hero-bg.png" alt="B Virgínia Design" class="w-full h-full object-cover transition duration-500" onerror="this.src='https://placehold.co/600x800/e8e2d5/5c5043?text=B+Virginia'">
@@ -57,7 +54,6 @@
     </div>
   </section>
 
-  <!-- SERVIÇOS -->
   <section id="servicos" class="py-20 bg-[#F4EFEA] px-6 md:px-16">
     <div class="max-w-7xl mx-auto text-center mb-16 space-y-3">
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Nossos Procedimentos</span>
@@ -66,7 +62,6 @@
     <div id="dynamic-services" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 max-w-7xl mx-auto"></div>
   </section>
 
-  <!-- PORTFÓLIO -->
   <section class="py-20 px-6 md:px-16 max-w-7xl mx-auto">
     <div class="text-center mb-16 space-y-3">
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Portfólio</span>
@@ -75,7 +70,6 @@
     <div id="portfolio-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"></div>
   </section>
 
-  <!-- DEPOIMENTOS -->
   <section class="py-20 bg-[#F4EFEA] px-6 md:px-16">
     <div class="max-w-7xl mx-auto">
       <div class="text-center mb-16 space-y-3">
@@ -86,7 +80,6 @@
     </div>
   </section>
 
-  <!-- FORMULÁRIO DE AGENDAMENTO -->
   <section id="agendamento" class="py-20 px-6 md:px-16">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
       <div class="space-y-6">
@@ -141,7 +134,6 @@
     </div>
   </section>
 
-  <!-- RODAPÉ -->
   <footer class="bg-[#2C2A29] text-gray-400 py-16 px-6 md:px-16 border-t border-amber-900/20">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
       <div class="space-y-4">
@@ -173,7 +165,7 @@
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Lista oficial exata com os nomes e durações corretas (em minutos)
+    // Lista oficial exata com os nomes corretos solicitados
     const SERVICOS_PADRAO = [
       { nome: "Design Simples", preco: 46.00, duracao_min: 30, foto_url: "assets/images/galeria-1.png" },
       { nome: "Design com Henna", preco: 45.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
@@ -242,7 +234,6 @@
     }
 
     async function carregarDadosSite() {
-      // Sempre carrega a lista oficial correta e apaga eventuais lixos do banco
       renderizarServicos(SERVICOS_PADRAO);
       renderizarPortfolio(PORTFOLIO_PADRAO);
       renderizarDepoimentos(DEPOIMENTOS_PADRAO);
