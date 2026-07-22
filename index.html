@@ -168,16 +168,16 @@
     </div>
   </footer>
 
-  <!-- SCRIPT COMPLETO DO SITE COM OS PROCEDIMENTOS E TEMPOS SOLICITADOS -->
+  <!-- SCRIPT COMPLETO DO SITE DO CLIENTE COM OS PROCEDIMENTOS OFICIAIS E BLOQUEIOS DE HORAS -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Lista exata com todos os processos e durações solicitadas
+    // Lista oficial exata com os nomes e durações solicitadas
     const SERVICOS_PADRAO = [
-      { nome: "Design simples", preco: 45.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
-      { nome: "Design com henna", preco: 45.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
+      { nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
+      { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
       { nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "assets/images/galeria-3.png" }, // 3h = 180 min
       { nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },      // 1h = 60 min
       { nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-5.png" }, // 2h = 120 min
@@ -198,13 +198,15 @@
 
     function renderizarServicos(servs) {
       servicosCarregados = servs;
-      document.getElementById('dynamic-services').innerHTML = servs.map(s => `
+      document.getElementById('dynamic-services').innerHTML = servs.map(s => {
+        let duracaoTxt = s.duracao_min >= 60 ? (s.duracao_min / 60) + 'h' : s.duracao_min + ' min';
+        return `
         <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
           <div>
             <img src="${s.foto_url || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'" class="w-full h-48 object-cover">
             <div class="p-6 space-y-2">
               <h3 class="font-title text-xl font-semibold">${s.nome}</h3>
-              <p class="text-xs text-gray-500">⏱️ Duração: ${s.duracao_min >= 60 ? (s.duracao_min/60)+'h' : s.duracao_min+' min'}</p>
+              <p class="text-xs text-gray-500">⏱️ Duração: ${duracaoTxt}</p>
             </div>
           </div>
           <div class="p-6 pt-0 flex justify-between items-center border-t border-gray-50 mt-4">
@@ -212,7 +214,7 @@
             <a href="#agendamento" onclick="preencherServico('${s.nome}')" class="bg-[#2C2A29] text-white text-xs px-4 py-2 rounded-lg font-semibold uppercase">Agendar</a>
           </div>
         </div>
-      `).join('');
+      `;}).join('');
 
       const select = document.getElementById('form-service');
       select.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>' + 
@@ -242,6 +244,7 @@
     }
 
     async function carregarDadosSite() {
+      // Ignora configurações antigas do Supabase para forçar a lista oficial correta
       renderizarServicos(SERVICOS_PADRAO);
       renderizarPortfolio(PORTFOLIO_PADRAO);
       renderizarDepoimentos(DEPOIMENTOS_PADRAO);
@@ -264,10 +267,6 @@
               });
               const portImgs = fotos.filter(f => f.id.startsWith('galeria-') || f.id.startsWith('galeria')).map(f => f.url);
               if (portImgs.length > 0) renderizarPortfolio(portImgs);
-            }
-            if (c.chave === 'procedimentos') {
-              const procs = JSON.parse(c.valor);
-              if (procs && procs.length > 0) renderizarServicos(procs);
             }
             if (c.chave === 'avaliacoes') {
               const avals = JSON.parse(c.valor);
@@ -306,7 +305,7 @@
       carregarHorariosDisponiveis();
     }
 
-    // BLOQUEIO INTELIGENTE DE HORÁRIOS FUTUROS COM BASE NA DURAÇÃO DO PROCESSO SELECIONADO
+    // BLOQUEIO INTELIGENTE DE HORÁRIOS BASEADO NA DURAÇÃO EM MINUTOS OU HORAS
     function carregarHorariosDisponiveis() {
       const dataSelecionada = document.getElementById('form-date').value;
       const selectServico = document.getElementById('form-service');
@@ -358,10 +357,8 @@
         let slotInicioMin = h * 60 + m;
         let slotFimMin = slotInicioMin + duracaoMinutos;
 
-        // Impede agendamento se o procedimento ultrapassar o horário de fechamento (19:00)
         if (slotFimMin > fimMin) return;
 
-        // Valida se qualquer bloco de 30 minutos do atendimento pretendido colide com algum horário já ocupado ou bloqueado
         let conflito = false;
         for (let offset = 0; offset < duracaoMinutos; offset += 30) {
           let checkM = slotInicioMin + offset;
