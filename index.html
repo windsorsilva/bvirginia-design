@@ -168,20 +168,22 @@
     </div>
   </footer>
 
-  <!-- SCRIPT COMPLETO DO SITE DO CLIENTE -->
+  <!-- SCRIPT COMPLETO DO SITE COM OS PROCEDIMENTOS E TEMPOS SOLICITADOS -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+    // Lista exata com todos os processos e durações solicitadas
     const SERVICOS_PADRAO = [
-      { nome: "Design simples", preco: 35.00, duracao_min: 30, foto_url: "assets/images/galeria-1.png" },
-      { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-      { nome: "Design com colorimetria", preco: 55.00, duracao_min: 45, foto_url: "assets/images/galeria-3.png" },
-      { nome: "Brow lamination", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
-      { nome: "Lash lifting", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-5.png" },
-      { nome: "Depilação do buço", preco: 15.00, duracao_min: 30, foto_url: "assets/images/galeria-6.png" },
-      { nome: "Combo brow + lash", preco: 160.00, duracao_min: 90, foto_url: "assets/images/galeria-1.png" }
+      { nome: "Design simples", preco: 45.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
+      { nome: "Design com henna", preco: 45.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
+      { nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "assets/images/galeria-3.png" }, // 3h = 180 min
+      { nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },      // 1h = 60 min
+      { nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-5.png" }, // 2h = 120 min
+      { nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-6.png" },         // 2h = 120 min
+      { nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-1.png" },         // 2h = 120 min
+      { nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-2.png" }    // 2h = 120 min
     ];
 
     const PORTFOLIO_PADRAO = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
@@ -202,7 +204,7 @@
             <img src="${s.foto_url || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'" class="w-full h-48 object-cover">
             <div class="p-6 space-y-2">
               <h3 class="font-title text-xl font-semibold">${s.nome}</h3>
-              <p class="text-xs text-gray-500">⏱️ Duração: ${s.duracao_min || 30} min</p>
+              <p class="text-xs text-gray-500">⏱️ Duração: ${s.duracao_min >= 60 ? (s.duracao_min/60)+'h' : s.duracao_min+' min'}</p>
             </div>
           </div>
           <div class="p-6 pt-0 flex justify-between items-center border-t border-gray-50 mt-4">
@@ -214,7 +216,7 @@
 
       const select = document.getElementById('form-service');
       select.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>' + 
-        servs.map(s => `<option value="${s.nome}" data-duracao="${s.duracao_min || 30}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
+        servs.map(s => `<option value="${s.nome}" data-duracao="${s.duracao_min}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
     }
 
     function renderizarPortfolio(port) {
@@ -304,6 +306,7 @@
       carregarHorariosDisponiveis();
     }
 
+    // BLOQUEIO INTELIGENTE DE HORÁRIOS FUTUROS COM BASE NA DURAÇÃO DO PROCESSO SELECIONADO
     function carregarHorariosDisponiveis() {
       const dataSelecionada = document.getElementById('form-date').value;
       const selectServico = document.getElementById('form-service');
@@ -319,8 +322,8 @@
       let duracaoMinutos = parseInt(selectedOption.getAttribute('data-duracao')) || 30;
 
       let horariosPossiveis = [];
-      let inicioMin = 10 * 60;
-      let fimMin = 19 * 60;
+      let inicioMin = 10 * 60; // 10:00
+      let fimMin = 19 * 60;    // 19:00
 
       for (let t = inicioMin; t < fimMin; t += 30) {
         let h = Math.floor(t / 60).toString().padStart(2, '0');
@@ -355,8 +358,10 @@
         let slotInicioMin = h * 60 + m;
         let slotFimMin = slotInicioMin + duracaoMinutos;
 
+        // Impede agendamento se o procedimento ultrapassar o horário de fechamento (19:00)
         if (slotFimMin > fimMin) return;
 
+        // Valida se qualquer bloco de 30 minutos do atendimento pretendido colide com algum horário já ocupado ou bloqueado
         let conflito = false;
         for (let offset = 0; offset < duracaoMinutos; offset += 30) {
           let checkM = slotInicioMin + offset;
@@ -386,7 +391,6 @@
       selectTempo.innerHTML = htmlOptions;
     }
 
-    // ENVIO DE AGENDAMENTO CORRIGIDO PARA O SUPABASE
     async function enviarAgendamento(event) {
       event.preventDefault();
       const nome_cliente = document.getElementById('form-name').value.trim();
@@ -400,7 +404,6 @@
       const valor = sObj ? Number(sObj.preco) : 0;
 
       try {
-        // Gravação com nomes idênticos aos das colunas do Supabase
         const { error: errAgendamento } = await _supabase.from('agendamentos').insert([{ 
           nome_cliente: nome_cliente, 
           telefone: telefone, 
@@ -416,7 +419,6 @@
           return;
         }
 
-        // Atualização/Inserção da base de CRM
         const { data: cliExistente } = await _supabase.from('clientes').select('*').eq('telefone', telefone);
         if (cliExistente && cliExistente.length > 0) {
           await _supabase.from('clientes').update({
