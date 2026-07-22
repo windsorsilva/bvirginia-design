@@ -20,7 +20,7 @@
     <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full mx-4 space-y-6">
       <div class="text-center space-y-2">
         <h2 class="font-title text-2xl font-bold">Painel Administrativo ✨</h2>
-        <p class="text-xs text-gray-500">Digite qualquer senha para acessar o gerenciamento</p>
+        <p class="text-xs text-gray-500">Digite a senha para acessar o gerenciamento</p>
       </div>
       <div class="space-y-4">
         <div>
@@ -32,8 +32,9 @@
     </div>
   </div>
 
-  <!-- CONTEÚDO PRINCIPAL DO ADMIN -->
+  <!-- CONTEÚDO PRINCIPAL DO ADMIN (Oculto até o login) -->
   <div id="admin-content" class="hidden">
+    <!-- HEADER -->
     <header class="bg-white border-b px-6 md:px-16 py-4 flex justify-between items-center shadow-sm">
       <div>
         <h1 class="font-title text-xl font-bold">Painel da Agenda ✨</h1>
@@ -42,6 +43,7 @@
       <button onclick="sairAdmin()" class="bg-black hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-xs font-bold transition">SAIR DO PAINEL 🚪</button>
     </header>
 
+    <!-- ABAS DE NAVEGAÇÃO -->
     <nav class="bg-white border-b px-6 md:px-16 flex space-x-8 overflow-x-auto">
       <button onclick="mudarAba('agenda')" id="btn-tab-agenda" class="py-4 border-b-2 border-[#b5945b] text-[#b5945b] font-bold text-sm uppercase whitespace-nowrap">Agenda 📅</button>
       <button onclick="mudarAba('crm')" id="btn-tab-crm" class="py-4 border-b-2 border-transparent text-gray-500 hover:text-black font-bold text-sm uppercase whitespace-nowrap">Clientes (CRM) 👥</button>
@@ -50,12 +52,13 @@
       <button onclick="mudarAba('cms')" id="btn-tab-cms" class="py-4 border-b-2 border-transparent text-gray-500 hover:text-black font-bold text-sm uppercase whitespace-nowrap">Configurações & CMS ⚙️</button>
     </nav>
 
+    <!-- CONTEÚDO DAS ABAS -->
     <main class="max-w-7xl mx-auto p-6 md:p-16">
       
       <!-- ABA 1: AGENDA -->
       <section id="sec-agenda" class="tab-content space-y-6">
         <div class="flex flex-wrap justify-between items-center gap-4">
-          <h2 class="text-xl font-bold">Gestão Completa de Agendamentos</h2>
+          <h2 class="text-xl font-bold">Gestão Completa de Agendamentos (Futuros e Histórico)</h2>
           <div class="flex items-center space-x-2">
             <label class="text-xs font-bold uppercase text-gray-600">Filtrar por data:</label>
             <input type="date" id="filtro-data-agenda" onchange="carregarFinanceiroEAgendamentos()" class="border p-2 rounded text-sm bg-white">
@@ -82,7 +85,7 @@
         </div>
       </section>
 
-      <!-- ABA 2: CLIENTES -->
+      <!-- ABA 2: CLIENTES (CRM) -->
       <section id="sec-crm" class="tab-content space-y-6 hidden">
         <h2 class="text-xl font-bold">Base de Clientes & CRM</h2>
         <div class="bg-white p-6 rounded shadow border overflow-x-auto">
@@ -137,7 +140,7 @@
         </div>
       </section>
 
-      <!-- ABA 4: BLOQUEIOS -->
+      <!-- ABA 4: BLOQUEIOS MANUAIS -->
       <section id="sec-bloqueios" class="tab-content space-y-6 hidden">
         <h2 class="text-xl font-bold">Gerenciar Bloqueios Manuais de Horário</h2>
         <div class="bg-white p-6 rounded shadow border max-w-lg space-y-4">
@@ -164,7 +167,7 @@
         </div>
       </section>
 
-      <!-- ABA 5: CMS -->
+      <!-- ABA 5: CONFIGURAÇÕES & CMS -->
       <section id="sec-cms" class="tab-content space-y-6 hidden">
         <h2 class="text-xl font-bold">Configurações & CMS do Site</h2>
         <div class="bg-white p-6 rounded shadow border space-y-4 max-w-xl">
@@ -184,18 +187,23 @@
     </main>
   </div>
 
+  <!-- SCRIPT COMPLETO DO PAINEL ADMIN -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     function tentarLogin() {
-      // Aceita qualquer senha digitada para garantir acesso imediato
-      document.getElementById('login-modal').classList.add('hidden');
-      document.getElementById('admin-content').classList.remove('hidden');
-      carregarFinanceiroEAgendamentos();
-      carregarClientes();
-      carregarBloqueios();
+      const senha = document.getElementById('admin-password').value;
+      if (senha === 'Virginia123') {
+        document.getElementById('login-modal').classList.add('hidden');
+        document.getElementById('admin-content').classList.remove('hidden');
+        carregarFinanceiroEAgendamentos();
+        carregarClientes();
+        carregarBloqueios();
+      } else {
+        alert('Senha incorreta!');
+      }
     }
 
     function sairAdmin() {
