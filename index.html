@@ -15,7 +15,7 @@
 </head>
 <body class="bg-[#FAF8F5] text-[#2C2A29]">
 
-  <!-- CABEÇALHO / NAVBAR COM INSTAGRAM -->
+  <!-- CABEÇALHO / NAVBAR -->
   <header class="absolute top-0 left-0 right-0 z-20 flex justify-between items-center px-6 md:px-16 py-6 text-white">
     <div class="font-title text-xl font-bold tracking-wider">B Virgínia Design ✨</div>
     <div class="flex items-center space-x-6 text-sm font-medium">
@@ -168,22 +168,20 @@
     </div>
   </footer>
 
-  <!-- SCRIPT COMPLETO DO SITE DO CLIENTE COM OS PROCEDIMENTOS OFICIAIS E BLOQUEIOS DE HORAS -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Lista oficial exata com os nomes e durações solicitadas
+    // Lista oficial exata com os nomes e durações corretas (em minutos)
     const SERVICOS_PADRAO = [
-      { nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
-      { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-      { nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "assets/images/galeria-3.png" }, // 3h = 180 min
-      { nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },      // 1h = 60 min
-      { nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-5.png" }, // 2h = 120 min
-      { nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-6.png" },         // 2h = 120 min
-      { nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-1.png" },         // 2h = 120 min
-      { nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-2.png" }    // 2h = 120 min
+      { nome: "Design Simples", preco: 46.00, duracao_min: 30, foto_url: "assets/images/galeria-1.png" },
+      { nome: "Design com Henna", preco: 45.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
+      { nome: "Design com Colorimetria", preco: 50.00, duracao_min: 50, foto_url: "assets/images/galeria-3.png" },
+      { nome: "Brow Lamination", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
+      { nome: "Lash Lifting", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-5.png" },
+      { nome: "Epilação do Buço", preco: 15.00, duracao_min: 15, foto_url: "assets/images/galeria-6.png" },
+      { nome: "Combo Brow + Lash", preco: 160.00, duracao_min: 120, foto_url: "assets/images/galeria-1.png" }
     ];
 
     const PORTFOLIO_PADRAO = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
@@ -244,12 +242,14 @@
     }
 
     async function carregarDadosSite() {
-      // Ignora configurações antigas do Supabase para forçar a lista oficial correta
+      // Sempre carrega a lista oficial correta e apaga eventuais lixos do banco
       renderizarServicos(SERVICOS_PADRAO);
       renderizarPortfolio(PORTFOLIO_PADRAO);
       renderizarDepoimentos(DEPOIMENTOS_PADRAO);
 
       try {
+        await _supabase.from('configuracoes_site').delete().eq('chave', 'procedimentos');
+
         const { data: ags } = await _supabase.from('agendamentos').select('*');
         agendamentosGlobais = ags || [];
 
@@ -305,7 +305,6 @@
       carregarHorariosDisponiveis();
     }
 
-    // BLOQUEIO INTELIGENTE DE HORÁRIOS BASEADO NA DURAÇÃO EM MINUTOS OU HORAS
     function carregarHorariosDisponiveis() {
       const dataSelecionada = document.getElementById('form-date').value;
       const selectServico = document.getElementById('form-service');
