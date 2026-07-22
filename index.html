@@ -304,7 +304,6 @@
       carregarHorariosDisponiveis();
     }
 
-    // Lógica de horários de 30 em 30 minutos e bloqueio automático por duração do serviço
     function carregarHorariosDisponiveis() {
       const dataSelecionada = document.getElementById('form-date').value;
       const selectServico = document.getElementById('form-service');
@@ -316,14 +315,12 @@
         return;
       }
 
-      // Descobrir a duração do serviço selecionado
       const selectedOption = selectServico.options[selectServico.selectedIndex];
       let duracaoMinutos = parseInt(selectedOption.getAttribute('data-duracao')) || 30;
 
-      // Horários possíveis das 10:00 às 19:00 de 30 em 30 minutos
       let horariosPossiveis = [];
-      let inicioMin = 10 * 60; // 10:00
-      let fimMin = 19 * 60;    // 19:00
+      let inicioMin = 10 * 60;
+      let fimMin = 19 * 60;
 
       for (let t = inicioMin; t < fimMin; t += 30) {
         let h = Math.floor(t / 60).toString().padStart(2, '0');
@@ -331,16 +328,13 @@
         horariosPossiveis.push(`${h}:${m}`);
       }
 
-      // Filtrar agendamentos já existentes na data selecionada
       const agendamentosDoDia = agendamentosGlobais.filter(a => a.data === dataSelecionada);
       
-      // Mapear slots ocupados considerando a duração de cada agendamento anterior
       let slotsOcupados = new Set();
       agendamentosDoDia.forEach(item => {
         let [h, m] = item.horario.split(':').map(Number);
         let agInicioMin = h * 60 + m;
         
-        // Descobrir duração do serviço já agendado
         let sObj = servicosCarregados.find(s => s.nome === item.servico);
         let agDuracao = sObj ? (sObj.duracao_min || 30) : 30;
 
@@ -352,10 +346,8 @@
         }
       });
 
-      // Verificar bloqueios manuais cadastrados no admin
       const bloqueiosDoDia = bloqueiosGlobais.filter(b => b.data === dataSelecionada);
 
-      // Gerar as opções do select validando se há espaço suficiente para a duração do serviço
       let htmlOptions = '<option value="" disabled selected>Selecione um horário</option>';
       
       horariosPossiveis.forEach(hStr => {
@@ -363,10 +355,8 @@
         let slotInicioMin = h * 60 + m;
         let slotFimMin = slotInicioMin + duracaoMinutos;
 
-        // Verificar se ultrapassa o horário de fechamento (19:00)
         if (slotFimMin > fimMin) return;
 
-        // Verificar se algum slot dentro do intervalo necessário está ocupado ou bloqueado
         let conflito = false;
         for (let offset = 0; offset < duracaoMinutos; offset += 30) {
           let checkM = slotInicioMin + offset;
@@ -379,7 +369,6 @@
             break;
           }
 
-          // Checar se bate com bloqueios manuais
           for (let b of bloqueiosDoDia) {
             if (checkStr >= b.inicio && checkStr <= b.fim) {
               conflito = true;
@@ -397,9 +386,10 @@
       selectTempo.innerHTML = htmlOptions;
     }
 
+    // ENVIO DE AGENDAMENTO CORRIGIDO PARA O SUPABASE
     async function enviarAgendamento(event) {
       event.preventDefault();
-      const nome = document.getElementById('form-name').value.trim();
+      const nome_cliente = document.getElementById('form-name').value.trim();
       const telefone = document.getElementById('form-phone').value.trim();
       const servico = document.getElementById('form-service').value;
       const data = document.getElementById('form-date').value;
@@ -407,25 +397,45 @@
       const obs = document.getElementById('form-notes').value.trim();
 
       const sObj = servicosCarregados.find(s => s.nome === servico);
-      const valor = sObj ? sObj.preco : 0;
+      const valor = sObj ? Number(sObj.preco) : 0;
 
       try {
-        await _supabase.from('agendamentos').insert([{ nome, telefone, servico, data, horario, valor, status: 'Confirmado' }]);
+        // Gravação com nomes idênticos aos das colunas do Supabase
+        const { error: errAgendamento } = await _supabase.from('agendamentos').insert([{ 
+          nome_cliente: nome_cliente, 
+          telefone: telefone, 
+          servico: servico, 
+          data: data, 
+          horario: horario, 
+          valor: valor, 
+          status: 'Pendente' 
+        }]);
+
+        if (errAgendamento) {
+          alert('Atenção: Não foi possível gravar o agendamento no sistema. Erro: ' + errAgendamento.message);
+          return;
+        }
+
+        // Atualização/Inserção da base de CRM
         const { data: cliExistente } = await _supabase.from('clientes').select('*').eq('telefone', telefone);
         if (cliExistente && cliExistente.length > 0) {
           await _supabase.from('clientes').update({
-            nome,
+            nome: nome_cliente,
             ultimo_servico: servico,
             total_agendamentos: (cliExistente[0].total_agendamentos || 1) + 1
           }).eq('telefone', telefone);
         } else {
-          await _supabase.from('clientes').insert([{ nome, telefone, ultimo_servico: servico, total_agendamentos: 1 }]);
+          await _supabase.from('clientes').insert([{ nome: nome_cliente, telefone: telefone, ultimo_servico: servico, total_agendamentos: 1 }]);
         }
-      } catch (e) { console.log("Erro ao salvar no banco."); }
+
+      } catch (e) { 
+        console.error("Erro inesperado ao conectar com o banco:", e);
+      }
 
       const dataFmt = data.split('-').reverse().join('/');
-      let msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n👤 *Nome*: ${nome}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}`;
+      let msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n👤 *Nome*: ${nome_cliente}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}`;
       if (obs) msg += `\n📝 *Obs*: ${obs}`;
+      
       window.open(`https://wa.me/5581989002496?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
