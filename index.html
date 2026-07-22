@@ -28,7 +28,7 @@
   </header>
 
   <!-- HERO BANNER -->
-  <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500 pt-28" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('assets/images/foto-perfil.jpg.jpg');">
+  <section id="hero-section" class="relative min-h-screen flex items-center justify-start p-6 md:p-16 bg-cover bg-center transition-all duration-500 pt-28" style="background-image: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=1200');">
     <div class="max-w-xl text-white space-y-6 z-10">
       <span class="text-xs uppercase tracking-widest text-[#D4AF37] font-semibold">B Virgínia Design</span>
       <h1 id="site-titulo-capa" class="text-4xl md:text-5xl font-title font-bold leading-tight">Beleza através do olhar ✨</h1>
@@ -47,7 +47,7 @@
   <!-- SEÇÃO SOBRE -->
   <section class="py-16 px-6 md:px-16 max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
     <div class="relative rounded-2xl overflow-hidden shadow-2xl aspect-[3/4]">
-      <img id="foto-sobre-element" src="assets/images/hero-bg.png" alt="B Virgínia Design" class="w-full h-full object-cover transition duration-500" onerror="this.src='https://placehold.co/600x800/e8e2d5/5c5043?text=B+Virginia'">
+      <img id="foto-sobre-element" src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=800" alt="B Virgínia Design" class="w-full h-full object-cover transition duration-500" onerror="this.src='https://placehold.co/600x800/e8e2d5/5c5043?text=B+Virginia'">
     </div>
     <div class="space-y-6">
       <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Exclusividade e Arte</span>
@@ -86,13 +86,14 @@
     </div>
   </section>
 
-  <!-- FORMULÁRIO DE AGENDAMENTO -->
+  <!-- FORMULÁRIO DE AGENDAMENTO (ATUALIZADO SEM HORÁRIO FIXO) -->
   <section id="agendamento" class="py-20 px-6 md:px-16">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
       <div class="space-y-6">
         <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
         <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00.</p>
+        <p class="text-xs text-amber-700 font-medium">💡 *Como funciona:* Escolha o serviço e a data desejada. Enviaremos uma mensagem no WhatsApp combinando o melhor horário disponível para você!</p>
         <div class="space-y-3 text-sm text-gray-600 pt-2">
           <p>📍 <a id="form-local-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b] font-medium"><span id="form-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></a></p>
           <p>💬 <span id="form-wsp-info">+55 81 98900-2496</span></p>
@@ -112,29 +113,21 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Serviço Desejado</label>
-            <select id="form-service" required onchange="carregarHorariosDisponiveis()" class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
+            <select id="form-service" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
               <option value="" disabled selected>Selecione um serviço</option>
             </select>
           </div>
-          <div class="grid grid-cols-2 gap-4">
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data</label>
-              <input type="date" id="form-date" required onchange="carregarHorariosDisponiveis()" class="w-full border border-gray-200 rounded-lg p-3 text-sm">
-            </div>
-            <div>
-              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horário (30 em 30 min)</label>
-              <select id="form-time" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
-                <option value="" disabled selected>Primeiro escolha a data e serviço</option>
-              </select>
-            </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data Desejada</label>
+            <input type="date" id="form-date" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
           </div>
           <div>
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações</label>
-            <textarea id="form-notes" rows="2" placeholder="Observação..." class="w-full border border-gray-200 rounded-lg p-3 text-sm"></textarea>
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações (Opcional)</label>
+            <textarea id="form-notes" rows="2" placeholder="Alguma observação..." class="w-full border border-gray-200 rounded-lg p-3 text-sm"></textarea>
           </div>
 
           <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition text-sm uppercase flex items-center justify-center gap-2">
-            <i class="fab fa-whatsapp text-lg"></i> SOLICITAR AGENDAMENTO
+            <i class="fab fa-whatsapp text-lg"></i> SOLICITAR AGENDAMENTO NO WHATSAPP
           </button>
         </form>
       </div>
@@ -168,33 +161,36 @@
     </div>
   </footer>
 
-  <!-- SCRIPT COMPLETO DO SITE DO CLIENTE -->
+  <!-- SCRIPT DO SITE -->
   <script>
     const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    // Procedimentos atualizados estritamente com os nomes e durações corretos fornecidos
     const SERVICOS_PADRAO = [
-      { nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "assets/images/galeria-1.png" },
-      { nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "assets/images/galeria-2.png" },
-      { nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "assets/images/galeria-3.png" },
-      { nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "assets/images/galeria-4.png" },
-      { nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-5.png" },
-      { nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-6.png" },
-      { nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-1.png" },
-      { nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "assets/images/galeria-2.png" }
+      { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
+      { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+      { id: 3, nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
+      { id: 4, nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" },
+      { id: 5, nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+      { id: 6, nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
+      { id: 7, nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
+      { id: 8, nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" }
     ];
 
-    const PORTFOLIO_PADRAO = ['assets/images/galeria-1.png', 'assets/images/galeria-2.png', 'assets/images/galeria-3.png', 'assets/images/galeria-4.png'];
+    const PORTFOLIO_PADRAO = [
+      'https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600',
+      'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600',
+      'https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600',
+      'https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600'
+    ];
+
     const DEPOIMENTOS_PADRAO = [
       { nome: 'Amanda Silva', estrelas: 5, texto: 'Atendimento incrível e impecável.' },
       { nome: 'Beatriz Costa', estrelas: 5, texto: 'Extensão super confortável.' }
     ];
 
     let servicosCarregados = SERVICOS_PADRAO;
-    let bloqueiosGlobais = [];
-    let agendamentosGlobais = [];
 
     function renderizarServicos(servs) {
       servicosCarregados = servs;
@@ -204,13 +200,15 @@
         if (s.duracao_min === 120) duracaoTxt = '2h';
         if (s.duracao_min === 60) duracaoTxt = '1h';
 
+        let fotoServico = s.foto_url && s.foto_url.trim() !== '' ? s.foto_url : 'https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600';
+
         return `
         <div class="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col justify-between">
           <div>
-            <img src="${s.foto_url || 'https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'}" onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'" class="w-full h-48 object-cover">
+            <img src="${fotoServico}" onerror="this.src='https://placehold.co/600x400/e8e2d5/5c5043?text=B+Virginia'" class="w-full h-48 object-cover">
             <div class="p-6 space-y-2">
               <h3 class="font-title text-xl font-semibold">${s.nome}</h3>
-              <p class="text-xs text-gray-500">⏱️ Duração: ${duracaoTxt}</p>
+              <p class="text-xs text-gray-500">⏱️ Duração estimada: ${duracaoTxt}</p>
             </div>
           </div>
           <div class="p-6 pt-0 flex justify-between items-center border-t border-gray-50 mt-4">
@@ -222,7 +220,7 @@
 
       const select = document.getElementById('form-service');
       select.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>' + 
-        servs.map(s => `<option value="${s.nome}" data-duracao="${s.duracao_min || 30}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
+        servs.map(s => `<option value="${s.nome}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
     }
 
     function renderizarPortfolio(port) {
@@ -253,22 +251,20 @@
       renderizarDepoimentos(DEPOIMENTOS_PADRAO);
 
       try {
-        const { data: ags } = await _supabase.from('agendamentos').select('*');
-        agendamentosGlobais = ags || [];
-
         const { data: configs } = await _supabase.from('configuracoes_site').select('*');
         if (configs && configs.length > 0) {
           configs.forEach(c => {
-            if (c.chave === 'bloqueios') {
-              bloqueiosGlobais = JSON.parse(c.valor) || [];
-            }
             if (c.chave === 'fotos_site') {
               const fotos = JSON.parse(c.valor);
               fotos.forEach(f => {
-                if (f.id === 'capa' && f.url) document.getElementById('hero-section').style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${f.url}')`;
-                if (f.id === 'sobre' && f.url) document.getElementById('foto-sobre-element').src = f.url;
+                if (f.id === 'capa' && f.url && f.url.trim() !== '') {
+                  document.getElementById('hero-section').style.backgroundImage = `linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.45) 50%, rgba(0,0,0,0.1) 100%), url('${f.url}')`;
+                }
+                if (f.id === 'sobre' && f.url && f.url.trim() !== '') {
+                  document.getElementById('foto-sobre-element').src = f.url;
+                }
               });
-              const portImgs = fotos.filter(f => f.id.startsWith('galeria-') || f.id.startsWith('galeria')).map(f => f.url);
+              const portImgs = fotos.filter(f => (f.id.startsWith('galeria-') || f.id.startsWith('galeria')) && f.url && f.url.trim() !== '').map(f => f.url);
               if (portImgs.length > 0) renderizarPortfolio(portImgs);
             }
             if (c.chave === 'procedimentos') {
@@ -309,89 +305,6 @@
 
     function preencherServico(nome) {
       document.getElementById('form-service').value = nome;
-      carregarHorariosDisponiveis();
-    }
-
-    function carregarHorariosDisponiveis() {
-      const dataSelecionada = document.getElementById('form-date').value;
-      const selectServico = document.getElementById('form-service');
-      const selectTempo = document.getElementById('form-time');
-
-      selectTempo.innerHTML = '<option value="" disabled selected>Selecione um horário</option>';
-
-      if (!dataSelecionada || !selectServico.value) {
-        return;
-      }
-
-      const selectedOption = selectServico.options[selectServico.selectedIndex];
-      let duracaoMinutos = parseInt(selectedOption.getAttribute('data-duracao')) || 30;
-
-      let horariosPossiveis = [];
-      let inicioMin = 10 * 60;
-      let fimMin = 19 * 60;
-
-      for (let t = inicioMin; t < fimMin; t += 30) {
-        let h = Math.floor(t / 60).toString().padStart(2, '0');
-        let m = (t % 60).toString().padStart(2, '0');
-        horariosPossiveis.push(`${h}:${m}`);
-      }
-
-      const agendamentosDoDia = agendamentosGlobais.filter(a => a.data === dataSelecionada);
-      
-      let slotsOcupados = new Set();
-      agendamentosDoDia.forEach(item => {
-        let [h, m] = item.horario.split(':').map(Number);
-        let agInicioMin = h * 60 + m;
-        
-        let sObj = servicosCarregados.find(s => s.nome === item.servico);
-        let agDuracao = sObj ? (sObj.duracao_min || 30) : 30;
-
-        for (let offset = 0; offset < agDuracao; offset += 30) {
-          let totalM = agInicioMin + offset;
-          let th = Math.floor(totalM / 60).toString().padStart(2, '0');
-          let tm = (totalM % 60).toString().padStart(2, '0');
-          slotsOcupados.add(`${th}:${tm}`);
-        }
-      });
-
-      const bloqueiosDoDia = bloqueiosGlobais.filter(b => b.data === dataSelecionada);
-
-      let htmlOptions = '<option value="" disabled selected>Selecione um horário</option>';
-      
-      horariosPossiveis.forEach(hStr => {
-        let [h, m] = hStr.split(':').map(Number);
-        let slotInicioMin = h * 60 + m;
-        let slotFimMin = slotInicioMin + duracaoMinutos;
-
-        if (slotFimMin > fimMin) return;
-
-        let conflito = false;
-        for (let offset = 0; offset < duracaoMinutos; offset += 30) {
-          let checkM = slotInicioMin + offset;
-          let th = Math.floor(checkM / 60).toString().padStart(2, '0');
-          let tm = (checkM % 60).toString().padStart(2, '0');
-          let checkStr = `${th}:${tm}`;
-
-          if (slotsOcupados.has(checkStr)) {
-            conflito = true;
-            break;
-          }
-
-          for (let b of bloqueiosDoDia) {
-            if (checkStr >= b.inicio && checkStr <= b.fim) {
-              conflito = true;
-              break;
-            }
-          }
-          if (conflito) break;
-        }
-
-        if (!conflito) {
-          htmlOptions += `<option value="${hStr}">${hStr}</option>`;
-        }
-      });
-
-      selectTempo.innerHTML = htmlOptions;
     }
 
     async function enviarAgendamento(event) {
@@ -400,27 +313,21 @@
       const telefone = document.getElementById('form-phone').value.trim();
       const servico = document.getElementById('form-service').value;
       const data = document.getElementById('form-date').value;
-      const horario = document.getElementById('form-time').value;
       const obs = document.getElementById('form-notes').value.trim();
 
       const sObj = servicosCarregados.find(s => s.nome === servico);
       const valor = sObj ? Number(sObj.preco) : 0;
 
       try {
-        const { error: errAgendamento } = await _supabase.from('agendamentos').insert([{ 
+        await _supabase.from('agendamentos').insert([{ 
           nome_cliente: nome_cliente, 
           telefone: telefone, 
           servico: servico, 
           data: data, 
-          horario: horario, 
+          horario: 'A combinar', 
           valor: valor, 
           status: 'Pendente' 
         }]);
-
-        if (errAgendamento) {
-          alert('Atenção: Não foi possível gravar o agendamento no sistema. Erro: ' + errAgendamento.message);
-          return;
-        }
 
         const { data: cliExistente } = await _supabase.from('clientes').select('*').eq('telefone', telefone);
         if (cliExistente && cliExistente.length > 0) {
@@ -432,13 +339,12 @@
         } else {
           await _supabase.from('clientes').insert([{ nome: nome_cliente, telefone: telefone, ultimo_servico: servico, total_agendamentos: 1 }]);
         }
-
       } catch (e) { 
-        console.error("Erro inesperado ao conectar com o banco:", e);
+        console.error("Erro no banco:", e);
       }
 
       const dataFmt = data.split('-').reverse().join('/');
-      let msg = `Olá, B Virgínia Design! Gostaria de confirmar meu agendamento:\n\n👤 *Nome*: ${nome_cliente}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horario}`;
+      let msg = `Olá, B Virgínia Design! Gostaria de solicitar um agendamento:\n\n👤 *Nome*: ${nome_cliente}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data Desejada*: ${dataFmt}`;
       if (obs) msg += `\n📝 *Obs*: ${obs}`;
       
       window.open(`https://wa.me/5581989002496?text=${encodeURIComponent(msg)}`, '_blank');

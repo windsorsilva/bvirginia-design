@@ -75,7 +75,7 @@
             <!-- TAB 1: AGENDA -->
             <section id="sec-agenda" class="tab-content">
                 <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
-                    <h2 class="text-xl font-bold">Gestão Completa de Agendamentos (Futuros e Histórico)</h2>
+                    <h2 class="text-xl font-bold">Solicitações de Agendamento (Envie o horário pelo WhatsApp)</h2>
                     <div class="flex items-center space-x-2">
                         <label class="text-xs font-bold uppercase text-gray-600">Filtrar por data:</label>
                         <input type="date" id="filtro-data-agenda" onchange="carregarFinanceiroEAgendamentos()" class="border p-2 rounded text-sm bg-white">
@@ -87,17 +87,16 @@
                         <thead>
                             <tr class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
                                 <th class="p-3">Cliente</th>
-                                <th class="p-3">Telefone</th>
+                                <th class="p-3">Telefone / WhatsApp</th>
                                 <th class="p-3">Serviço</th>
-                                <th class="p-3">Data</th>
-                                <th class="p-3">Horário</th>
+                                <th class="p-3">Data Desejada</th>
                                 <th class="p-3">Status</th>
-                                <th class="p-3 text-center">Ações</th>
+                                <th class="p-3 text-center">Ações & WhatsApp</th>
                             </tr>
                         </thead>
                         <tbody id="lista-agendamentos" class="divide-y divide-gray-200 text-sm">
                             <tr>
-                                <td colspan="7" class="p-6 text-center text-gray-500">Carregando agendamentos...</td>
+                                <td colspan="6" class="p-6 text-center text-gray-500">Carregando agendamentos...</td>
                             </tr>
                         </tbody>
                     </table>
@@ -114,7 +113,7 @@
                                 <th class="p-3">NOME</th>
                                 <th class="p-3">TELEFONE / WHATSAPP</th>
                                 <th class="p-3">ÚLTIMO SERVIÇO</th>
-                                <th class="p-3">TOTAL AGENDADO</th>
+                                <th class="p-3">TOTAL SOLICITADO</th>
                             </tr>
                         </thead>
                         <tbody id="tabela-clientes">
@@ -134,7 +133,7 @@
                         <h3 id="fin-faturamento" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
                     </div>
                     <div class="bg-white p-6 rounded shadow border border-l-4 border-blue-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Agendamentos Realizados</p>
+                        <p class="text-xs uppercase font-bold text-gray-500">Solicitações Realizadas</p>
                         <h3 id="fin-qtd-agendamentos" class="text-2xl font-bold text-gray-800 mt-2">0</h3>
                     </div>
                     <div class="bg-white p-6 rounded shadow border border-l-4 border-green-500">
@@ -144,19 +143,19 @@
                 </div>
 
                 <div class="bg-white p-6 rounded shadow border">
-                    <h3 class="font-bold text-lg mb-4 border-b pb-2">Extrato de Serviços Agendados</h3>
+                    <h3 class="font-bold text-lg mb-4 border-b pb-2">Extrato de Serviços</h3>
                     <div class="overflow-x-auto">
                         <table class="w-full text-left text-sm">
                             <thead>
                                 <tr class="border-b bg-gray-50">
-                                    <th class="p-2">DATA/HORA</th>
+                                    <th class="p-2">DATA</th>
                                     <th class="p-2">CLIENTE</th>
                                     <th class="p-2">PROCEDIMENTO</th>
                                     <th class="p-2">VALOR</th>
                                 </tr>
                             </thead>
                             <tbody id="extrato-financeiro">
-                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum agendamento registrado ainda.</td></tr>
+                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro ainda.</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -165,7 +164,7 @@
 
             <!-- TAB 4: BLOQUEIOS MANUAIS -->
             <section id="sec-bloqueios" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Horário / Dias Inteiros</h2>
+                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Dias Indisponíveis</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div class="bg-white p-6 rounded shadow border">
                         <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
@@ -192,7 +191,7 @@
                         </form>
                     </div>
                     <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários e Dias Bloqueados</h3>
+                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Dias Bloqueados</h3>
                         <div id="lista-bloqueios-cadastrados" class="space-y-2 text-sm">
                             <p class="text-gray-500">Nenhum bloqueio cadastrado.</p>
                         </div>
@@ -213,15 +212,15 @@
                 <!-- SUB-ABA 1: PROCEDIMENTOS -->
                 <div id="subsec-procedimentos" class="subtab-content">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Procedimentos Cadastrados (Upload do Celular/PC/Tablet)</h3>
+                        <h3 class="text-lg font-bold">Procedimentos Cadastrados (Cole o link da foto)</h3>
                         <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO PROCEDIMENTO</button>
                     </div>
                     <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 2: EXPEDIENTE & BLOQUEIOS -->
+                <!-- SUB-ABA 2: EXPEDIENTE -->
                 <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras da Agenda e Bloqueios</h3>
+                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras do Estúdio</h3>
                     <form onsubmit="salvarRegras(event)" class="space-y-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div>
@@ -237,9 +236,9 @@
                     </form>
                 </div>
 
-                <!-- SUB-ABA 3: TEXTOS & INSTAGRAM (CMS) -->
+                <!-- SUB-ABA 3: TEXTOS & INSTAGRAM -->
                 <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos, Localização e Instagram Exibidos no Site</h3>
+                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos, Localização e Instagram</h3>
                     <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="space-y-4">
                             <div>
@@ -280,10 +279,10 @@
                     <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 5: GALERIA -->
+                <!-- SUB-ABA 5: GALERIA & FOTOS (COM URL DIRETA PARA FUNCIONAR IMEDIATAMENTE) -->
                 <div id="subsec-galeria" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
+                        <h3 class="text-lg font-bold">Gerenciamento de Fotos (Insira o link direto da imagem)</h3>
                         <button onclick="adicionarNovaFotoGaleria()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ ADICIONAR FOTO</button>
                     </div>
                     <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -301,25 +300,22 @@
         </main>
     </div>
 
-    <!-- SCRIPT COMPLETO DO ADMIN -->
+    <!-- SCRIPT DO ADMIN -->
     <script>
         const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        
-        // Senha corrigida estritamente para virginia123 (minúscula) conforme solicitado
         const SENHA_ADMIN = 'virginia123';
 
-        // Procedimentos configurados com nomes e durações corretos fornecidos
         let procedimentos = [
-            { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "" },
-            { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "" },
-            { id: 3, nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "" },
-            { id: 4, nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "" },
-            { id: 5, nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "" },
-            { id: 6, nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "" },
-            { id: 7, nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "" },
-            { id: 8, nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "" }
+            { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
+            { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+            { id: 3, nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
+            { id: 4, nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" },
+            { id: 5, nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+            { id: 6, nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
+            { id: 7, nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
+            { id: 8, nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" }
         ];
 
         let avaliacoes = [
@@ -330,10 +326,8 @@
         let fotosSite = [
             { id: 'capa', posicao: 'Fondo da Capa (Hero Section)', url: '' },
             { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: '' },
-            { id: 'card-1', posicao: 'Card de Serviço - Design de Sobrancelha', url: '' },
-            { id: 'card-2', posicao: 'Card de Serviço - Lash Lifting / Cílios', url: '' },
-            { id: 'galeria-1', posicao: 'Galeria - Foto 1 (Resultado Sobrancelhas)', url: '' },
-            { id: 'galeria-2', posicao: 'Galeria - Foto 2 (Estúdio / Ambiente)', url: '' }
+            { id: 'galeria-1', posicao: 'Galeria - Foto 1', url: '' },
+            { id: 'galeria-2', posicao: 'Galeria - Foto 2', url: '' }
         ];
 
         let bloqueios = [];
@@ -412,28 +406,21 @@
         async function carregarFinanceiroEAgendamentos() {
             try {
                 const tbody = document.getElementById('lista-agendamentos');
-                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Carregando agendamentos...</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-500">Carregando solicitações...</td></tr>`;
 
                 let query = _supabase
                     .from('agendamentos')
                     .select('*')
-                    .order('data', { ascending: true })
-                    .order('horario', { ascending: true });
+                    .order('data', { ascending: true });
 
                 const dataFiltro = document.getElementById('filtro-data-agenda')?.value;
-                if (dataFiltro) {
-                    query = query.eq('data', dataFiltro);
-                }
+                if (dataFiltro) query = query.eq('data', dataFiltro);
 
                 const { data: ags, error } = await query;
-
-                if (error) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-red-500">Erro ao carregar agendamentos do Supabase.</td></tr>`;
-                    return;
-                }
+                if (error) throw error;
 
                 if (!ags || ags.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">Nenhum agendamento encontrado para o período.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-500">Nenhuma solicitação encontrada.</td></tr>`;
                     document.getElementById('extrato-financeiro').innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>`;
                     document.getElementById('fin-faturamento').innerText = `R$ 0,00`;
                     document.getElementById('fin-qtd-agendamentos').innerText = `0`;
@@ -442,12 +429,13 @@
                 }
 
                 tbody.innerHTML = ags.map(item => {
-                    const nomeCli = item.nome_cliente || item.cliente || item.nome || 'Cliente';
-                    const telCli = item.telefone || item.whatsapp || '-';
-                    const servCli = item.servico || item.procedimento || 'Serviço';
+                    const nomeCli = item.nome_cliente || 'Cliente';
+                    const telCli = item.telefone || '-';
+                    const servCli = item.servico || 'Serviço';
                     const dataCli = item.data ? item.data.split('-').reverse().join('/') : '-';
-                    const horaCli = item.horario || '-';
                     const statusCli = item.status || 'Pendente';
+                    const telLimpo = telCli.replace(/\D/g, '');
+                    const msgWsp = `Olá, ${nomeCli}! Vi sua solicitação para ${servico} no dia ${dataCli}. Temos horário disponível às [INSERIR HORÁRIO AQUI]. Confirma?`;
 
                     return `
                         <tr>
@@ -455,15 +443,15 @@
                             <td class="p-3">${telCli}</td>
                             <td class="p-3">${servCli}</td>
                             <td class="p-3 font-semibold text-amber-700">${dataCli}</td>
-                            <td class="p-3 font-semibold text-gray-900">${horaCli}</td>
                             <td class="p-3">
                                 <span class="px-2.5 py-1 rounded-full text-xs font-semibold ${statusCli === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">
                                     ${statusCli}
                                 </span>
                             </td>
                             <td class="p-3 text-center space-x-2">
-                                <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-green-500 text-white px-3 py-1 rounded text-xs hover:bg-green-600 font-medium">Aceitar</button>
-                                <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-3 py-1 rounded text-xs hover:bg-red-600 font-medium">Excluir</button>
+                                <a href="https://wa.me/55${telLimpo}?text=${encodeURIComponent(msgWsp)}" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded text-xs hover:bg-green-700 font-bold inline-block">💬 Enviar Horário WhatsApp</a>
+                                <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-blue-500 text-white px-2.5 py-1 rounded text-xs hover:bg-blue-600">Aprovar</button>
+                                <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-2.5 py-1 rounded text-xs hover:bg-red-600">Excluir</button>
                             </td>
                         </tr>
                     `;
@@ -471,9 +459,9 @@
 
                 document.getElementById('extrato-financeiro').innerHTML = ags.map(a => `
                     <tr class="border-b">
-                        <td class="p-2">${a.data ? a.data.split('-').reverse().join('/') : ''} - ${a.horario}</td>
-                        <td class="p-2">${a.nome_cliente || a.cliente || a.nome || 'Cliente'}</td>
-                        <td class="p-2">${a.servico || a.procedimento || ''}</td>
+                        <td class="p-2">${a.data ? a.data.split('-').reverse().join('/') : ''}</td>
+                        <td class="p-2">${a.nome_cliente || 'Cliente'}</td>
+                        <td class="p-2">${a.servico || ''}</td>
                         <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2).replace('.', ',')}</td>
                     </tr>
                 `).join('');
@@ -484,7 +472,7 @@
                 document.getElementById('fin-ticket-medio').innerText = `R$ ${(fat / ags.length).toFixed(2).replace('.', ',')}`;
 
             } catch (e) {
-                console.log("Erro ao carregar dados:", e);
+                console.log("Erro ao carregar:", e);
             }
         }
 
@@ -493,7 +481,7 @@
                 const { data: cls } = await _supabase.from('clientes').select('*');
                 const tbody = document.getElementById('tabela-clientes');
                 if (!cls || cls.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado ainda.</td></tr>`;
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado.</td></tr>`;
                     return;
                 }
                 tbody.innerHTML = cls.map(c => `
@@ -508,25 +496,19 @@
         }
 
         async function atualizarStatus(id, novoStatus) {
-            const { error } = await _supabase.from('agendamentos').update({ status: novoStatus }).eq('id', id);
-            if (error) alert('Erro ao atualizar status: ' + error.message);
-            else carregarFinanceiroEAgendamentos();
+            await _supabase.from('agendamentos').update({ status: novoStatus }).eq('id', id);
+            carregarFinanceiroEAgendamentos();
         }
 
         async function excluirAgendamento(id) {
-            if (confirm('Tem certeza que deseja excluir este agendamento?')) {
-                const { error } = await _supabase.from('agendamentos').delete().eq('id', id);
-                if (error) alert('Erro ao excluir: ' + error.message);
-                else carregarFinanceiroEAgendamentos();
+            if (confirm('Deseja excluir?')) {
+                await _supabase.from('agendamentos').delete().eq('id', id);
+                carregarFinanceiroEAgendamentos();
             }
         }
 
         function renderizarProcedimentos() {
             const container = document.getElementById('grid-procedimentos');
-            if (procedimentos.length === 0) {
-                container.innerHTML = `<p class="text-gray-500 text-sm">Nenhum procedimento cadastrado.</p>`;
-                return;
-            }
             container.innerHTML = procedimentos.map(p => `
                 <div class="bg-white p-5 rounded shadow border space-y-3">
                     <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold">
@@ -540,32 +522,16 @@
                             <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700">
                         </div>
                     </div>
-                    
-                    <div class="mt-2">
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Foto do Serviço:</label>
-                        ${p.foto_url ? `<div class="mb-2"><img src="${p.foto_url}" class="h-20 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Nenhuma foto carregada</div>'}
-                        <input type="file" id="proc-file-${p.id}" accept="image/*" class="w-full text-xs border p-1 rounded bg-gray-50 mb-1" onchange="converterArquivoParaBase64Procedimento(${p.id})">
-                        <input type="hidden" id="proc-foto-${p.id}" value="${p.foto_url || ''}">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Link da Foto do Serviço:</label>
+                        <input type="text" id="proc-foto-${p.id}" value="${p.foto_url || ''}" placeholder="https://exemplo.com/foto.jpg" class="w-full border p-2 rounded text-xs bg-gray-50">
                     </div>
-
                     <div class="flex space-x-2 pt-2">
                         <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
-                        <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">EXCLUIR</button>
+                        <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
                     </div>
                 </div>
             `).join('');
-        }
-
-        function converterArquivoParaBase64Procedimento(id) {
-            const input = document.getElementById(`proc-file-${id}`);
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById(`proc-foto-${id}`).value = e.target.result;
-                    alert('✨ Foto carregada do dispositivo! Clique em SALVAR para confirmar.');
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
         }
 
         async function salvarProcedimento(id) {
@@ -576,13 +542,13 @@
                 procedimentos[idx].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
                 procedimentos[idx].foto_url = document.getElementById(`proc-foto-${id}`).value;
                 await salvarNoBanco('procedimentos', procedimentos);
-                alert('✨ Procedimento salvo com sucesso!');
+                alert('✨ Procedimento salvo!');
                 renderizarProcedimentos();
             }
         }
 
         async function excluirProcedimento(id) {
-            if (confirm('Deseja excluir este procedimento?')) {
+            if (confirm('Excluir procedimento?')) {
                 procedimentos = procedimentos.filter(p => p.id !== id);
                 await salvarNoBanco('procedimentos', procedimentos);
                 renderizarProcedimentos();
@@ -625,30 +591,14 @@
             container.innerHTML = fotosSite.map(f => `
                 <div class="bg-white p-4 rounded shadow border space-y-3">
                     <h4 class="font-bold text-sm text-amber-700">${f.posicao}</h4>
-                    
-                    ${f.url ? `<div class="mb-2"><img src="${f.url}" class="h-24 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Nenhuma foto carregada</div>'}
-                    
-                    <input type="file" id="foto-file-${f.id}" accept="image/*" class="w-full text-xs border p-1 rounded bg-gray-50" onchange="converterArquivoParaBase64Foto('${f.id}')">
-                    <input type="hidden" id="foto-url-${f.id}" value="${f.url || ''}">
-
+                    ${f.url ? `<div class="mb-2"><img src="${f.url}" class="h-20 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Sem imagem</div>'}
+                    <input type="text" id="foto-url-${f.id}" value="${f.url || ''}" placeholder="Cole o link direto da imagem aqui" class="w-full border p-2 rounded text-xs bg-gray-50">
                     <div class="flex space-x-2 pt-2">
                         <button onclick="salvarFotoUnica('${f.id}')" class="flex-1 bg-gold text-white font-bold text-xs py-2 rounded">💾 SALVAR FOTO</button>
-                        <button onclick="excluirFotoSite('${f.id}')" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded hover:bg-red-200">REMOVER</button>
+                        <button onclick="excluirFotoSite('${f.id}')" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">REMOVER</button>
                     </div>
                 </div>
             `).join('');
-        }
-
-        function converterArquivoParaBase64Foto(id) {
-            const input = document.getElementById(`foto-file-${id}`);
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById(`foto-url-${id}`).value = e.target.result;
-                    alert('✨ Foto carregada do dispositivo! Clique em SALVAR FOTO para confirmar.');
-                };
-                reader.readAsDataURL(input.files[0]);
-            }
         }
 
         async function salvarFotoUnica(id) {
@@ -656,13 +606,13 @@
             if (idx !== -1) {
                 fotosSite[idx].url = document.getElementById(`foto-url-${id}`).value;
                 await salvarNoBanco('fotos_site', fotosSite);
-                alert('✨ Foto salva com sucesso!');
+                alert('✨ Foto salva com sucesso e atualizada no site!');
                 renderizarFotos();
             }
         }
 
         async function excluirFotoSite(id) {
-            if (confirm('Deseja remover esta foto?')) {
+            if (confirm('Remover esta foto?')) {
                 fotosSite = fotosSite.filter(f => f.id !== id);
                 await salvarNoBanco('fotos_site', fotosSite);
                 renderizarFotos();
@@ -701,7 +651,7 @@
             });
             await salvarNoBanco('bloqueios', bloqueios);
             renderizarBloqueios();
-            alert('✨ Bloqueio cadastrado e sincronizado com o site!');
+            alert('✨ Bloqueio cadastrado!');
         }
 
         function renderizarBloqueios() {
@@ -713,7 +663,7 @@
             container.innerHTML = bloqueios.map(b => `
                 <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
                     <div>
-                        <p>📅 Data: <b>${b.data}</b> (${b.inicio} às ${b.fim})</p>
+                        <p>📅 Data: <b>${b.data}</b></p>
                         <p class="text-gray-500">Motivo: ${b.motivo || 'Não informado'}</p>
                     </div>
                     <button onclick="excluirBloqueio(${b.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
@@ -738,7 +688,7 @@
         }
 
         window.onload = function() {
-            if (sessionStorage.getItem('admin_autenticado') === 'true') liberarPanel(); // liberação segura
+            if (sessionStorage.getItem('admin_autenticado') === 'true') liberarPainel();
         }
     </script>
 </body>
