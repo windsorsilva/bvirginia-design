@@ -86,14 +86,14 @@
     </div>
   </section>
 
-  <!-- FORMULÁRIO DE AGENDAMENTO (SEM HORÁRIO FIXO) -->
+  <!-- FORMULÁRIO DE AGENDAMENTO -->
   <section id="agendamento" class="py-20 px-6 md:px-16">
     <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-start">
       <div class="space-y-6">
         <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
-        <p class="text-gray-600 leading-relaxed">Horário de Atendimento: Terça a Sábado das 10:00 às 19:00.</p>
-        <p class="text-xs text-amber-700 font-medium">💡 *Como funciona:* Escolha o serviço e a data desejada. Enviaremos uma mensagem no WhatsApp combinando o melhor horário disponível para você!</p>
+        <p class="text-gray-600 leading-relaxed">Dias de Atendimento: Terça a Sábado das 10:00 às 19:00 (Domingos e segundas são dias de folga, salvo exceções).</p>
+        <p class="text-xs text-amber-700 font-medium">💡 *Como funciona:* Ao selecionar o dia, se houver horários livres cadastrados, escolha o seu. Caso contrário, enviaremos sua solicitação direto para o WhatsApp!</p>
         <div class="space-y-3 text-sm text-gray-600 pt-2">
           <p>📍 <a id="form-local-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b] font-medium"><span id="form-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></a></p>
           <p>💬 <span id="form-wsp-info">+55 81 98900-2496</span></p>
@@ -119,15 +119,25 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data Desejada</label>
-            <input type="date" id="form-date" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
+            <input type="date" id="form-date" required onchange="verificarDisponibilidadeData()" class="w-full border border-gray-200 rounded-lg p-3 text-sm">
+            <p id="aviso-data-folga" class="text-xs text-red-500 mt-1 hidden">⚠️ Domingo e segunda são dias de folga (exceto se houver exceção cadastrada).</p>
           </div>
+
+          <!-- BLOCO DE HORÁRIOS DINÂMICOS -->
+          <div id="bloco-horarios" class="hidden">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horários Disponíveis neste dia</label>
+            <select id="form-horario" class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
+              <option value="" disabled selected>Selecione um horário</option>
+            </select>
+          </div>
+
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Observações (Opcional)</label>
             <textarea id="form-notes" rows="2" placeholder="Alguma observação..." class="w-full border border-gray-200 rounded-lg p-3 text-sm"></textarea>
           </div>
 
           <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition text-sm uppercase flex items-center justify-center gap-2">
-            <i class="fab fa-whatsapp text-lg"></i> SOLICITAR AGENDAMENTO NO WHATSAPP
+            <i class="fab fa-whatsapp text-lg"></i> <span id="btn-texto-submit">SOLICITAR AGENDAMENTO NO WHATSAPP</span>
           </button>
         </form>
       </div>
@@ -190,6 +200,8 @@
     ];
 
     let servicosCarregados = SERVICOS_PADRAO;
+    let excecoesFolgaGlobal = [];
+    let horariosDiasGlobal = [];
 
     function renderizarServicos(servs) {
       servicosCarregados = servs;
@@ -253,6 +265,8 @@
         const { data: configs } = await _supabase.from('configuracoes_site').select('*');
         if (configs && configs.length > 0) {
           configs.forEach(c => {
+            if (c.chave === 'excecoes_folga') excecoesFolgaGlobal = JSON.parse(c.valor) || [];
+            if (c.chave === 'horarios_dias') horariosDiasGlobal = JSON.parse(c.valor) || [];
             if (c.chave === 'fotos_site') {
               const fotos = JSON.parse(c.valor);
               fotos.forEach(f => {
@@ -306,12 +320,56 @@
       document.getElementById('form-service').value = nome;
     }
 
+    function verificarDisponibilidadeData() {
+      const dataInput = document.getElementById('form-date').value;
+      const avisoFolga = document.getElementById('aviso-data-folga');
+      const blocoHorarios = document.getElementById('bloco-horarios');
+      const selectHorario = document.getElementById('form-horario');
+      const btnTexto = document.getElementById('btn-texto-submit');
+
+      if (!dataInput) return;
+
+      // Cria a data ajustada para fuso local
+      const partes = dataInput.split('-');
+      const dataObj = new Date(partes[0], partes[1] - 1, partes[2]);
+      const diaSemana = dataObj.getDay(); // 0 = Domingo, 1 = Segunda
+
+      const isDomingoOuSegunda = (diaSemana === 0 || diaSemana === 1);
+      const temExcecao = excecoesFolgaGlobal.some(ex => ex.data === dataInput);
+
+      // Se for domingo ou segunda e NÃO tiver exceção, bloqueia
+      if (isDomingoOuSegunda && !temExcecao) {
+        avisoFolga.classList.remove('hidden');
+        blocoHorarios.classList.add('hidden');
+        selectHorario.removeAttribute('required');
+        btnTexto.innerText = "SOLICITAR AGENDAMENTO NO WHATSAPP";
+        return;
+      } else {
+        avisoFolga.classList.add('hidden');
+      }
+
+      // Verifica se existem horários livres cadastrados para este dia específico
+      const configDia = horariosDiasGlobal.find(h => h.data === dataInput);
+      if (configDia && configDia.horarios && configDia.horarios.length > 0) {
+        blocoHorarios.classList.remove('hidden');
+        selectHorario.setAttribute('required', 'true');
+        selectHorario.innerHTML = '<option value="" disabled selected>Selecione um horário</option>' +
+          configDia.horarios.map(h => `<option value="${h}">${h}</option>`).join('');
+        btnTexto.innerText = "SOLICITAR AGENDAMENTO COM HORÁRIO";
+      } else {
+        blocoHorarios.classList.add('hidden');
+        selectHorario.removeAttribute('required');
+        btnTexto.innerText = "SOLICITAR AGENDAMENTO NO WHATSAPP";
+      }
+    }
+
     async function enviarAgendamento(event) {
       event.preventDefault();
       const nome_cliente = document.getElementById('form-name').value.trim();
       const telefone = document.getElementById('form-phone').value.trim();
       const servico = document.getElementById('form-service').value;
       const data = document.getElementById('form-date').value;
+      const horarioSelecionado = document.getElementById('form-horario').value || 'A combinar';
       const obs = document.getElementById('form-notes').value.trim();
 
       const sObj = servicosCarregados.find(s => s.nome === servico);
@@ -323,7 +381,7 @@
           telefone: telefone, 
           servico: servico, 
           data: data, 
-          horario: 'A combinar', 
+          horario: horarioSelecionado, 
           valor: valor, 
           status: 'Pendente' 
         }]);
@@ -341,15 +399,15 @@
       } catch (e) { console.error("Erro no banco:", e); }
 
       const dataFmt = data.split('-').reverse().join('/');
-      let msg = `Olá, B Virgínia Design! Gostaria de solicitar um agendamento:\n\n👤 *Nome*: ${nome_cliente}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data Desejada*: ${dataFmt}`;
+      let msg = `Olá, B Virgínia Design! Gostaria de solicitar um agendamento:\n\n👤 *Nome*: ${nome_cliente}\n📱 *WhatsApp*: ${telefone}\n✨ *Serviço*: ${servico}\n📅 *Data*: ${dataFmt}\n⏰ *Horário*: ${horarioSelecionado}`;
       if (obs) msg += `\n📝 *Obs*: ${obs}`;
       
       window.open(`https://wa.me/5581989002496?text=${encodeURIComponent(msg)}`, '_blank');
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
+    document.addEventListener("DOMContentLoaded", async () => {
       document.getElementById('form-date').min = new Date().toISOString().split('T')[0];
-      carregarDadosSite();
+      await carregarDadosSite();
     });
   </script>
 </body>

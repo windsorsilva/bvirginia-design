@@ -60,7 +60,7 @@
                 <button onclick="switchTab('agenda')" id="tab-agenda" class="py-3 px-2 active-tab">AGENDA 📅</button>
                 <button onclick="switchTab('clientes')" id="tab-clientes" class="py-3 px-2">CLIENTES (CRM) 👥</button>
                 <button onclick="switchTab('financeiro')" id="tab-financeiro" class="py-3 px-2">FINANCEIRO 💰</button>
-                <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="py-3 px-2">BLOQUEIOS MANUAIS 🚫</button>
+                <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="py-3 px-2">BLOQUEIOS & EXCEÇÕES 🚫</button>
                 <button onclick="switchTab('cms')" id="tab-cms" class="py-3 px-2">CONFIGURAÇÕES & CMS ⚙️</button>
                 <button onclick="switchTab('backup')" id="tab-backup" class="py-3 px-2">BACKUP & RESTAURAÇÃO 💾</button>
             </div>
@@ -71,7 +71,7 @@
             <!-- TAB 1: AGENDA -->
             <section id="sec-agenda" class="tab-content">
                 <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
-                    <h2 class="text-xl font-bold">Solicitações de Agendamento (Envie o horário pelo WhatsApp)</h2>
+                    <h2 class="text-xl font-bold">Solicitações de Agendamento</h2>
                     <div class="flex items-center space-x-2">
                         <label class="text-xs font-bold uppercase text-gray-600">Filtrar por data:</label>
                         <input type="date" id="filtro-data-agenda" onchange="carregarFinanceiroEAgendamentos()" class="border p-2 rounded text-sm bg-white">
@@ -85,7 +85,7 @@
                                 <th class="p-3">Cliente</th>
                                 <th class="p-3">Telefone / WhatsApp</th>
                                 <th class="p-3">Serviço</th>
-                                <th class="p-3">Data Desejada</th>
+                                <th class="p-3">Data / Horário</th>
                                 <th class="p-3">Status</th>
                                 <th class="p-3 text-center">Ações & WhatsApp</th>
                             </tr>
@@ -154,38 +154,57 @@
                 </div>
             </section>
 
-            <!-- TAB 4: BLOQUEIOS MANUAIS -->
+            <!-- TAB 4: BLOQUEIOS & EXCEÇÕES -->
             <section id="sec-bloqueios" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Bloqueios Manuais de Dias Indisponíveis</h2>
+                <h2 class="text-xl font-bold mb-4">Gerenciamento de Folgas, Exceções e Horários Livres</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Bloquear Dia Inteiro ou Período</h3>
-                        <form onsubmit="salvarBloqueio(event)" class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Data</label>
-                                <input type="date" id="bloq-data" required class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div class="grid grid-cols-2 gap-4">
+                    <div class="bg-white p-6 rounded shadow border space-y-6">
+                        <div>
+                            <h3 class="font-bold text-lg mb-2 border-b pb-2">Abrir Exceção (Domingo ou Segunda)</h3>
+                            <p class="text-xs text-gray-500 mb-3">Domigos e segundas são folgas padrão. Use aqui para liberar uma data específica em que irá trabalhar.</p>
+                            <form onsubmit="salvarExcecaoFolga(event)" class="space-y-3">
                                 <div>
-                                    <label class="block text-xs font-bold uppercase">Hora Início</label>
-                                    <input type="time" id="bloq-inicio" value="10:00" required class="w-full border p-2 rounded mt-1">
+                                    <label class="block text-xs font-bold uppercase">Data da Exceção (Dom ou Seg)</label>
+                                    <input type="date" id="excecao-data" required class="w-full border p-2 rounded mt-1">
                                 </div>
                                 <div>
-                                    <label class="block text-xs font-bold uppercase">Hora Fim</label>
-                                    <input type="time" id="bloq-fim" value="19:00" required class="w-full border p-2 rounded mt-1">
+                                    <label class="block text-xs font-bold uppercase">Motivo</label>
+                                    <input type="text" id="excecao-motivo" placeholder="Ex: Plantão especial" class="w-full border p-2 rounded mt-1">
                                 </div>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Motivo</label>
-                                <input type="text" id="bloq-motivo" placeholder="Ex: Folga, Feriado" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded">CADASTRAR BLOQUEIO</button>
-                        </form>
+                                <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded text-xs">LIBERAR ESTE DIA DE FOLGA</button>
+                            </form>
+                        </div>
+
+                        <div class="border-t pt-4">
+                            <h3 class="font-bold text-lg mb-2 border-b pb-2">Cadastrar Horários Livres para um Dia</h3>
+                            <p class="text-xs text-gray-500 mb-3">Defina os horários disponíveis que aparecerão quando o cliente clicar na data.</p>
+                            <form onsubmit="salvarHorarioDia(event)" class="space-y-3">
+                                <div>
+                                    <label class="block text-xs font-bold uppercase">Data</label>
+                                    <input type="date" id="horario-data" required class="w-full border p-2 rounded mt-1">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold uppercase">Horários Livres (Separe por vírgula)</label>
+                                    <input type="text" id="horario-lista" placeholder="Ex: 10:00, 11:30, 14:00, 16:00" required class="w-full border p-2 rounded mt-1">
+                                </div>
+                                <button type="submit" class="w-full bg-black text-white font-bold py-2 rounded text-xs">SALVAR HORÁRIOS DO DIA</button>
+                            </form>
+                        </div>
                     </div>
-                    <div class="bg-white p-6 rounded shadow border">
-                        <h3 class="font-bold text-lg mb-4 border-b pb-2">Dias Bloqueados</h3>
-                        <div id="lista-bloqueios-cadastrados" class="space-y-2 text-sm">
-                            <p class="text-gray-500">Nenhum bloqueio cadastrado.</p>
+
+                    <div class="space-y-6">
+                        <div class="bg-white p-6 rounded shadow border">
+                            <h3 class="font-bold text-lg mb-4 border-b pb-2">Exceções de Folga Cadastradas</h3>
+                            <div id="lista-excecoes-cadastradas" class="space-y-2 text-sm">
+                                <p class="text-gray-500">Nenhuma exceção cadastrada.</p>
+                            </div>
+                        </div>
+
+                        <div class="bg-white p-6 rounded shadow border">
+                            <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários Específicos por Dia</h3>
+                            <div id="lista-horarios-cadastrados" class="space-y-2 text-sm">
+                                <p class="text-gray-500">Nenhum horário específico cadastrado.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -195,13 +214,13 @@
             <section id="sec-cms" class="tab-content hidden">
                 <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
                     <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
-                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE & BLOQUEIOS</button>
+                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE</button>
                     <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS & INSTAGRAM (CMS)</button>
                     <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
                     <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
                 </div>
 
-                <!-- SUB-ABA 1: PROCEDIMENTOS (Com escolha de foto do celular/PC) -->
+                <!-- SUB-ABA 1: PROCEDIMENTOS -->
                 <div id="subsec-procedimentos" class="subtab-content">
                     <div class="flex justify-between items-center mb-6">
                         <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
@@ -224,6 +243,7 @@
                                 <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
                             </div>
                         </div>
+                        <p class="text-xs text-gray-500">Nota: Domingos e Segundas são dias de folga por padrão. Para abrir exceções, utilize a aba "Bloqueios & Exceções".</p>
                         <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
                     </form>
                 </div>
@@ -271,7 +291,7 @@
                     <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
                 </div>
 
-                <!-- SUB-ABA 5: GALERIA & FOTOS (Upload direto do celular/PC com botão de escolha) -->
+                <!-- SUB-ABA 5: GALERIA -->
                 <div id="subsec-galeria" class="subtab-content hidden">
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
@@ -321,7 +341,8 @@
             { id: 'galeria-2', posicao: 'Galeria - Foto 2 (Estúdio / Ambiente)', url: '' }
         ];
 
-        let bloqueios = [];
+        let excecoesFolga = [];
+        let horariosDias = [];
 
         function verificarSenha(e) {
             e.preventDefault();
@@ -342,7 +363,7 @@
             renderizarFotos();
             carregarFinanceiroEAgendamentos();
             carregarClientesCRM();
-            renderizarBloqueios();
+            renderizarExcecoeseHorarios();
         }
 
         function logout() {
@@ -373,7 +394,8 @@
                         if (item.chave === 'fotos_site') fotosSite = JSON.parse(item.valor);
                         if (item.chave === 'procedimentos') procedimentos = JSON.parse(item.valor);
                         if (item.chave === 'avaliacoes') avaliacoes = JSON.parse(item.valor);
-                        if (item.chave === 'bloqueios') bloqueios = JSON.parse(item.valor);
+                        if (item.chave === 'excecoes_folga') excecoesFolga = JSON.parse(item.valor);
+                        if (item.chave === 'horarios_dias') horariosDias = JSON.parse(item.valor);
                         if (item.chave === 'textos_cms') {
                             const txts = JSON.parse(item.valor);
                             if(txts.localizacao) document.getElementById('cms-localizacao').value = txts.localizacao;
@@ -418,19 +440,20 @@
                     const telCli = item.telefone || '-';
                     const servCli = item.servico || 'Serviço';
                     const dataCli = item.data ? item.data.split('-').reverse().join('/') : '-';
+                    const horarioCli = item.horario || 'A combinar';
                     const statusCli = item.status || 'Pendente';
                     const telLimpo = telCli.replace(/\D/g, '');
-                    const msgWsp = `Olá, ${nomeCli}! Vi sua solicitação para ${servCli} no dia ${dataCli}. Temos horário disponível às [INSERIR HORÁRIO AQUI]. Confirma?`;
+                    const msgWsp = `Olá, ${nomeCli}! Vi sua solicitação para ${servCli} no dia ${dataCli} (${horarioCli}). Tudo confirmado!`;
 
                     return `
                         <tr>
                             <td class="p-3 font-medium">${nomeCli}</td>
                             <td class="p-3">${telCli}</td>
                             <td class="p-3">${servCli}</td>
-                            <td class="p-3 font-semibold text-amber-700">${dataCli}</td>
+                            <td class="p-3 font-semibold text-amber-700">${dataCli} <span class="block text-xs font-normal text-gray-500">${horarioCli}</span></td>
                             <td class="p-3"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${statusCli === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${statusCli}</span></td>
                             <td class="p-3 text-center space-x-2">
-                                <a href="https://wa.me/55${telLimpo}?text=${encodeURIComponent(msgWsp)}" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded text-xs hover:bg-green-700 font-bold inline-block">💬 Enviar Horário WhatsApp</a>
+                                <a href="https://wa.me/55${telLimpo}?text=${encodeURIComponent(msgWsp)}" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded text-xs hover:bg-green-700 font-bold inline-block">💬 WhatsApp</a>
                                 <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-blue-500 text-white px-2.5 py-1 rounded text-xs hover:bg-blue-600">Aprovar</button>
                                 <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-2.5 py-1 rounded text-xs hover:bg-red-600">Excluir</button>
                             </td>
@@ -485,14 +508,11 @@
             }
         }
 
-        // Conversor de arquivo local para imagem Base64
         function converterArquivoParaBase64(inputElement, callback) {
             const file = inputElement.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
-                    callback(e.target.result);
-                };
+                reader.onload = function(e) { callback(e.target.result); };
                 reader.readAsDataURL(file);
             }
         }
@@ -513,7 +533,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Foto do Procedimento (Celular / PC):</label>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Foto do Procedimento:</label>
                         ${p.foto_url ? `<div class="mb-2"><img src="${p.foto_url}" class="h-24 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Sem foto carregada</div>'}
                         <input type="file" id="proc-file-${p.id}" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
                     </div>
@@ -537,7 +557,7 @@
                     converterArquivoParaBase64(fileInput, async (base64Img) => {
                         procedimentos[idx].foto_url = base64Img;
                         await salvarNoBanco('procedimentos', procedimentos);
-                        alert('✨ Procedimento e foto salvos com sucesso!');
+                        alert('✨ Procedimento e foto salvos!');
                         renderizarProcedimentos();
                     });
                 } else {
@@ -610,11 +630,11 @@
                     converterArquivoParaBase64(fileInput, async (base64Img) => {
                         fotosSite[idx].url = base64Img;
                         await salvarNoBanco('fotos_site', fotosSite);
-                        alert('✨ Foto salva com sucesso e atualizada no site!');
+                        alert('✨ Foto salva!');
                         renderizarFotos();
                     });
                 } else {
-                    alert('Por favor, escolha um arquivo de foto antes de salvar.');
+                    alert('Escolha um arquivo de foto antes de salvar.');
                 }
             }
         }
@@ -648,45 +668,81 @@
 
         async function salvarRegras(e) { e.preventDefault(); alert('Regras salvas!'); }
 
-        async function salvarBloqueio(e) {
+        async function salvarExcecaoFolga(e) {
             e.preventDefault();
-            bloqueios.push({
+            excecoesFolga.push({
                 id: Date.now(),
-                data: document.getElementById('bloq-data').value,
-                inicio: document.getElementById('bloq-inicio').value,
-                fim: document.getElementById('bloq-fim').value,
-                motivo: document.getElementById('bloq-motivo').value
+                data: document.getElementById('excecao-data').value,
+                motivo: document.getElementById('excecao-motivo').value
             });
-            await salvarNoBanco('bloqueios', bloqueios);
-            renderizarBloqueios();
-            alert('✨ Bloqueio cadastrado!');
+            await salvarNoBanco('excecoes_folga', excecoesFolga);
+            renderizarExcecoeseHorarios();
+            alert('✨ Exceção cadastrada com sucesso!');
         }
 
-        function renderizarBloqueios() {
-            const container = document.getElementById('lista-bloqueios-cadastrados');
-            if (bloqueios.length === 0) {
-                container.innerHTML = `<p class="text-gray-500">Nenhum bloqueio cadastrado.</p>`;
-                return;
-            }
-            container.innerHTML = bloqueios.map(b => `
-                <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
-                    <div>
-                        <p>📅 Data: <b>${b.data}</b></p>
-                        <p class="text-gray-500">Motivo: ${b.motivo || 'Não informado'}</p>
+        async function salvarHorarioDia(e) {
+            e.preventDefault();
+            const dataVal = document.getElementById('horario-data').value;
+            const listaVal = document.getElementById('horario-lista').value;
+            
+            // Remove horario existente para essa data se houver, ou atualiza
+            horariosDias = horariosDias.filter(h => h.data !== dataVal);
+            horariosDias.push({
+                id: Date.now(),
+                data: dataVal,
+                horarios: listaVal.split(',').map(h => h.trim()).filter(h => h !== '')
+            });
+            await salvarNoBanco('horarios_dias', horariosDias);
+            renderizarExcecoeseHorarios();
+            alert('✨ Horários do dia salvos com sucesso!');
+        }
+
+        function renderizarExcecoeseHorarios() {
+            const containerExc = document.getElementById('lista-excecoes-cadastradas');
+            if (excecoesFolga.length === 0) {
+                containerExc.innerHTML = `<p class="text-gray-500">Nenhuma exceção cadastrada.</p>`;
+            } else {
+                containerExc.innerHTML = excecoesFolga.map(ex => `
+                    <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
+                        <div>
+                            <p>📅 Data Liberada: <b>${ex.data.split('-').reverse().join('/')}</b></p>
+                            <p class="text-gray-500">Motivo: ${ex.motivo || 'Não informado'}</p>
+                        </div>
+                        <button onclick="excluirExcecao(${ex.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
                     </div>
-                    <button onclick="excluirBloqueio(${b.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
-                </div>
-            `).join('');
+                `).join('');
+            }
+
+            const containerHor = document.getElementById('lista-horarios-cadastrados');
+            if (horariosDias.length === 0) {
+                containerHor.innerHTML = `<p class="text-gray-500">Nenhum horário específico cadastrado.</p>`;
+            } else {
+                containerHor.innerHTML = horariosDias.map(h => `
+                    <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
+                        <div>
+                            <p>📅 Data: <b>${h.data.split('-').reverse().join('/')}</b></p>
+                            <p class="text-amber-700 font-semibold">⏰ Horários: ${h.horarios.join(', ')}</p>
+                        </div>
+                        <button onclick="excluirHorarioDia(${h.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
+                    </div>
+                `).join('');
+            }
         }
 
-        async function excluirBloqueio(id) {
-            bloqueios = bloqueios.filter(b => b.id !== id);
-            await salvarNoBanco('bloqueios', bloqueios);
-            renderizarBloqueios();
+        async function excluirExcecao(id) {
+            excecoesFolga = excecoesFolga.filter(ex => ex.id !== id);
+            await salvarNoBanco('excecoes_folga', excecoesFolga);
+            renderizarExcecoeseHorarios();
+        }
+
+        async function excluirHorarioDia(id) {
+            horariosDias = horariosDias.filter(h => h.id !== id);
+            await salvarNoBanco('horarios_dias', horariosDias);
+            renderizarExcecoeseHorarios();
         }
 
         function exportarBackup() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({procedimentos, avaliacoes, fotosSite, bloqueios}, null, 2));
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({procedimentos, avaliacoes, fotosSite, excecoesFolga, horariosDias}, null, 2));
             const a = document.createElement('a');
             a.setAttribute("href", dataStr);
             a.setAttribute("download", "backup_b_virginia.json");
