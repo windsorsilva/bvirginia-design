@@ -98,7 +98,7 @@
                 </div>
             </section>
 
-            <!-- TAB 2: EXCEÇÕES & HORÁRIOS LIVRES (ATUALIZADO COM VÁRIOS HORÁRIOS + EXCLUSÃO INDIVIDUAL) -->
+            <!-- TAB 2: EXCEÇÕES & HORÁRIOS LIVRES -->
             <section id="sec-bloqueios" class="tab-content hidden">
                 <h2 class="text-xl font-bold mb-4">Gerenciamento de Folgas, Exceções e Horários Livres</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -454,7 +454,6 @@
                     const statusCli = item.status || 'Pendente';
                     const telLimpo = telCli.replace(/\D/g, '');
                     
-                    // Direciona para WhatsApp sem horário quando vazio
                     let msgWsp = '';
                     if (horarioCli && horarioCli.trim() !== '') {
                         msgWsp = `Olá, ${nomeCli}! Vi sua solicitação para ${servCli} no dia ${dataCli} (${horarioCli}). Tudo confirmado!`;
@@ -697,7 +696,6 @@
             alert('✨ Exceção cadastrada com sucesso!');
         }
 
-        // Funções para adicionar vários horários em formato de etiquetas e exclusão individual
         function adicionarHorarioTemporario() {
             const inputH = document.getElementById('input-novo-horario').value.trim();
             if (!inputH) {
@@ -706,7 +704,7 @@
             }
             if (!horariosTemporariosFila.includes(inputH)) {
                 horariosTemporariosFila.push(inputH);
-                horariosTemporariosFila.sort(); // Mantém ordenado
+                horariosTemporariosFila.sort();
             }
             document.getElementById('input-novo-horario').value = '';
             renderizarEtiquetasTemporarias();
@@ -743,7 +741,6 @@
                 return;
             }
 
-            // Remove existente para atualizar ou insere novo
             horariosDias = horariosDias.filter(h => h.data !== dataVal);
             horariosDias.push({
                 id: Date.now(),
