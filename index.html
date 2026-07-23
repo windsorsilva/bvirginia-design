@@ -139,7 +139,7 @@
                             if(txts.whatsapp) document.getElementById('info-whatsapp').innerText = '+' + txts.whatsapp;
                             if(txts.instagram) {
                                 document.getElementById('info-instagram-link').href = txts.instagram;
-                                document.getElementById('info-instagram-link').innerText = '@' + txts.instagram.split('/').pop();
+                                document.getElementById('info-instagram-link').innerText = '@' + txts.instagram.split('/').pop().split('?')[0];
                             }
                         }
                     });
@@ -172,14 +172,12 @@
             }
 
             const dataObj = new Date(dataInput + 'T00:00:00');
-            const diaSemana = dataObj.getDay(); // 0 = Domingo, 1 = Segunda, ...
+            const diaSemana = dataObj.getDay();
 
-            // Verificar se é domingo (0) ou segunda (1) e se existe exceção cadastrada
             let isFolgaPadrao = (diaSemana === 0 || diaSemana === 1);
             let horariosDisponiveis = [];
 
             try {
-                // Buscar exceções de folga e horários específicos configurados no Supabase
                 const { data: cfgData } = await _supabase.from('configuracoes_site').select('*');
                 let excecoesFolga = [];
                 let horariosDias = [];
@@ -203,7 +201,6 @@
                 if (diaEspecifico && diaEspecifico.horarios && diaEspecifico.horarios.length > 0) {
                     horariosDisponiveis = [...diaEspecifico.horarios];
                 } else {
-                    // Horário padrão das 10:00 às 19:00 (intervalos de 30 em 30 min)
                     horariosDisponiveis = [
                         "10:00", "10:30", "11:00", "11:30", 
                         "13:00", "13:30", "14:00", "14:30", "15:00", 
@@ -211,7 +208,6 @@
                     ];
                 }
 
-                // Filtrar horários passados se o agendamento for para o dia de hoje
                 const hojeStr = new Date().toISOString().split('T')[0];
                 if (dataInput === hojeStr) {
                     const agora = new Date();
@@ -222,7 +218,6 @@
                     });
                 }
 
-                // Filtrar horários já ocupados por agendamentos aprovados/pendentes
                 const { data: agendamentosExistentes } = await _supabase.from('agendamentos').select('horario').eq('data', dataInput);
                 if (agendamentosExistentes && agendamentosExistentes.length > 0) {
                     const horariosOcupados = agendamentosExistentes.map(a => a.horario);
@@ -274,7 +269,6 @@
             const optionEl = selectServico.options[selectServico.selectedIndex];
             const valor = parseFloat(optionEl.getAttribute('data-preco')) || 0.00;
 
-            // Salvar no Supabase
             try {
                 await _supabase.from('agendamentos').insert([{
                     nome_cliente: nome,
@@ -287,7 +281,6 @@
                     status: 'Pendente'
                 }]);
 
-                // Atualizar base de clientes CRM
                 const { data: clienteExiste } = await _supabase.from('clientes').select('*').eq('telefone', whatsapp).single();
                 if (clienteExiste) {
                     await _supabase.from('clientes').update({
