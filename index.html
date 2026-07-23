@@ -93,7 +93,7 @@
         <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
         <p class="text-gray-600 leading-relaxed">Dias de Atendimento: Terça a Sábado das 10:00 às 19:00 (Domingos e segundas são dias de folga, salvo exceções).</p>
-        <p class="text-xs text-amber-700 font-medium">💡 *Como funciona:* Ao selecionar o dia, se houver horários livres cadastrados, escolha o seu. Caso contrário, enviaremos sua solicitação direto para o WhatsApp!</p>
+        <p class="text-xs text-amber-700 font-medium">💡 *Como funciona:* Domingos e segundas vêm bloqueados por padrão, a menos que você libere uma data específica no admin. Ao selecionar o dia, se houver horários livres cadastrados, escolha o seu; caso contrário, enviaremos direto para o WhatsApp!</p>
         <div class="space-y-3 text-sm text-gray-600 pt-2">
           <p>📍 <a id="form-local-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b] font-medium"><span id="form-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></a></p>
           <p>💬 <span id="form-wsp-info">+55 81 98900-2496</span></p>
@@ -120,7 +120,7 @@
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data Desejada</label>
             <input type="date" id="form-date" required onchange="verificarDisponibilidadeData()" class="w-full border border-gray-200 rounded-lg p-3 text-sm">
-            <p id="aviso-data-folga" class="text-xs text-red-500 mt-1 hidden">⚠️ Domingo e segunda são dias de folga (exceto se houver exceção cadastrada).</p>
+            <p id="aviso-data-folga" class="text-xs text-red-500 mt-1 hidden">⚠️ Domingo e segunda são dias de folga e não podem ser selecionados (a menos que liberados no admin).</p>
           </div>
 
           <!-- BLOCO DE HORÁRIOS DINÂMICOS -->
@@ -329,7 +329,6 @@
 
       if (!dataInput) return;
 
-      // Cria a data ajustada para fuso local
       const partes = dataInput.split('-');
       const dataObj = new Date(partes[0], partes[1] - 1, partes[2]);
       const diaSemana = dataObj.getDay(); // 0 = Domingo, 1 = Segunda
@@ -337,12 +336,15 @@
       const isDomingoOuSegunda = (diaSemana === 0 || diaSemana === 1);
       const temExcecao = excecoesFolgaGlobal.some(ex => ex.data === dataInput);
 
-      // Se for domingo ou segunda e NÃO tiver exceção, bloqueia
+      // Se for domingo ou segunda e NÃO tiver exceção, bloqueia e limpa imediatamente
       if (isDomingoOuSegunda && !temExcecao) {
         avisoFolga.classList.remove('hidden');
         blocoHorarios.classList.add('hidden');
         selectHorario.removeAttribute('required');
+        selectHorario.value = "";
+        document.getElementById('form-date').value = ""; // Limpa a data escolhida para impedir a seleção
         btnTexto.innerText = "SOLICITAR AGENDAMENTO NO WHATSAPP";
+        alert("Este dia é sua folga (Domingo ou Segunda) e não está disponível para agendamento.");
         return;
       } else {
         avisoFolga.classList.add('hidden');
@@ -359,6 +361,7 @@
       } else {
         blocoHorarios.classList.add('hidden');
         selectHorario.removeAttribute('required');
+        selectHorario.value = "";
         btnTexto.innerText = "SOLICITAR AGENDAMENTO NO WHATSAPP";
       }
     }

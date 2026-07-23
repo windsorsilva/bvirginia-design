@@ -1,759 +1,476 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo - B Virginia Design ✨</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <style>
-        :root {
-            --primary-gold: #c5a059;
-            --primary-dark: #1a1a1a;
-        }
-        .bg-gold { background-color: var(--primary-gold); }
-        .text-gold { color: var(--primary-gold); }
-        .border-gold { border-color: var(--primary-gold); }
-        .active-tab { border-bottom: 3px solid var(--primary-gold); font-weight: bold; color: #000; }
-        .active-subtab { background-color: #f3f4f6; border-bottom: 2px solid var(--primary-gold); font-weight: bold; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Administrativo | B Virgínia Design</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .font-title { font-family: 'Playfair Display', serif; }
+  </style>
 </head>
-<body class="bg-gray-100 font-sans text-gray-800 min-h-screen">
+<body class="bg-[#FAF8F5] text-[#2C2A29] min-h-screen">
 
-    <!-- MODAL DE LOGIN -->
-    <div id="login-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-2xl p-8 max-w-md w-full border-t-4 border-gold text-center">
-            <h2 class="text-2xl font-serif font-bold text-gray-900 mb-2">B Virginia Design ✨</h2>
-            <p class="text-sm text-gray-600 mb-6">Acesso exclusivo ao gerenciamento do site</p>
-            
-            <form onsubmit="verificarSenha(event)" class="space-y-4">
-                <div>
-                    <label class="block text-xs font-bold text-gray-700 uppercase mb-1 text-left">Senha do Administrador</label>
-                    <input type="password" id="input-senha" placeholder="••••••••" required 
-                           class="w-full border rounded px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-500">
-                </div>
-                <p id="login-error" class="text-red-500 text-xs font-semibold hidden">Senha incorreta! Tente novamente.</p>
-                <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow hover:opacity-90 transition">
-                    ENTRAR NO PAINEL
-                </button>
-            </form>
-            <div class="mt-6 border-t pt-4">
-                <a href="index.html" class="text-xs text-gray-500 hover:underline">← Voltar ao site principal</a>
-            </div>
-        </div>
+  <header class="bg-[#2C2A29] text-white py-6 px-6 md:px-16 flex justify-between items-center shadow-md">
+    <div class="flex items-center space-x-3">
+      <h1 class="font-title text-2xl font-bold tracking-wider">Painel Administrativo</h1>
+      <span class="bg-[#b5945b] text-white text-xs px-3 py-1 rounded-full uppercase tracking-widest font-semibold">B Virgínia Design</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="index.html" target="_blank" class="text-xs bg-white/10 hover:bg-white/25 px-4 py-2 rounded-lg transition">Ver Site 🌐</a>
+      <button onclick="fazerLogout()" class="text-xs bg-red-600/80 hover:bg-red-600 px-4 py-2 rounded-lg transition">Sair 🚪</button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 md:px-16 py-10 space-y-12">
+    
+    <!-- ABA DE NAVEGAÇÃO RÁPIDA -->
+    <div class="flex flex-wrap gap-3 border-b border-gray-200 pb-4">
+      <button onclick="mudarTab('agenda')" id="tab-btn-agenda" class="px-5 py-2.5 rounded-lg text-sm font-bold bg-[#b5945b] text-white transition shadow-sm">📅 Agendamentos</button>
+      <button onclick="mudarTab('horarios')" id="tab-btn-horarios" class="px-5 py-2.5 rounded-lg text-sm font-bold bg-white text-gray-600 hover:bg-gray-100 transition border border-gray-200">⏰ Exceções & Horários Livres</button>
+      <button onclick="mudarTab('servicos')" id="tab-btn-servicos" class="px-5 py-2.5 rounded-lg text-sm font-bold bg-white text-gray-600 hover:bg-gray-100 transition border border-gray-200">✨ Serviços & Preços</button>
+      <button onclick="mudarTab('clientes')" id="tab-btn-clientes" class="px-5 py-2.5 rounded-lg text-sm font-bold bg-white text-gray-600 hover:bg-gray-100 transition border border-gray-200">👥 Clientes</button>
     </div>
 
-    <!-- PAINEL PRINCIPAL -->
-    <div id="admin-content" class="hidden">
-        <header class="bg-white border-b px-6 py-4 flex flex-wrap justify-between items-center shadow-sm">
+    <!-- SEÇÃO: AGENDAMENTOS -->
+    <section id="tab-agenda" class="space-y-6">
+      <div class="flex justify-between items-center">
+        <h2 class="font-title text-2xl font-semibold">Gerenciar Agendamentos</h2>
+        <button onclick="carregarAgendamentos()" class="text-xs bg-gray-200 hover:bg-gray-300 px-3 py-2 rounded-lg transition">🔄 Atualizar Lista</button>
+      </div>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-100 text-xs text-gray-500 uppercase tracking-wider">
+              <th class="p-4">Cliente / WhatsApp</th>
+              <th class="p-4">Serviço</th>
+              <th class="p-4">Data e Horário</th>
+              <th class="p-4">Valor</th>
+              <th class="p-4">Status</th>
+              <th class="p-4 text-right">Ações</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-agendamentos-body" class="divide-y divide-gray-100 text-sm">
+            <tr><td colspan="6" class="p-6 text-center text-gray-400">Carregando agendamentos...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- SEÇÃO: HORÁRIOS LIVRES & EXCEÇÕES DE FOLGA -->
+    <section id="tab-horarios" class="space-y-8 hidden">
+      <h2 class="font-title text-2xl font-semibold">Gerenciamento de Dias e Horários Livres</h2>
+      <p class="text-xs text-gray-500">Domingos e segundas vêm bloqueados por padrão. Aqui você pode abrir exceções para trabalhar nesses dias ou cadastrar **múltiplos horários livres específicos** (ex: 09:00, 11:00, 12:00, 16:00) para qualquer dia.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <!-- Cadastrar Exceção / Horários -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+          <h3 class="font-title text-lg font-semibold text-[#b5945b]">Cadastrar Exceção / Múltiplos Horários</h3>
+          <form id="form-excecao" onsubmit="salvarExcecaoHorario(event)" class="space-y-4">
             <div>
-                <h1 class="text-2xl font-serif font-bold">Painel da Agenda ✨</h1>
-                <p class="text-xs text-gray-500">Gestão B Virginia Design</p>
+              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Escolha a Data</label>
+              <input type="date" id="admin-excecao-data" required class="w-full border border-gray-200 rounded-lg p-3 text-sm">
             </div>
-            <button onclick="logout()" class="bg-black text-white px-4 py-2 rounded text-xs font-semibold hover:bg-red-600 transition">
-                SAIR DO PAINEL 🚪
-            </button>
-        </header>
-
-        <nav class="bg-white border-b overflow-x-auto">
-            <div class="flex space-x-6 px-6 text-sm font-medium text-gray-600 min-w-max">
-                <button onclick="switchTab('agenda')" id="tab-agenda" class="py-3 px-2 active-tab">AGENDA 📅</button>
-                <button onclick="switchTab('clientes')" id="tab-clientes" class="py-3 px-2">CLIENTES (CRM) 👥</button>
-                <button onclick="switchTab('financeiro')" id="tab-financeiro" class="py-3 px-2">FINANCEIRO 💰</button>
-                <button onclick="switchTab('bloqueios')" id="tab-bloqueios" class="py-3 px-2">BLOQUEIOS & EXCEÇÕES 🚫</button>
-                <button onclick="switchTab('cms')" id="tab-cms" class="py-3 px-2">CONFIGURAÇÕES & CMS ⚙️</button>
-                <button onclick="switchTab('backup')" id="tab-backup" class="py-3 px-2">BACKUP & RESTAURAÇÃO 💾</button>
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Adicionar Horário Livre</label>
+              <div class="flex gap-2">
+                <input type="time" id="admin-novo-horario-input" class="w-full border border-gray-200 rounded-lg p-3 text-sm">
+                <button type="button" onclick="adicionarHorarioListaTemp()" class="bg-[#2C2A29] hover:bg-black text-white px-4 py-2 rounded-lg text-xs font-bold">Adicionar +</button>
+              </div>
+              <p class="text-[10px] text-gray-400 mt-1">Insira os horários um a um. Eles aparecerão na lista abaixo antes de salvar.</p>
             </div>
-        </nav>
 
-        <main class="max-w-7xl mx-auto p-6">
+            <!-- Lista temporária de horários para cadastrar -->
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-gray-500 uppercase">Horários na Fila de Cadastro:</label>
+              <div id="lista-horarios-temp" class="flex flex-wrap gap-2 min-h-[40px] p-2 bg-gray-50 rounded-lg border border-dashed border-gray-200">
+                <span class="text-xs text-gray-400 italic">Nenhum horário adicionado ainda. Se salvar sem horário, o dia servirá apenas como liberação geral (direcionando para o WhatsApp sem hora fixa).</span>
+              </div>
+            </div>
 
-            <!-- TAB 1: AGENDA -->
-            <section id="sec-agenda" class="tab-content">
-                <div class="flex flex-wrap justify-between items-center mb-4 gap-4">
-                    <h2 class="text-xl font-bold">Solicitações de Agendamento</h2>
-                    <div class="flex items-center space-x-2">
-                        <label class="text-xs font-bold uppercase text-gray-600">Filtrar por data:</label>
-                        <input type="date" id="filtro-data-agenda" onchange="carregarFinanceiroEAgendamentos()" class="border p-2 rounded text-sm bg-white">
-                        <button onclick="document.getElementById('filtro-data-agenda').value=''; carregarFinanceiroEAgendamentos();" class="bg-gray-200 text-gray-700 px-3 py-2 rounded text-xs font-bold hover:bg-gray-300">Ver Todos</button>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded shadow border overflow-x-auto">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-gray-200 text-gray-700 uppercase text-xs tracking-wider">
-                                <th class="p-3">Cliente</th>
-                                <th class="p-3">Telefone / WhatsApp</th>
-                                <th class="p-3">Serviço</th>
-                                <th class="p-3">Data / Horário</th>
-                                <th class="p-3">Status</th>
-                                <th class="p-3 text-center">Ações & WhatsApp</th>
-                            </tr>
-                        </thead>
-                        <tbody id="lista-agendamentos" class="divide-y divide-gray-200 text-sm">
-                            <tr><td colspan="6" class="p-6 text-center text-gray-500">Carregando agendamentos...</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+            <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-3 rounded-lg transition text-xs uppercase">Salvar Configuração do Dia</button>
+          </form>
+        </div>
 
-            <!-- TAB 2: CLIENTES -->
-            <section id="sec-clientes" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Base de Clientes Cadastrados</h2>
-                <div class="bg-white p-6 rounded shadow border overflow-x-auto">
-                    <table class="w-full text-left text-sm">
-                        <thead>
-                            <tr class="border-b bg-gray-50">
-                                <th class="p-3">NOME</th>
-                                <th class="p-3">TELEFONE / WHATSAPP</th>
-                                <th class="p-3">ÚLTIMO SERVIÇO</th>
-                                <th class="p-3">TOTAL SOLICITADO</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tabela-clientes">
-                            <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado ainda.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
+        <!-- Dias já liberados cadastrados -->
+        <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 space-y-4">
+          <h3 class="font-title text-lg font-semibold">Dias Liberados & Horários Cadastrados</h3>
+          <div id="lista-excecoes-cadastradas" class="space-y-3 max-h-[400px] overflow-y-auto">
+            <p class="text-xs text-gray-400">Carregando exceções...</p>
+          </div>
+        </div>
+      </div>
+    </section>
 
-            <!-- TAB 3: FINANCEIRO -->
-            <section id="sec-financeiro" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Relatório Financeiro Automático</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-amber-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Faturamento Previsto (Mês)</p>
-                        <h3 id="fin-faturamento" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-blue-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Solicitações Realizadas</p>
-                        <h3 id="fin-qtd-agendamentos" class="text-2xl font-bold text-gray-800 mt-2">0</h3>
-                    </div>
-                    <div class="bg-white p-6 rounded shadow border border-l-4 border-green-500">
-                        <p class="text-xs uppercase font-bold text-gray-500">Ticket Médio por Cliente</p>
-                        <h3 id="fin-ticket-medio" class="text-2xl font-bold text-gray-800 mt-2">R$ 0,00</h3>
-                    </div>
-                </div>
-                <div class="bg-white p-6 rounded shadow border">
-                    <h3 class="font-bold text-lg mb-4 border-b pb-2">Extrato de Serviços</h3>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm">
-                            <thead>
-                                <tr class="border-b bg-gray-50">
-                                    <th class="p-2">DATA</th>
-                                    <th class="p-2">CLIENTE</th>
-                                    <th class="p-2">PROCEDIMENTO</th>
-                                    <th class="p-2">VALOR</th>
-                                </tr>
-                            </thead>
-                            <tbody id="extrato-financeiro">
-                                <tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro ainda.</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </section>
+    <!-- SEÇÃO: SERVIÇOS & PREÇOS -->
+    <section id="tab-servicos" class="space-y-6 hidden">
+      <div class="flex justify-between items-center">
+        <h2 class="font-title text-2xl font-semibold">Procedimentos & Valores</h2>
+        <button onclick="salvarServicosAdmin()" class="bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold px-6 py-3 rounded-lg text-xs uppercase transition">Salvar Alterações</button>
+      </div>
+      <div id="admin-servicos-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+    </section>
 
-            <!-- TAB 4: BLOQUEIOS & EXCEÇÕES -->
-            <section id="sec-bloqueios" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Gerenciamento de Folgas, Exceções e Horários Livres</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div class="bg-white p-6 rounded shadow border space-y-6">
-                        <div>
-                            <h3 class="font-bold text-lg mb-2 border-b pb-2">Abrir Exceção (Domingo ou Segunda)</h3>
-                            <p class="text-xs text-gray-500 mb-3">Domigos e segundas são folgas padrão. Use aqui para liberar uma data específica em que irá trabalhar.</p>
-                            <form onsubmit="salvarExcecaoFolga(event)" class="space-y-3">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Data da Exceção (Dom ou Seg)</label>
-                                    <input type="date" id="excecao-data" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Motivo</label>
-                                    <input type="text" id="excecao-motivo" placeholder="Ex: Plantão especial" class="w-full border p-2 rounded mt-1">
-                                </div>
-                                <button type="submit" class="w-full bg-gold text-white font-bold py-2 rounded text-xs">LIBERAR ESTE DIA DE FOLGA</button>
-                            </form>
-                        </div>
+    <!-- SEÇÃO: CLIENTES -->
+    <section id="tab-clientes" class="space-y-6 hidden">
+      <h2 class="font-title text-2xl font-semibold">Base de Clientes</h2>
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-gray-50 border-b border-gray-100 text-xs text-gray-500 uppercase tracking-wider">
+              <th class="p-4">Nome</th>
+              <th class="p-4">WhatsApp</th>
+              <th class="p-4">Último Serviço</th>
+              <th class="p-4">Total de Atendimentos</th>
+            </tr>
+          </thead>
+          <tbody id="tabela-clientes-body" class="divide-y divide-gray-100 text-sm">
+            <tr><td colspan="4" class="p-6 text-center text-gray-400">Carregando clientes...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-                        <div class="border-t pt-4">
-                            <h3 class="font-bold text-lg mb-2 border-b pb-2">Cadastrar Horários Livres para um Dia</h3>
-                            <p class="text-xs text-gray-500 mb-3">Defina os horários disponíveis que aparecerão quando o cliente clicar na data.</p>
-                            <form onsubmit="salvarHorarioDia(event)" class="space-y-3">
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Data</label>
-                                    <input type="date" id="horario-data" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                                <div>
-                                    <label class="block text-xs font-bold uppercase">Horários Livres (Separe por vírgula)</label>
-                                    <input type="text" id="horario-lista" placeholder="Ex: 10:00, 11:30, 14:00, 16:00" required class="w-full border p-2 rounded mt-1">
-                                </div>
-                                <button type="submit" class="w-full bg-black text-white font-bold py-2 rounded text-xs">SALVAR HORÁRIOS DO DIA</button>
-                            </form>
-                        </div>
-                    </div>
+  </main>
 
-                    <div class="space-y-6">
-                        <div class="bg-white p-6 rounded shadow border">
-                            <h3 class="font-bold text-lg mb-4 border-b pb-2">Exceções de Folga Cadastradas</h3>
-                            <div id="lista-excecoes-cadastradas" class="space-y-2 text-sm">
-                                <p class="text-gray-500">Nenhuma exceção cadastrada.</p>
-                            </div>
-                        </div>
+  <script>
+    const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-                        <div class="bg-white p-6 rounded shadow border">
-                            <h3 class="font-bold text-lg mb-4 border-b pb-2">Horários Específicos por Dia</h3>
-                            <div id="lista-horarios-cadastrados" class="space-y-2 text-sm">
-                                <p class="text-gray-500">Nenhum horário específico cadastrado.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+    let horariosTempParaSalvar = [];
+    let excecoesGlobaisAdmin = [];
+    let horariosDiasGlobaisAdmin = [];
+    let servicosGlobaisAdmin = [];
 
-            <!-- TAB 5: CONFIGURAÇÕES & CMS -->
-            <section id="sec-cms" class="tab-content hidden">
-                <div class="flex space-x-2 border-b mb-6 bg-white p-2 rounded shadow-sm overflow-x-auto">
-                    <button onclick="switchSubTab('procedimentos')" id="subtab-procedimentos" class="py-2 px-4 text-sm font-semibold rounded active-subtab">PROCEDIMENTOS</button>
-                    <button onclick="switchSubTab('horarios')" id="subtab-horarios" class="py-2 px-4 text-sm font-semibold rounded">EXPEDIENTE</button>
-                    <button onclick="switchSubTab('textos')" id="subtab-textos" class="py-2 px-4 text-sm font-semibold rounded">TEXTOS & INSTAGRAM (CMS)</button>
-                    <button onclick="switchSubTab('avaliacoes')" id="subtab-avaliacoes" class="py-2 px-4 text-sm font-semibold rounded">AVALIAÇÕES ⭐</button>
-                    <button onclick="switchSubTab('galeria')" id="subtab-galeria" class="py-2 px-4 text-sm font-semibold rounded">GALERIA & TODAS AS FOTOS</button>
-                </div>
+    function verificarAutenticacao() {
+      const logado = localStorage.getItem('bvirginia_admin_logado');
+      if (logado !== 'true') {
+        const senha = prompt("Digite a senha do painel administrativo:");
+        if (senha === 'virginia123' || senha === 'admin') {
+          localStorage.setItem('bvirginia_admin_logado', 'true');
+        } else {
+          alert('Senha incorreta!');
+          window.location.href = 'index.html';
+        }
+      }
+    }
 
-                <!-- SUB-ABA 1: PROCEDIMENTOS -->
-                <div id="subsec-procedimentos" class="subtab-content">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Procedimentos Cadastrados</h3>
-                        <button onclick="adicionarNovoProcedimento()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO PROCEDIMENTO</button>
-                    </div>
-                    <div id="grid-procedimentos" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </div>
+    function fazerLogout() {
+      localStorage.removeItem('bvirginia_admin_logado');
+      window.location.href = 'index.html';
+    }
 
-                <!-- SUB-ABA 2: EXPEDIENTE -->
-                <div id="subsec-horarios" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-3xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Ajustar Regras do Estúdio</h3>
-                    <form onsubmit="salvarRegras(event)" class="space-y-4">
-                        <div class="grid grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Início do Expediente</label>
-                                <input type="time" id="cfg-inicio" value="10:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Fechamento do Estúdio</label>
-                                <input type="time" id="cfg-fim" value="19:00" class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-                        <p class="text-xs text-gray-500">Nota: Domingos e Segundas são dias de folga por padrão. Para abrir exceções, utilize a aba "Bloqueios & Exceções".</p>
-                        <button type="submit" class="bg-gold text-white font-bold px-6 py-2 rounded">SALVAR REGRAS</button>
-                    </form>
-                </div>
+    function mudarTab(tab) {
+      ['agenda', 'horarios', 'servicos', 'clientes'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        document.getElementById(`tab-btn-${t}`).className = "px-5 py-2.5 rounded-lg text-sm font-bold bg-white text-gray-600 hover:bg-gray-100 transition border border-gray-200";
+      });
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      document.getElementById(`tab-btn-${tab}`).className = "px-5 py-2.5 rounded-lg text-sm font-bold bg-[#b5945b] text-white transition shadow-sm";
+    }
 
-                <!-- SUB-ABA 3: TEXTOS -->
-                <div id="subsec-textos" class="subtab-content hidden bg-white p-6 rounded shadow border max-w-4xl">
-                    <h3 class="text-lg font-bold mb-4 border-b pb-2">Editar Textos, Localização e Instagram</h3>
-                    <form onsubmit="salvarTextosCMS(event)" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Título Principal (Capa)</label>
-                                <input type="text" id="cms-titulo-capa" value="Beleza através do olhar ✨" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Descrição da Capa</label>
-                                <textarea id="cms-desc-capa" rows="3" class="w-full border p-2 rounded mt-1">Realce sua beleza com sobrancelhas e cílios feitos de forma única para valorizar a sua essência.</textarea>
-                            </div>
-                        </div>
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Localização / Endereço do Salão</label>
-                                <input type="text" id="cms-localizacao" value="Bela Vista, Cabo de Santo Agostinho – PE" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">Link do Instagram</label>
-                                <input type="text" id="cms-instagram" value="https://www.instagram.com/bvirginiadesign" class="w-full border p-2 rounded mt-1">
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold uppercase">WhatsApp de Atendimento</label>
-                                <input type="text" id="cms-whatsapp" value="5581989002496" class="w-full border p-2 rounded mt-1">
-                            </div>
-                        </div>
-                        <div class="md:col-span-2">
-                            <button type="submit" class="w-full bg-gold text-white font-bold py-3 rounded shadow">PUBLICAR TEXTOS NO SITE</button>
-                        </div>
-                    </form>
-                </div>
+    // --- AGENDAMENTOS ---
+    async function carregarAgendamentos() {
+      const tbody = document.getElementById('tabela-agendamentos-body');
+      tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400">Carregando...</td></tr>`;
+      
+      const { data, error } = await _supabase.from('agendamentos').select('*').order('data', { ascending: false });
+      if (error || !data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-400">Nenhum agendamento encontrado.</td></tr>`;
+        return;
+      }
 
-                <!-- SUB-ABA 4: AVALIAÇÕES -->
-                <div id="subsec-avaliacoes" class="subtab-content hidden">
-                    <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-lg font-bold">Depoimentos & Avaliações dos Clientes</h3>
-                        <button onclick="adicionarNovoComentario()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ NOVO DEPOIMENTO</button>
-                    </div>
-                    <div id="grid-avaliacoes" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-                </div>
+      tbody.innerHTML = data.map(ag => {
+        const dataFmt = ag.data ? ag.data.split('-').reverse().join('/') : '';
+        const badgeColor = ag.status === 'Confirmado' ? 'bg-green-100 text-green-700' : (ag.status === 'Cancelado' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700');
+        
+        return `
+          <tr class="hover:bg-gray-50/50">
+            <td class="p-4">
+              <p class="font-semibold text-gray-900">${ag.nome_cliente}</p>
+              <a href="https://wa.me/55${ag.telefone.replace(/\D/g,'')}" target="_blank" class="text-xs text-[#b5945b] hover:underline">💬 ${ag.telefone}</a>
+            </td>
+            <td class="p-4 font-medium">${ag.servico}</td>
+            <td class="p-4 text-xs">📅 ${dataFmt}<br>⏰ ${ag.horario}</td>
+            <td class="p-4 font-semibold text-[#b5945b]">R$ ${Number(ag.valor).toFixed(2).replace('.', ',')}</td>
+            <td class="p-4"><span class="px-3 py-1 rounded-full text-xs font-semibold ${badgeColor}">${ag.status}</span></td>
+            <td class="p-4 text-right space-x-2">
+              <button onclick="mudarStatusAgendamento('${ag.id}', 'Confirmado')" class="text-xs bg-green-50 text-green-600 border border-green-200 px-3 py-1 rounded hover:bg-green-100">Confirmar</button>
+              <button onclick="mudarStatusAgendamento('${ag.id}', 'Cancelado')" class="text-xs bg-red-50 text-red-600 border border-red-200 px-3 py-1 rounded hover:bg-red-100">Cancelar</button>
+              <button onclick="excluirAgendamento('${ag.id}')" class="text-xs text-gray-400 hover:text-red-600"><i class="fas fa-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
 
-                <!-- SUB-ABA 5: GALERIA -->
-                <div id="subsec-galeria" class="subtab-content hidden">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold">Gerenciamento de Todas as Fotos do Site & Adicionar Novas Fotos na Galeria</h3>
-                        <button onclick="adicionarNovaFotoGaleria()" class="bg-gold text-white px-4 py-2 rounded text-sm font-bold">+ ADICIONAR FOTO</button>
-                    </div>
-                    <div id="grid-fotos-site" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                </div>
-            </section>
+    async function mudarStatusAgendamento(id, novoStatus) {
+      await _supabase.from('agendamentos').update({ status: novoStatus }).eq('id', id);
+      carregarAgendamentos();
+    }
 
-            <!-- TAB 6: BACKUP -->
-            <section id="sec-backup" class="tab-content hidden">
-                <h2 class="text-xl font-bold mb-4">Backup e Segurança</h2>
-                <div class="bg-white p-6 rounded shadow border text-center">
-                    <button onclick="exportarBackup()" class="bg-black text-white px-6 py-2 rounded font-bold">EXPORTAR BACKUP DADOS</button>
-                </div>
-            </section>
+    async function excluirAgendamento(id) {
+      if (confirm('Deseja realmente excluir este agendamento?')) {
+        await _supabase.from('agendamentos').delete().eq('id', id);
+        carregarAgendamentos();
+      }
+    }
 
-        </main>
-    </div>
+    // --- HORÁRIOS & EXCEÇÕES ---
+    function adicionarHorarioListaTemp() {
+      const input = document.getElementById('admin-novo-horario-input');
+      const val = input.value;
+      if (!val) {
+        alert("Selecione um horário válido.");
+        return;
+      }
+      if (horariosTempParaSalvar.includes(val)) {
+        alert("Este horário já foi adicionado à lista.");
+        return;
+      }
+      horariosTempParaSalvar.push(val);
+      horariosTempParaSalvar.sort();
+      atualizarVisualHorariosTemp();
+      input.value = '';
+    }
 
-    <script>
-        const SUPABASE_URL = 'https://zehvxzqqideeyqdvnnwp.supabase.co';
-        const SUPABASE_KEY = 'sb_publishable_Qb7Nyhl4R-9d7cUjEHMpvg_D5HRB9as';
-        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-        const SENHA_ADMIN = 'virginia123';
+    function removerHorarioListaTemp(index) {
+      horariosTempParaSalvar.splice(index, 1);
+      atualizarVisualHorariosTemp();
+    }
 
-        let procedimentos = [
-            { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
-            { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
-            { id: 3, nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
-            { id: 4, nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" },
-            { id: 5, nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
-            { id: 6, nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
-            { id: 7, nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
-            { id: 8, nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" }
-        ];
+    function atualizarVisualHorariosTemp() {
+      const container = document.getElementById('lista-horarios-temp');
+      if (horariosTempParaSalvar.length === 0) {
+        container.innerHTML = `<span class="text-xs text-gray-400 italic">Nenhum horário adicionado ainda. Se salvar sem horário, o dia servirá apenas como liberação geral (direcionando para o WhatsApp sem hora fixa).</span>`;
+        return;
+      }
+      container.innerHTML = horariosTempParaSalvar.map((h, i) => `
+        <span class="bg-[#2C2A29] text-white text-xs px-3 py-1 rounded-full flex items-center gap-2">
+          ⏰ ${h} <button type="button" onclick="removerHorarioListaTemp(${i})" class="text-red-300 hover:text-white">&times;</button>
+        </span>
+      `).join('');
+    }
 
-        let avaliacoes = [
-            { id: 1, nome: 'Amanda Silva', estrelas: 5, texto: 'Atendimento incrível e impecável.' },
-            { id: 2, nome: 'Beatriz Costa', estrelas: 5, texto: 'Extensão super confortável.' }
-        ];
+    async function carregarExcecoesAdmin() {
+      try {
+        const { data } = await _supabase.from('configuracoes_site').select('*');
+        if (data) {
+          data.forEach(c => {
+            if (c.chave === 'excecoes_folga') excecoesGlobaisAdmin = JSON.parse(c.valor) || [];
+            if (c.chave === 'horarios_dias') horariosDiasGlobaisAdmin = JSON.parse(c.valor) || [];
+          });
+        }
+      } catch(e) {}
 
-        let fotosSite = [
-            { id: 'capa', posicao: 'Fondo da Capa (Hero Section)', url: '' },
-            { id: 'sobre', posicao: 'Foto Principal da Seção "Sobre Mim"', url: '' },
-            { id: 'galeria-1', posicao: 'Galeria - Foto 1 (Resultado Sobrancelhas)', url: '' },
-            { id: 'galeria-2', posicao: 'Galeria - Foto 2 (Estúdio / Ambiente)', url: '' }
-        ];
+      const container = document.getElementById('lista-excecoes-cadastradas');
+      
+      // Unifica todas as datas presentes em excecoes_folga ou horarios_dias
+      let todasDatas = [...new Set([...excecoesGlobaisAdmin.map(e => e.data), ...horariosDiasGlobaisAdmin.map(h => h.data)])];
+      
+      if (todasDatas.length === 0) {
+        container.innerHTML = `<p class="text-xs text-gray-400 italic">Nenhuma exceção ou horário especial cadastrado.</p>`;
+        return;
+      }
 
-        let excecoesFolga = [];
-        let horariosDias = [];
+      todasDatas.sort();
 
-        function verificarSenha(e) {
-            e.preventDefault();
-            if (document.getElementById('input-senha').value === SENHA_ADMIN) {
-                sessionStorage.setItem('admin_autenticado', 'true');
-                liberarPainel();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-            }
+      container.innerHTML = todasDatas.map(dataStr => {
+        const dataFmt = dataStr.split('-').reverse().join('/');
+        const configDia = horariosDiasGlobaisAdmin.find(h => h.data === dataStr);
+        const listaHorarios = configDia ? configDia.horarios : [];
+
+        return `
+          <div class="p-4 bg-gray-50 rounded-xl border border-gray-100 flex flex-col gap-3">
+            <div class="flex justify-between items-center">
+              <div>
+                <span class="font-bold text-sm text-[#2C2A29]">📅 ${dataFmt}</span>
+                <span class="text-[10px] bg-green-100 text-green-700 px-2 py-0.5 rounded ml-2 font-semibold">Liberado</span>
+              </div>
+              <button onclick="excluirDiaInteiroAdmin('${dataStr}')" class="text-xs text-red-500 hover:underline">🗑️ Remover Dia Inteiro</button>
+            </div>
+            <div>
+              <span class="text-xs font-bold text-gray-500 uppercase block mb-1">Horários Livres Cadastrados:</span>
+              <div class="flex flex-wrap gap-1.5">
+                ${listaHorarios.length > 0 ? listaHorarios.map(h => `
+                  <span class="bg-white border border-gray-200 text-gray-700 text-xs px-2.5 py-1 rounded-md flex items-center gap-1.5 shadow-sm">
+                    ⏰ ${h} 
+                    <button onclick="excluirHorarioEspecificoAdmin('${dataStr}', '${h}')" class="text-red-500 hover:text-red-700 font-bold ml-1" title="Excluir este horário">&times;</button>
+                  </span>
+                `).join('') : '<span class="text-xs text-gray-400 italic">Apenas liberação geral (WhatsApp sem horário fixo)</span>'}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function salvarExcecaoHorario(event) {
+      event.preventDefault();
+      const dataInput = document.getElementById('admin-excecao-data').value;
+      if (!dataInput) return;
+
+      // Adiciona em excecoes_folga se não existir
+      if (!excecoesGlobaisAdmin.some(e => e.data === dataInput)) {
+        excecoesGlobaisAdmin.push({ data: dataInput, motivo: 'Liberado no admin' });
+      }
+
+      // Atualiza ou insere em horarios_dias
+      const indexHorario = horariosDiasGlobaisAdmin.findIndex(h => h.data === dataInput);
+      if (horariosTempParaSalvar.length > 0) {
+        if (indexHorario >= 0) {
+          // Funde os novos horários com os existentes sem duplicar
+          let combinados = [...new Set([...horariosDiasGlobaisAdmin[indexHorario].horarios, ...horariosTempParaSalvar])];
+          combinados.sort();
+          horariosDiasGlobaisAdmin[indexHorario].horarios = combinados;
+        } else {
+          horariosDiasGlobaisAdmin.push({ data: dataInput, horarios: [...horariosTempParaSalvar] });
+        }
+      }
+
+      // Salva no Supabase
+      try {
+        await _supabase.from('configuracoes_site').upsert([
+          { chave: 'excecoes_folga', valor: JSON.stringify(excecoesGlobaisAdmin) },
+          { chave: 'horarios_dias', valor: JSON.stringify(horariosDiasGlobaisAdmin) }
+        ], { onConflict: 'chave' });
+
+        alert("Horários e exceção salvos com sucesso!");
+        horariosTempParaSalvar = [];
+        atualizarVisualHorariosTemp();
+        document.getElementById('admin-excecao-data').value = '';
+        carregarExcecoesAdmin();
+      } catch (err) {
+        alert("Erro ao salvar no banco de dados.");
+      }
+    }
+
+    async function excluirHorarioEspecificoAdmin(dataStr, horarioAlvo) {
+      if (!confirm(`Deseja excluir o horário ${horarioAlvo} do dia ${dataStr.split('-').reverse().join('/')}?`)) return;
+
+      const indexHorario = horariosDiasGlobaisAdmin.findIndex(h => h.data === dataStr);
+      if (indexHorario >= 0) {
+        horariosDiasGlobaisAdmin[indexHorario].horarios = horariosDiasGlobaisAdmin[indexHorario].horarios.filter(h => h !== horarioAlvo);
+        
+        // Se ficou sem horários, remove o objeto da lista de horários daquele dia
+        if (horariosDiasGlobaisAdmin[indexHorario].horarios.length === 0) {
+          horariosDiasGlobaisAdmin.splice(indexHorario, 1);
         }
 
-        async function liberarPainel() {
-            document.getElementById('login-modal').classList.add('hidden');
-            document.getElementById('admin-content').classList.remove('hidden');
-            await carregarDadosDoBanco();
-            renderizarProcedimentos();
-            renderizarAvaliacoes();
-            renderizarFotos();
-            carregarFinanceiroEAgendamentos();
-            carregarClientesCRM();
-            renderizarExcecoeseHorarios();
+        await _supabase.from('configuracoes_site').upsert([
+          { chave: 'horarios_dias', valor: JSON.stringify(horariosDiasGlobaisAdmin) }
+        ], { onConflict: 'chave' });
+
+        carregarExcecoesAdmin();
+      }
+    }
+
+    async function excluirDiaInteiroAdmin(dataStr) {
+      if (!confirm(`Deseja remover totalmente a liberação e horários da data ${dataStr.split('-').reverse().join('/')}?`)) return;
+
+      excecoesGlobaisAdmin = excecoesGlobaisAdmin.filter(e => e.data !== dataStr);
+      horariosDiasGlobaisAdmin = horariosDiasGlobaisAdmin.filter(h => h.data !== dataStr);
+
+      await _supabase.from('configuracoes_site').upsert([
+        { chave: 'excecoes_folga', valor: JSON.stringify(excecoesGlobaisAdmin) },
+        { chave: 'horarios_dias', valor: JSON.stringify(horariosDiasGlobaisAdmin) }
+      ], { onConflict: 'chave' });
+
+      carregarExcecoesAdmin();
+    }
+
+    // --- CLIENTES ---
+    async function carregarClientes() {
+      const tbody = document.getElementById('tabela-clientes-body');
+      const { data } = await _supabase.from('clientes').select('*').order('total_agendamentos', { ascending: false });
+      if (!data || data.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="p-6 text-center text-gray-400">Nenhum cliente cadastrado.</td></tr>`;
+        return;
+      }
+      tbody.innerHTML = data.map(c => `
+        <tr class="hover:bg-gray-50/50">
+          <td class="p-4 font-semibold text-gray-900">${c.nome}</td>
+          <td class="p-4 text-[#b5945b]"><a href="https://wa.me/55${c.telefone.replace(/\D/g,'')}" target="_blank">💬 ${c.telefone}</a></td>
+          <td class="p-4">${c.ultimo_servico || '-'}</td>
+          <td class="p-4 font-bold text-center">${c.total_agendamentos || 1}</td>
+        </tr>
+      `).join('');
+    }
+
+    // --- SERVIÇOS ---
+    async function carregarServicosAdmin() {
+      const SERVICOS_PADRAO = [
+        { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
+        { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+        { id: 3, nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
+        { id: 4, nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" },
+        { id: 5, nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+        { id: 6, nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
+        { id: 7, nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
+        { id: 8, nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" }
+      ];
+      servicosGlobaisAdmin = SERVICOS_PADRAO;
+      try {
+        const { data } = await _supabase.from('configuracoes_site').select('*').eq('chave', 'procedimentos');
+        if (data && data.length > 0) {
+          const procs = JSON.parse(data[0].valor);
+          if (procs && procs.length > 0) servicosGlobaisAdmin = procs;
         }
+      } catch(e) {}
 
-        function logout() {
-            sessionStorage.removeItem('admin_autenticado');
-            window.location.reload();
-        }
+      document.getElementById('admin-servicos-container').innerHTML = servicosGlobaisAdmin.map((s, idx) => `
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 space-y-3">
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase">Nome do Serviço</label>
+            <input type="text" id="serv-nome-${idx}" value="${s.nome}" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mt-1">
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase">Preço (R$)</label>
+              <input type="number" step="0.01" id="serv-preco-${idx}" value="${s.preco}" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mt-1">
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-gray-500 uppercase">Duração (min)</label>
+              <input type="number" id="serv-duracao-${idx}" value="${s.duracao_min}" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mt-1">
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-gray-500 uppercase">URL da Foto</label>
+            <input type="text" id="serv-foto-${idx}" value="${s.foto_url || ''}" class="w-full border border-gray-200 rounded-lg p-2.5 text-sm mt-1">
+          </div>
+        </div>
+      `).join('');
+    }
 
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('nav button').forEach(el => el.classList.remove('active-tab'));
-            document.getElementById(`sec-${tabId}`).classList.remove('hidden');
-            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
-            if(tabId === 'clientes') carregarClientesCRM();
-        }
+    async function salvarServicosAdmin() {
+      servicosGlobaisAdmin = servicosGlobaisAdmin.map((s, idx) => ({
+        id: s.id || idx + 1,
+        nome: document.getElementById(`serv-nome-${idx}`).value,
+        preco: parseFloat(document.getElementById(`serv-preco-${idx}`).value) || 0,
+        duracao_min: parseInt(document.getElementById(`serv-duracao-${idx}`).value) || 30,
+        foto_url: document.getElementById(`serv-foto-${idx}`).value
+      }));
 
-        function switchSubTab(subTabId) {
-            document.querySelectorAll('.subtab-content').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('#sec-cms button').forEach(el => el.classList.remove('active-subtab'));
-            document.getElementById(`subsec-${subTabId}`).classList.remove('hidden');
-            document.getElementById(`subtab-${subTabId}`).classList.add('active-subtab');
-        }
+      await _supabase.from('configuracoes_site').upsert([
+        { chave: 'procedimentos', valor: JSON.stringify(servicosGlobaisAdmin) }
+      ], { onConflict: 'chave' });
 
-        async function carregarDadosDoBanco() {
-            try {
-                const { data } = await _supabase.from('configuracoes_site').select('*');
-                if (data && data.length > 0) {
-                    data.forEach(item => {
-                        if (item.chave === 'fotos_site') fotosSite = JSON.parse(item.valor);
-                        if (item.chave === 'procedimentos') procedimentos = JSON.parse(item.valor);
-                        if (item.chave === 'avaliacoes') avaliacoes = JSON.parse(item.valor);
-                        if (item.chave === 'excecoes_folga') excecoesFolga = JSON.parse(item.valor);
-                        if (item.chave === 'horarios_dias') horariosDias = JSON.parse(item.valor);
-                        if (item.chave === 'textos_cms') {
-                            const txts = JSON.parse(item.valor);
-                            if(txts.localizacao) document.getElementById('cms-localizacao').value = txts.localizacao;
-                            if(txts.titulo_capa) document.getElementById('cms-titulo-capa').value = txts.titulo_capa;
-                            if(txts.desc_capa) document.getElementById('cms-desc-capa').value = txts.desc_capa;
-                            if(txts.instagram) document.getElementById('cms-instagram').value = txts.instagram;
-                            if(txts.whatsapp) document.getElementById('cms-whatsapp').value = txts.whatsapp;
-                        }
-                    });
-                }
-            } catch (err) { console.log('Erro ao carregar dados do Supabase.'); }
-        }
+      alert("Serviços atualizados com sucesso!");
+      carregarServicosAdmin();
+    }
 
-        async function salvarNoBanco(chave, objetoDado) {
-            const valorString = JSON.stringify(objetoDado);
-            await _supabase.from('configuracoes_site').upsert({ chave: chave, valor: valorString }, { onConflict: 'chave' });
-        }
-
-        async function carregarFinanceiroEAgendamentos() {
-            try {
-                const tbody = document.getElementById('lista-agendamentos');
-                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-500">Carregando solicitações...</td></tr>`;
-
-                let query = _supabase.from('agendamentos').select('*').order('data', { ascending: true });
-                const dataFiltro = document.getElementById('filtro-data-agenda')?.value;
-                if (dataFiltro) query = query.eq('data', dataFiltro);
-
-                const { data: ags, error } = await query;
-                if (error) throw error;
-
-                if (!ags || ags.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-gray-500">Nenhuma solicitação encontrada.</td></tr>`;
-                    document.getElementById('extrato-financeiro').innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum registro.</td></tr>`;
-                    document.getElementById('fin-faturamento').innerText = `R$ 0,00`;
-                    document.getElementById('fin-qtd-agendamentos').innerText = `0`;
-                    document.getElementById('fin-ticket-medio').innerText = `R$ 0,00`;
-                    return;
-                }
-
-                tbody.innerHTML = ags.map(item => {
-                    const nomeCli = item.nome_cliente || 'Cliente';
-                    const telCli = item.telefone || '-';
-                    const servCli = item.servico || 'Serviço';
-                    const dataCli = item.data ? item.data.split('-').reverse().join('/') : '-';
-                    const horarioCli = item.horario || 'A combinar';
-                    const statusCli = item.status || 'Pendente';
-                    const telLimpo = telCli.replace(/\D/g, '');
-                    const msgWsp = `Olá, ${nomeCli}! Vi sua solicitação para ${servCli} no dia ${dataCli} (${horarioCli}). Tudo confirmado!`;
-
-                    return `
-                        <tr>
-                            <td class="p-3 font-medium">${nomeCli}</td>
-                            <td class="p-3">${telCli}</td>
-                            <td class="p-3">${servCli}</td>
-                            <td class="p-3 font-semibold text-amber-700">${dataCli} <span class="block text-xs font-normal text-gray-500">${horarioCli}</span></td>
-                            <td class="p-3"><span class="px-2.5 py-1 rounded-full text-xs font-semibold ${statusCli === 'Confirmado' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}">${statusCli}</span></td>
-                            <td class="p-3 text-center space-x-2">
-                                <a href="https://wa.me/55${telLimpo}?text=${encodeURIComponent(msgWsp)}" target="_blank" class="bg-green-600 text-white px-3 py-1.5 rounded text-xs hover:bg-green-700 font-bold inline-block">💬 WhatsApp</a>
-                                <button onclick="atualizarStatus('${item.id}', 'Confirmado')" class="bg-blue-500 text-white px-2.5 py-1 rounded text-xs hover:bg-blue-600">Aprovar</button>
-                                <button onclick="excluirAgendamento('${item.id}')" class="bg-red-500 text-white px-2.5 py-1 rounded text-xs hover:bg-red-600">Excluir</button>
-                            </td>
-                        </tr>
-                    `;
-                }).join('');
-
-                document.getElementById('extrato-financeiro').innerHTML = ags.map(a => `
-                    <tr class="border-b">
-                        <td class="p-2">${a.data ? a.data.split('-').reverse().join('/') : ''}</td>
-                        <td class="p-2">${a.nome_cliente || 'Cliente'}</td>
-                        <td class="p-2">${a.servico || ''}</td>
-                        <td class="p-2 font-bold text-green-700">R$ ${Number(a.valor || 0).toFixed(2).replace('.', ',')}</td>
-                    </tr>
-                `).join('');
-
-                let fat = ags.reduce((acc, curr) => acc + Number(curr.valor || 0), 0);
-                document.getElementById('fin-faturamento').innerText = `R$ ${fat.toFixed(2).replace('.', ',')}`;
-                document.getElementById('fin-qtd-agendamentos').innerText = ags.length;
-                document.getElementById('fin-ticket-medio').innerText = `R$ ${(fat / ags.length).toFixed(2).replace('.', ',')}`;
-            } catch (e) { console.log(e); }
-        }
-
-        async function carregarClientesCRM() {
-            try {
-                const { data: cls } = await _supabase.from('clientes').select('*');
-                const tbody = document.getElementById('tabela-clientes');
-                if (!cls || cls.length === 0) {
-                    tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-gray-500">Nenhum cliente cadastrado.</td></tr>`;
-                    return;
-                }
-                tbody.innerHTML = cls.map(c => `
-                    <tr class="border-b">
-                        <td class="p-3 font-medium">${c.nome || '-'}</td>
-                        <td class="p-3">${c.telefone || '-'}</td>
-                        <td class="p-3">${c.ultimo_servico || '-'}</td>
-                        <td class="p-3 font-bold text-center">${c.total_agendamentos || 1}</td>
-                    </tr>
-                `).join('');
-            } catch(e) { console.log(e); }
-        }
-
-        async function atualizarStatus(id, novoStatus) {
-            await _supabase.from('agendamentos').update({ status: novoStatus }).eq('id', id);
-            carregarFinanceiroEAgendamentos();
-        }
-
-        async function excluirAgendamento(id) {
-            if (confirm('Deseja excluir?')) {
-                await _supabase.from('agendamentos').delete().eq('id', id);
-                carregarFinanceiroEAgendamentos();
-            }
-        }
-
-        function converterArquivoParaBase64(inputElement, callback) {
-            const file = inputElement.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) { callback(e.target.result); };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        function renderizarProcedimentos() {
-            const container = document.getElementById('grid-procedimentos');
-            container.innerHTML = procedimentos.map(p => `
-                <div class="bg-white p-5 rounded shadow border space-y-3">
-                    <input type="text" id="proc-nome-${p.id}" value="${p.nome}" class="w-full border p-2 rounded text-sm font-bold">
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-[10px] text-gray-500 uppercase font-bold">Tempo (min)</label>
-                            <input type="text" id="proc-tempo-${p.id}" value="${p.duracao_min || 30}" class="w-full border p-2 rounded text-sm">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] text-gray-500 uppercase font-bold">Preço (R$)</label>
-                            <input type="number" step="0.01" id="proc-preco-${p.id}" value="${Number(p.preco).toFixed(2)}" class="w-full border p-2 rounded text-sm font-bold text-green-700">
-                        </div>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-gray-700 mb-1">Foto do Procedimento:</label>
-                        ${p.foto_url ? `<div class="mb-2"><img src="${p.foto_url}" class="h-24 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Sem foto carregada</div>'}
-                        <input type="file" id="proc-file-${p.id}" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
-                    </div>
-                    <div class="flex space-x-2 pt-2">
-                        <button onclick="salvarProcedimento(${p.id})" class="flex-1 bg-gold text-white text-xs font-bold py-2 rounded">💾 SALVAR</button>
-                        <button onclick="excluirProcedimento(${p.id})" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">EXCLUIR</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function salvarProcedimento(id) {
-            const idx = procedimentos.findIndex(p => p.id === id);
-            if (idx !== -1) {
-                procedimentos[idx].nome = document.getElementById(`proc-nome-${id}`).value;
-                procedimentos[idx].duracao_min = parseInt(document.getElementById(`proc-tempo-${id}`).value) || 30;
-                procedimentos[idx].preco = parseFloat(document.getElementById(`proc-preco-${id}`).value);
-
-                const fileInput = document.getElementById(`proc-file-${id}`);
-                if (fileInput.files && fileInput.files[0]) {
-                    converterArquivoParaBase64(fileInput, async (base64Img) => {
-                        procedimentos[idx].foto_url = base64Img;
-                        await salvarNoBanco('procedimentos', procedimentos);
-                        alert('✨ Procedimento e foto salvos!');
-                        renderizarProcedimentos();
-                    });
-                } else {
-                    await salvarNoBanco('procedimentos', procedimentos);
-                    alert('✨ Procedimento salvo!');
-                    renderizarProcedimentos();
-                }
-            }
-        }
-
-        async function excluirProcedimento(id) {
-            if (confirm('Excluir procedimento?')) {
-                procedimentos = procedimentos.filter(p => p.id !== id);
-                await salvarNoBanco('procedimentos', procedimentos);
-                renderizarProcedimentos();
-            }
-        }
-
-        function adicionarNovoProcedimento() {
-            procedimentos.push({ id: Date.now(), nome: "Novo Serviço", preco: 50.00, duracao_min: 30, foto_url: "" });
-            renderizarProcedimentos();
-        }
-
-        function renderizarAvaliacoes() {
-            const container = document.getElementById('grid-avaliacoes');
-            container.innerHTML = avaliacoes.map(a => `
-                <div class="bg-white p-5 rounded shadow border space-y-3">
-                    <input type="text" id="aval-nome-${a.id}" value="${a.nome}" class="w-full border p-2 rounded text-sm font-bold">
-                    <textarea id="aval-texto-${a.id}" rows="2" class="w-full border p-2 rounded text-sm">${a.texto}</textarea>
-                    <button onclick="salvarAvaliacao(${a.id})" class="bg-gold text-white text-xs font-bold py-2 px-4 rounded">💾 SALVAR</button>
-                </div>
-            `).join('');
-        }
-
-        async function salvarAvaliacao(id) {
-            const idx = avaliacoes.findIndex(a => a.id === id);
-            if (idx !== -1) {
-                avaliacoes[idx].nome = document.getElementById(`aval-nome-${id}`).value;
-                avaliacoes[idx].texto = document.getElementById(`aval-texto-${id}`).value;
-                await salvarNoBanco('avaliacoes', avaliacoes);
-                alert('✨ Avaliação salva!');
-            }
-        }
-
-        function adicionarNovoComentario() {
-            avaliacoes.push({ id: Date.now(), nome: "Cliente", estrelas: 5, texto: "Excelente!" });
-            renderizarAvaliacoes();
-        }
-
-        function renderizarFotos() {
-            const container = document.getElementById('grid-fotos-site');
-            container.innerHTML = fotosSite.map(f => `
-                <div class="bg-white p-4 rounded shadow border space-y-3">
-                    <h4 class="font-bold text-sm text-amber-700">${f.posicao}</h4>
-                    ${f.url ? `<div class="mb-2"><img src="${f.url}" class="h-24 w-full object-cover rounded border"></div>` : '<div class="mb-2 p-2 bg-gray-100 text-center text-xs text-gray-400 rounded">Nenhuma foto carregada</div>'}
-                    <input type="file" id="foto-file-${f.id}" accept="image/*" class="w-full text-xs text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-xs file:font-semibold file:bg-amber-50 file:text-amber-700 hover:file:bg-amber-100">
-                    <div class="flex space-x-2 pt-2">
-                        <button onclick="salvarFotoUnica('${f.id}')" class="flex-1 bg-gold text-white font-bold text-xs py-2 rounded">💾 SALVAR FOTO</button>
-                        <button onclick="excluirFotoSite('${f.id}')" class="bg-red-100 text-red-600 text-xs font-bold px-3 py-2 rounded">REMOVER</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        async function salvarFotoUnica(id) {
-            const idx = fotosSite.findIndex(f => f.id === id);
-            if (idx !== -1) {
-                const fileInput = document.getElementById(`foto-file-${id}`);
-                if (fileInput.files && fileInput.files[0]) {
-                    converterArquivoParaBase64(fileInput, async (base64Img) => {
-                        fotosSite[idx].url = base64Img;
-                        await salvarNoBanco('fotos_site', fotosSite);
-                        alert('✨ Foto salva!');
-                        renderizarFotos();
-                    });
-                } else {
-                    alert('Escolha um arquivo de foto antes de salvar.');
-                }
-            }
-        }
-
-        async function excluirFotoSite(id) {
-            if (confirm('Remover esta foto?')) {
-                fotosSite = fotosSite.filter(f => f.id !== id);
-                await salvarNoBanco('fotos_site', fotosSite);
-                renderizarFotos();
-            }
-        }
-
-        function adicionarNovaFotoGaleria() {
-            const novoId = 'galeria-' + Date.now();
-            fotosSite.push({ id: novoId, posicao: 'Nova Foto da Galeria', url: '' });
-            renderizarFotos();
-        }
-
-        async function salvarTextosCMS(e) { 
-            e.preventDefault(); 
-            const textos = {
-                titulo_capa: document.getElementById('cms-titulo-capa').value,
-                desc_capa: document.getElementById('cms-desc-capa').value,
-                localizacao: document.getElementById('cms-localizacao').value,
-                instagram: document.getElementById('cms-instagram').value,
-                whatsapp: document.getElementById('cms-whatsapp').value
-            };
-            await salvarNoBanco('textos_cms', textos);
-            alert('✨ Textos salvos!'); 
-        }
-
-        async function salvarRegras(e) { e.preventDefault(); alert('Regras salvas!'); }
-
-        async function salvarExcecaoFolga(e) {
-            e.preventDefault();
-            excecoesFolga.push({
-                id: Date.now(),
-                data: document.getElementById('excecao-data').value,
-                motivo: document.getElementById('excecao-motivo').value
-            });
-            await salvarNoBanco('excecoes_folga', excecoesFolga);
-            renderizarExcecoeseHorarios();
-            alert('✨ Exceção cadastrada com sucesso!');
-        }
-
-        async function salvarHorarioDia(e) {
-            e.preventDefault();
-            const dataVal = document.getElementById('horario-data').value;
-            const listaVal = document.getElementById('horario-lista').value;
-            
-            // Remove horario existente para essa data se houver, ou atualiza
-            horariosDias = horariosDias.filter(h => h.data !== dataVal);
-            horariosDias.push({
-                id: Date.now(),
-                data: dataVal,
-                horarios: listaVal.split(',').map(h => h.trim()).filter(h => h !== '')
-            });
-            await salvarNoBanco('horarios_dias', horariosDias);
-            renderizarExcecoeseHorarios();
-            alert('✨ Horários do dia salvos com sucesso!');
-        }
-
-        function renderizarExcecoeseHorarios() {
-            const containerExc = document.getElementById('lista-excecoes-cadastradas');
-            if (excecoesFolga.length === 0) {
-                containerExc.innerHTML = `<p class="text-gray-500">Nenhuma exceção cadastrada.</p>`;
-            } else {
-                containerExc.innerHTML = excecoesFolga.map(ex => `
-                    <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
-                        <div>
-                            <p>📅 Data Liberada: <b>${ex.data.split('-').reverse().join('/')}</b></p>
-                            <p class="text-gray-500">Motivo: ${ex.motivo || 'Não informado'}</p>
-                        </div>
-                        <button onclick="excluirExcecao(${ex.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
-                    </div>
-                `).join('');
-            }
-
-            const containerHor = document.getElementById('lista-horarios-cadastrados');
-            if (horariosDias.length === 0) {
-                containerHor.innerHTML = `<p class="text-gray-500">Nenhum horário específico cadastrado.</p>`;
-            } else {
-                containerHor.innerHTML = horariosDias.map(h => `
-                    <div class="border p-3 rounded flex justify-between items-center bg-gray-50 text-xs">
-                        <div>
-                            <p>📅 Data: <b>${h.data.split('-').reverse().join('/')}</b></p>
-                            <p class="text-amber-700 font-semibold">⏰ Horários: ${h.horarios.join(', ')}</p>
-                        </div>
-                        <button onclick="excluirHorarioDia(${h.id})" class="text-red-600 font-bold hover:underline">Excluir</button>
-                    </div>
-                `).join('');
-            }
-        }
-
-        async function excluirExcecao(id) {
-            excecoesFolga = excecoesFolga.filter(ex => ex.id !== id);
-            await salvarNoBanco('excecoes_folga', excecoesFolga);
-            renderizarExcecoeseHorarios();
-        }
-
-        async function excluirHorarioDia(id) {
-            horariosDias = horariosDias.filter(h => h.id !== id);
-            await salvarNoBanco('horarios_dias', horariosDias);
-            renderizarExcecoeseHorarios();
-        }
-
-        function exportarBackup() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({procedimentos, avaliacoes, fotosSite, excecoesFolga, horariosDias}, null, 2));
-            const a = document.createElement('a');
-            a.setAttribute("href", dataStr);
-            a.setAttribute("download", "backup_b_virginia.json");
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        }
-
-        window.onload = function() {
-            if (sessionStorage.getItem('admin_autenticado') === 'true') liberarPainel();
-        }
-    </script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      verificarAutenticacao();
+      await carregarAgendamentos();
+      await carregarExcecoesAdmin();
+      await carregarClientes();
+      await carregarServicosAdmin();
+    });
+  </script>
 </body>
 </html>
