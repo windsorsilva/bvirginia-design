@@ -125,7 +125,7 @@
           <!-- BLOCO DE HORÁRIOS DINÂMICOS -->
           <div id="bloco-horarios" class="hidden">
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horários Disponíveis neste dia</label>
-            <select id="form-horario" class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
+            <select id="form-horario" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
               <option value="" disabled selected>Selecione um horário</option>
             </select>
           </div>
@@ -136,7 +136,7 @@
           </div>
 
           <button type="submit" class="w-full bg-[#b5945b] hover:bg-[#9a7d4a] text-white font-bold py-4 rounded-lg transition text-sm uppercase flex items-center justify-center gap-2">
-            <i class="fab fa-whatsapp text-lg"></i> <span id="btn-texto-submit">SOLICITAR AGENDAMENTO NO WHATSAPP</span>
+            <i class="fab fa-whatsapp text-lg"></i> <span id="btn-texto-submit">SOLICITAR AGENDAMENTO COM HORÁRIO</span>
           </button>
         </form>
       </div>
@@ -316,10 +316,23 @@
 
     function preencherServico(nome) {
       document.getElementById('form-service').value = nome;
+      verificarDisponibilidadeData();
     }
 
-    function verificarDisponibilidadeData() {
+    function timeToMinutes(timeStr) {
+      const [h, m] = timeStr.split(':').map(Number);
+      return h * 60 + m;
+    }
+
+    function minutesToTime(totalMins) {
+      const h = Math.floor(totalMins / 60);
+      const m = totalMins % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    }
+
+    async function verificarDisponibilidadeData() {
       const dataInput = document.getElementById('form-date').value;
+      const servicoNome = document.getElementById('form-service').value;
       const avisoFolga = document.getElementById('aviso-data-folga');
       const blocoHorarios = document.getElementById('bloco-horarios');
       const selectHorario = document.getElementById('form-horario');
@@ -327,12 +340,22 @@
 
       if (!dataInput) return;
 
+      // Obter duração do serviço selecionado (padrão 30 min se não achar)
+      let duracaoServicoMin = 30;
+      if (servicoNome) {
+        const servObj = servicosCarregados.find(s => s.nome === servicoNome);
+        if (servObj && servObj.duracao_min) {
+          duracaoServicoMin = Number(servObj.duracao_min);
+        }
+      }
+
       const partes = dataInput.split('-');
       const dataObj = new Date(partes[0], partes[1] - 1, partes[2]);
       const diaSemana = dataObj.getDay(); // 0 = Domingo, 1 = Segunda
 
       const isDomingoOuSegunda = (diaSemana === 0 || diaSemana === 1);
-      const temExcecao = excecoesFolgaGlobal.some(ex => ex.data === dataInput);
+      const configExcecao = excecoesFolgaGlobal.find(ex => ex.data === dataInput);
+      const temExcecao = !!configExcecao;
 
       if (isDomingoOuSegunda && !temExcecao) {
         avisoFolga.classList.remove('hidden');
@@ -347,20 +370,90 @@
         avisoFolga.classList.add('hidden');
       }
 
-      // Procura horários específicos cadastrados para essa data
-      const configDia = horariosDiasGlobal.find(h => h.data === dataInput);
-      if (configDia && configDia.horarios && configDia.horarios.length > 0) {
-        blocoHorarios.classList.remove('hidden');
-        selectHorario.setAttribute('required', 'true');
-        selectHorario.innerHTML = '<option value="" disabled selected>Selecione um horário</option>' +
-          configDia.horarios.map(h => `<option value="${h}">${h}</option>`).join('');
-        btnTexto.innerText = "SOLICITAR AGENDAMENTO COM HORÁRIO";
+      // 1. Gerar todos os horários do expediente em intervalos de 30 minutos (10:00 às 19:00)
+      let listaHorariosGerados = [];
+      const configDiaCustom = horariosDiasGlobal.find(h => h.data === dataInput);
+      
+      if (configDiaCustom && configDiaCustom.horarios && configDiaCustom.horarios.length > 0) {
+        listaHorariosGerados = [...configDiaCustom.horarios];
+      } else if (temExcecao && configExcecao.horarios && configExcecao.horarios.length > 0) {
+        listaHorariosGerados = [...configExcecao.horarios];
       } else {
-        blocoHorarios.classList.add('hidden');
-        selectHorario.removeAttribute('required');
-        selectHorario.value = "";
-        btnTexto.innerText = "SOLICITAR AGENDAMENTO NO WHATSAPP";
+        for (let min = 10 * 60; min <= 19 * 60; min += 30) {
+          listaHorariosGerados.push(minutesToTime(min));
+        }
       }
+
+      // 2. Remover os horários do intervalo de almoço (12:00, 12:30, 13:00 e 13:30) para novos atendimentos
+      const almocoBloqueado = ['12:00', '12:30', '13:00', '13:30'];
+      let horariosFiltrados = listaHorariosGerados.filter(h => !almocoBloqueado.includes(h));
+
+      // 3. Se a data for hoje, remover todos os horários que já passaram (comparando horas e minutos)
+      const agora = new Date();
+      const anoAtual = agora.getFullYear();
+      const mesAtual = String(agora.getMonth() + 1).padStart(2, '0');
+      const diaAtual = String(agora.getDate()).padStart(2, '0');
+      const dataHojeStr = `${anoAtual}-${mesAtual}-${diaAtual}`;
+
+      if (dataInput === dataHojeStr) {
+        const horaAtualMin = agora.getHours() * 60 + agora.getMinutes();
+        horariosFiltrados = horariosFiltrados.filter(h => timeToMinutes(h) > horaAtualMin);
+      }
+
+      // 4 & 5. Buscar agendamentos existentes no banco para remover ocupados e bloqueados pela duração
+      let agendamentosDia = [];
+      try {
+        const { data: ags } = await _supabase.from('agendamentos').select('data, horario, servico, status').eq('data', dataInput);
+        if (ags) {
+          agendamentosDia = ags.filter(a => a.status !== 'Cancelado');
+        }
+      } catch (err) {
+        console.log("Erro ao buscar agendamentos para conflito:", err);
+      }
+
+      function obterDuracaoServico(nomeServ) {
+        const s = servicosCarregados.find(item => item.nome === nomeServ);
+        return s ? Number(s.duracao_min) : 30;
+      }
+
+      horariosFiltrados = horariosFiltrados.filter(horarioCandidato => {
+        const inicioCandidatoMin = timeToMinutes(horarioCandidato);
+        const fimCandidatoMin = inicioCandidatoMin + duracaoServicoMin;
+
+        // Regra de término: Não pode ultrapassar o horário limite de encerramento do expediente (21:00)
+        if (fimCandidatoMin > 21 * 60) {
+          return false;
+        }
+
+        // Verificar conflito com cada agendamento já existente
+        for (let ag of agendamentosDia) {
+          const inicioAgMin = timeToMinutes(ag.horario);
+          const duracaoAg = obterDuracaoServico(ag.servico);
+          const fimAgMin = inicioAgMin + duracaoAg;
+
+          if (inicioCandidatoMin < fimAgMin && fimCandidatoMin > inicioAgMin) {
+            return false; // Conflito encontrado
+          }
+        }
+
+        return true;
+      });
+
+      blocoHorarios.classList.remove('hidden');
+      selectHorario.setAttribute('required', 'true');
+
+      if (horariosFiltrados.length === 0) {
+        if (dataInput === dataHojeStr) {
+          selectHorario.innerHTML = '<option value="" disabled selected>Não há mais horários disponíveis para hoje. Escolha outra data.</option>';
+        } else {
+          selectHorario.innerHTML = '<option value="" disabled selected>Nenhum horário disponível para esta data</option>';
+        }
+      } else {
+        selectHorario.innerHTML = '<option value="" disabled selected>Selecione um horário</option>' +
+          horariosFiltrados.map(h => `<option value="${h}">${h}</option>`).join('');
+      }
+
+      btnTexto.innerText = "SOLICITAR AGENDAMENTO COM HORÁRIO";
     }
 
     async function enviarAgendamento(event) {
@@ -369,8 +462,13 @@
       const telefone = document.getElementById('form-phone').value.trim();
       const servico = document.getElementById('form-service').value;
       const data = document.getElementById('form-date').value;
-      const horarioSelecionado = document.getElementById('form-horario').value || 'A combinar';
+      const horarioSelecionado = document.getElementById('form-horario').value;
       const obs = document.getElementById('form-notes').value.trim();
+
+      if (!horarioSelecionado) {
+        alert("Por favor, selecione um horário válido.");
+        return;
+      }
 
       const sObj = servicosCarregados.find(s => s.nome === servico);
       const valor = sObj ? Number(sObj.preco) : 0;
@@ -411,6 +509,12 @@
       renderizarPortfolio(PORTFOLIO_PADRAO);
       renderizarDepoimentos(DEPOIMENTOS_PADRAO);
       await carregarDadosSite();
+      
+      document.getElementById('form-service').addEventListener('change', () => {
+        if (document.getElementById('form-date').value) {
+          verificarDisponibilidadeData();
+        }
+      });
     });
   </script>
 </body>
