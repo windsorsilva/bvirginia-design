@@ -92,8 +92,8 @@
       <div class="space-y-6">
         <span class="text-xs uppercase tracking-widest text-[#b5945b] font-bold">Horário Exclusivo</span>
         <h2 class="text-3xl md:text-4xl font-title font-semibold">Reserve seu momento de beleza</h2>
-        <p class="text-gray-600 leading-relaxed">Dias de Atendimento: Terça a Sábado das 10:00 às 19:00 (Domingos e segundas são dias de folga).</p>
-        <p class="text-xs text-amber-700 font-medium">💡 *Como funciona:* Domingos e segundas vêm bloqueados por padrão. Ao selecionar o dia, se houver horários livres cadastrados, escolha o seu; caso contrário, entraremos em contato para confirmar!</p>
+        <p class="text-gray-600 leading-relaxed">Expediente: Das 10:00 às 21:00 (Almoço das 12:00 às 14:00 sem início de novos atendimentos). Domingos e segundas são dias de folga (salvo exceções).</p>
+        <p class="text-xs text-amber-700 font-medium">💡 *Agendamento Inteligente:* O sistema calcula automaticamente a duração e evita conflitos de horários.</p>
         <div class="space-y-3 text-sm text-gray-600 pt-2">
           <p>📍 <a id="form-local-link" href="https://maps.google.com/?q=Bela+Vista+Cabo+de+Santo+Agostinho+PE" target="_blank" class="hover:underline text-[#b5945b] font-medium"><span id="form-local-info">Bela Vista, Cabo de Santo Agostinho – PE</span></a></p>
           <p>💬 <span id="form-wsp-info">+55 81 98900-2496</span></p>
@@ -113,20 +113,20 @@
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Serviço Desejado</label>
-            <select id="form-service" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
+            <select id="form-service" required onchange="verificarDisponibilidadeData()" class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
               <option value="" disabled selected>Selecione um serviço</option>
             </select>
           </div>
           <div>
             <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Data Desejada</label>
             <input type="date" id="form-date" required onchange="verificarDisponibilidadeData()" class="w-full border border-gray-200 rounded-lg p-3 text-sm">
-            <p id="aviso-data-folga" class="text-xs text-red-500 mt-1 hidden">⚠️ Domingo e segunda são dias de folga e não podem ser selecionados.</p>
+            <p id="aviso-data-folga" class="text-xs text-red-500 mt-1 hidden">⚠️ Este dia é folga e não possui horários disponíveis.</p>
           </div>
 
           <!-- BLOCO DE HORÁRIOS DINÂMICOS -->
           <div id="bloco-horarios" class="hidden">
-            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horários Disponíveis neste dia</label>
-            <select id="form-horario" class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
+            <label class="block text-xs font-bold text-gray-500 uppercase mb-1">Horários Disponíveis para Início</label>
+            <select id="form-horario" required class="w-full border border-gray-200 rounded-lg p-3 text-sm bg-white">
               <option value="" disabled selected>Selecione um horário</option>
             </select>
           </div>
@@ -177,14 +177,14 @@
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const SERVICOS_PADRAO = [
-      { id: 1, nome: "Design simples", preco: 35.00, duracao_min: 25, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
-      { id: 2, nome: "Design com henna", preco: 50.00, duracao_min: 40, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
-      { id: 3, nome: "Fox eyes", preco: 90.00, duracao_min: 180, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
-      { id: 4, nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" },
-      { id: 5, nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
-      { id: 6, nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
-      { id: 7, nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
-      { id: 8, nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" }
+      { id: 1, nome: "Design Simples", preco: 35.00, duracao_min: 25, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
+      { id: 2, nome: "Design com Henna", preco: 50.00, duracao_min: 40, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+      { id: 3, nome: "Sirena", preco: 90.00, duracao_min: 60, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" },
+      { id: 4, nome: "Brasileiro", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=600" },
+      { id: 5, nome: "5D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" },
+      { id: 6, nome: "6D", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1512290900722-9a702082bdf5?auto=format&fit=crop&q=80&w=600" },
+      { id: 7, nome: "4D Luxo", preco: 90.00, duracao_min: 120, foto_url: "https://images.unsplash.com/photo-1516975080664-ed2fc6a32937?auto=format&fit=crop&q=80&w=600" },
+      { id: 8, nome: "Fox Eyes", preco: 90.00, duracao_min: 180, foto_url: "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&q=80&w=600" }
     ];
 
     const PORTFOLIO_PADRAO = [
@@ -231,7 +231,7 @@
 
       const select = document.getElementById('form-service');
       select.innerHTML = '<option value="" disabled selected>Selecione um serviço</option>' + 
-        servs.map(s => `<option value="${s.nome}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')})</option>`).join('');
+        servs.map(s => `<option value="${s.nome}">${s.nome} (R$ ${Number(s.preco).toFixed(2).replace('.', ',')} - ${s.duracao_min >= 60 ? (s.duracao_min/60)+'h' : s.duracao_min+'min'})</option>`).join('');
     }
 
     function renderizarPortfolio(port) {
@@ -318,14 +318,15 @@
 
     function preencherServico(nome) {
       document.getElementById('form-service').value = nome;
+      verificarDisponibilidadeData();
     }
 
-    function verificarDisponibilidadeData() {
+    async function verificarDisponibilidadeData() {
       const dataInput = document.getElementById('form-date').value;
+      const servicoNome = document.getElementById('form-service').value;
       const avisoFolga = document.getElementById('aviso-data-folga');
       const blocoHorarios = document.getElementById('bloco-horarios');
       const selectHorario = document.getElementById('form-horario');
-      const btnTexto = document.getElementById('btn-texto-submit');
 
       if (!dataInput) return;
 
@@ -334,33 +335,104 @@
       const diaSemana = dataObj.getDay(); // 0 = Domingo, 1 = Segunda
 
       const isDomingoOuSegunda = (diaSemana === 0 || diaSemana === 1);
-      const temExcecao = excecoesFolgaGlobal.some(ex => ex.data === dataInput);
+      const excecaoEncontrada = excecoesFolgaGlobal.find(ex => ex.data === dataInput);
 
-      if (isDomingoOuSegunda && !temExcecao) {
-        avisoFolga.classList.remove('hidden');
-        blocoHorarios.classList.add('hidden');
-        selectHorario.removeAttribute('required');
-        selectHorario.value = "";
-        document.getElementById('form-date').value = ""; 
-        btnTexto.innerText = "SOLICITAR AGENDAMENTO NO WHATSAPP";
-        alert("Este dia é sua folga (Domingo ou Segunda) e não está disponível para agendamento.");
-        return;
+      // Regra de Prioridade de Folga / Exceção
+      let horariosPermitidosBase = [10, 11, 14, 15, 16, 17, 18, 19];
+
+      if (isDomingoOuSegunda) {
+        if (!excecaoEncontrada) {
+          avisoFolga.classList.remove('hidden');
+          blocoHorarios.classList.add('hidden');
+          selectHorario.innerHTML = '<option value="" disabled selected>Selecione um horário</option>';
+          selectHorario.removeAttribute('required');
+          document.getElementById('form-date').value = "";
+          alert("Este dia é folga (Domingo ou Segunda) e não está disponível para agendamento.");
+          return;
+        } else {
+          // Se houver exceção, usa os horários definidos nela se existirem
+          if (excecaoEncontrada.horarios && excecaoEncontrada.horarios.length > 0) {
+            horariosPermitidosBase = excecaoEncontrada.horarios.map(h => parseInt(h.split(':')[0]));
+          }
+          avisoFolga.classList.add('hidden');
+        }
       } else {
         avisoFolga.classList.add('hidden');
+        // Verifica se há configuração específica de horários para o dia útil
+        const configDia = horariosDiasGlobal.find(h => h.data === dataInput);
+        if (configDia && configDia.horarios && configDia.horarios.length > 0) {
+          horariosPermitidosBase = configDia.horarios.map(h => parseInt(h.split(':')[0]));
+        }
       }
 
-      const configDia = horariosDiasGlobal.find(h => h.data === dataInput);
-      if (configDia && configDia.horarios && configDia.horarios.length > 0) {
+      // Se o usuário selecionou uma exceção sem horários cadastrados
+      if (excecaoEncontrada && (!excecaoEncontrada.horarios || excecaoEncontrada.horarios.length === 0)) {
+        avisoFolga.classList.remove('hidden');
+        blocoHorarios.classList.add('hidden');
+        return;
+      }
+
+      // Buscar agendamentos existentes na data selecionada no Supabase
+      let agendamentosDoDia = [];
+      try {
+        const { data: ags } = await _supabase.from('agendamentos').select('*').eq('data', dataInput).neq('status', 'Cancelado');
+        if (ags) agendamentosDoDia = ags;
+      } catch (e) {
+        console.error("Erro ao buscar agendamentos", e);
+      }
+
+      // Obter duração do serviço selecionado (em horas, arredondado para cima ou blocos de 1h para checagem)
+      const servObj = servicosCarregados.find(s => s.nome === servicoNome);
+      const duracaoMinutos = servObj ? Number(servObj.duracao_min) : 60;
+      const duracaoHoras = Math.ceil(duracaoMinutos / 60);
+
+      // Calcular horários livres com base na duração, fim limite às 21:00 e conflitos
+      let horariosDisponiveis = [];
+
+      horariosPermitidosBase.forEach(hInicio => {
+        // Horários de 12 e 13 nunca podem ser início de atendimento
+        if (hInicio === 12 || hInicio === 13) return;
+
+        const hFim = hInicio + duracaoHoras;
+
+        // O expediente pode se estender até às 21:00 para concluir
+        if (hFim > 21) return;
+
+        // Verificar conflito com agendamentos existentes
+        let temConflito = false;
+        agendamentosDoDia.forEach(ag => {
+          // Extrair hora de início do agendamento existente
+          let agHoraInicio = 10;
+          if (ag.horario && ag.horario !== 'A combinar') {
+            agHoraInicio = parseInt(ag.horario.split(':')[0]);
+          }
+          
+          // Descobrir duração do serviço já agendado
+          const agServ = servicosCarregados.find(s => s.nome === ag.servico);
+          const agDurMin = agServ ? Number(agServ.duracao_min) : 60;
+          const agDurHoras = Math.ceil(agDurMin / 60);
+          const agHoraFim = agHoraInicio + agDurHoras;
+
+          // Checar sobreposição de intervalos [hInicio, hFim) com [agHoraInicio, agHoraFim)
+          if (hInicio < agHoraFim && hFim > agHoraInicio) {
+            temConflito = true;
+          }
+        });
+
+        if (!temConflito) {
+          const horaFormatada = String(hInicio).padStart(2, '0') + ':00';
+          horariosDisponiveis.push(horaFormatada);
+        }
+      });
+
+      if (horariosDisponiveis.length > 0) {
         blocoHorarios.classList.remove('hidden');
         selectHorario.setAttribute('required', 'true');
         selectHorario.innerHTML = '<option value="" disabled selected>Selecione um horário</option>' +
-          configDia.horarios.map(h => `<option value="${h}">${h}</option>`).join('');
-        btnTexto.innerText = "SOLICITAR AGENDAMENTO COM HORÁRIO";
+          horariosDisponiveis.map(h => `<option value="${h}">${h}</option>`).join('');
       } else {
-        blocoHorarios.classList.add('hidden');
-        selectHorario.removeAttribute('required');
-        selectHorario.value = "";
-        btnTexto.innerText = "SOLICITAR AGENDAMENTO NO WHATSAPP";
+        blocoHorarios.classList.remove('hidden');
+        selectHorario.innerHTML = '<option value="" disabled selected>Nenhum horário disponível nesta data</option>';
       }
     }
 
@@ -370,7 +442,7 @@
       const telefone = document.getElementById('form-phone').value.trim();
       const servico = document.getElementById('form-service').value;
       const data = document.getElementById('form-date').value;
-      const horarioSelecionado = document.getElementById('form-horario').value || 'A combinar';
+      const horarioSelecionado = document.getElementById('form-horario').value;
       const obs = document.getElementById('form-notes').value.trim();
 
       const sObj = servicosCarregados.find(s => s.nome === servico);
